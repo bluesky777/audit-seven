@@ -1,7 +1,7 @@
 {
-  "name": "audit-system",
-  "version": "0.0.9",
-  "description": "Aplicación auditar las iglesias Adventistas",
+  "name": "audit-seven",
+  "version": "0.0.1",
+  "description": "Aplicación para auditar las iglesias Adventistas",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -13,7 +13,7 @@
     "publish": "build --mac --win -p always",
     "postinstall": "install-app-deps"
   },
-  "repository": "https://github.com/bluesky777/auditorias-electron.git",
+  "repository": "https://github.com/bluesky777/audit-seven.git",
   "keywords": [
     "Tesorería",
     "Auditoría",
