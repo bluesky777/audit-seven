@@ -1,0 +1,193 @@
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2><i class="glyphicon glyphicon-info-sign"></i> Recomendaciones</h2>
+
+                <div class="box-icon">
+                    <!--
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                    -->
+                </div>
+            </div>
+            <div class="box-content row">
+                
+                <div class="col-sm-12">
+
+                    <button  class="btn btn-primary" ng-click="vercrearrecomendacion()">Crear recomendación</button>
+                        
+                    <div ng-show="vermostrarreco" class="panel panel-warning" style="margin-bottom: 50px">
+
+                        <div class="box-header well">
+                            <h2>
+                                <i class="glyphicon glyphicon-plus"></i> Nueva Recomendación
+                            </h2>
+                            <div class="box-icon"></div>
+                        </div>
+                        
+                        <form ng-submit="insertarrecomendacion(reco_crear)">
+                            <div class="box-content row">
+                                
+                                <div class="form-group col-sm-6"> <label>Fecha</label>
+                                    <input  required="required" type="date" class="form-control"  placeholder="Fecha " ng-model="reco_crear.fecha">
+                                </div>
+                                
+                                <div class="form-group col-sm-6"> <label>Hallazgo</label>
+                                    <textarea class="form-control" ng-model="reco_crear.hallazgo"></textarea>
+                                </div>
+
+                                <div class="form-group col-sm-6"> <label>Tipo</label>
+                                    
+                                    <ui-select ng-model="reco_crear.tipo" style="width: 100%;" theme="bootstrap">
+                                    <ui-select-match placeholder="Tipo">
+                                        <span ng-bind="$select.selected.tipo"></span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in tipos_recomend | filter: $select.search track by $index">
+                                        <span ng-bind-html="item.tipo | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                
+                                <div class="form-group col-sm-6"> <label>Recomendación</label>
+                                    <textarea class="form-control" ng-model="reco_crear.recomendacion"></textarea>
+                                </div>
+
+                                <div class="form-group col-sm-6"> <label>Justificación</label>
+                                    <textarea class="form-control" ng-model="reco_crear.justificacion"></textarea>
+                                </div>
+
+                                
+                                <div class="form-group col-sm-6"> <label>Superada</label>
+                                
+                                <div class="btn-group">
+                                    <label class="btn btn-success" ng-model="reco_crear.superada" uib-btn-radio="1">
+                                    <i class="glyphicon glyphicon-ok"></i> Si</label>
+                                    <label class="btn btn-success" ng-model="reco_crear.superada" uib-btn-radio="0"><i class="glyphicon glyphicon-remove"></i> No</label>
+                                </div>
+                                </div>
+
+                                
+                            </div>
+
+                            <div class="center">
+                                <input class="btn btn-warning " type="button" ng-click="cancelarVerCrearReco()" value="Cancelar">
+                                <input class="btn btn-primary " type="submit" name="" value="Crear recomendacion">         
+                            </div>
+                        </form>
+                    </div>
+
+
+
+                    
+
+
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr >
+                                <th scope="col">ID </th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Hallazgo</th>
+                                <th scope="col">Recomendación</th>
+                                <th scope="col">Respuesta</th>
+                                <th scope="col">superada</th>
+                                <th scope="col">Editar</th>
+                            
+                            </tr>
+                        </thead>
+                            
+
+                        <tbody>
+                            <tr ng-repeat="recomendacion in recomendaciones"  >
+                            
+                                <td >{{ $index + 1 }}</td>
+                                <td >{{recomendacion.fecha | date:'short' }}</td>
+                                <td>{{recomendacion.hallazgo}}</td>
+                                <td>{{recomendacion.recomendacion}}</td>
+                                <td >{{recomendacion.justificacion}}</td>
+                                <td >{{recomendacion.superada}}</td>
+                                
+                                <td>
+                                    <div class="btn-group">                        
+                                        <button class="btn btn-primary btn-sm" ng-click="VerActualizarReco(recomendacion)">
+                                            <i class="glyphicon glyphicon-pencil "></i>
+                                        </button>
+
+                                        <button class="btn btn-danger btn-sm" ng-click="eliminarreco(recomendacion)">
+                                            <i class="glyphicon glyphicon-remove "></i>
+                                        </button>
+                                    </div>
+
+                                </td>
+                            
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+
+
+                    
+
+
+
+                    <div ng-show="VerCreandoReco" id="editar-recomendaciones" class="row" style="margin-bottom: 50px">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                <h2>
+                                    <i class="glyphicon glyphicon-plus"></i> Editar Recomendación
+                                </h2>
+
+                                <div class="box-icon"></div>
+                                </div>
+
+                                <div class="box-content row">
+
+                                    <div class="col-sm-12">
+
+                                        <form ng-submit="actureco(act_reco)">
+                                            <div class="form-group col-sm-6"> <label>Fecha</label>
+                                                <input  required="required" type="date" class="form-control"  placeholder="Fecha " ng-model="act_reco.fecha">
+                                            </div>
+                                            
+                                            <div class="form-group col-sm-6"> <label>Hallazgo</label>
+                                                <textarea class="form-control" ng-model="act_reco.hallazgo"></textarea>
+                                           </div>
+                                            
+                                            <div class="form-group col-sm-6"> <label>Recomendación</label>
+                                                <textarea class="form-control" ng-model="act_reco.recomendacion"></textarea>
+                                            </div>
+
+                                            <div class="form-group col-sm-6"> <label>Justificacion</label>
+                                                <textarea class="form-control" ng-model="act_reco.justificacion"></textarea>
+                                            </div>
+                                                
+                                            <div class="form-group col-sm-6"> <label>Superada</label>
+                                                
+                                                <div class="btn-group ">
+                                                    <label class="btn btn-success" ng-model="act_reco.superada" uib-btn-radio="'si'">
+                                                        <i class="glyphicon glyphicon-ok "></i> Si</label>
+                                                    <label class="btn btn-success" ng-model="act_reco.superada" uib-btn-radio="'no'">
+                                                        <i class="glyphicon glyphicon-remove"></i> No</label>
+                                                </div>
+                                            </div>
+
+                                        <div class="center">
+                                            <input class="btn btn-warning " type="button" ng-click="closeActualizarReco()" value="Cancelar">
+                                            <input class="btn btn-primary " type="submit" ng-click="actureco(act_reco)" value="Actualizar">
+                                        </div>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                            
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

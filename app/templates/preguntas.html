@@ -1,0 +1,269 @@
+<div>
+    <ul class="breadcrumb">
+        <li>
+            <a ui-sref="panel">Inicio</a>
+        </li>
+        <li>
+            <a ui-sref="panel.preguntas" >preguntas</a>
+        </li>
+    </ul>
+</div>
+
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2><i class="glyphicon glyphicon-info-sign"></i> Preguntas</h2>
+
+                <div class="box-icon">
+                    <!--
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                    -->
+                </div>
+            </div>
+            <div class="box-content row">
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<button  class="btn btn-primary" ng-click="vercrearpregunta()">Crear</button>
+
+
+    <div ng-show="vercreando" class="panel panel-warning">
+
+         <form ng-submit="Insert_preguntas(pregunta_crearasd)">
+
+
+          <div class="col-sm-12">
+                    <form ng-submit="inserter_union(creatar_union)">
+                      <div class="row">
+                        <div class="form-group col-sm-12">
+                          <label for="nombre_union_new">Definición</label>
+                           <input required="required" type="text" class="form-control" placeholder="Definición" ng-model="pregunta_crearasd.definition">
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                          <label for="nombre_union_new">Tipo</label>
+                            <input required="required" type="text" class="form-control" placeholder="tipo" ng-model="pregunta_crearasd.tipo">
+            
+                        </div>
+
+                      </div>
+          
+                      <div class="row">
+                        <div class="form-group col-sm-6">
+                          <label for="alias_union_new">Alias</label>
+          
+                          <input required="required" class="form-control" id="alias_union_new" type="text" placeholder="Alias" ng-model="creatar_union.alias">
+                        </div>
+          
+          
+          
+                        <div class="form-group col-sm-6">
+                          <label for="codigo_union_new">Codigo</label>
+                          <input required="required" class="form-control" id="codigo_union_new" type="text" placeholder="Codigo" ng-model="creatar_union.codigo">
+          
+                        </div>
+          
+                      </div>
+          
+          
+          
+          
+                   
+          
+                  </div>
+
+
+          <div>
+           
+          </div>
+
+          <div>
+           
+          </div>
+
+          <div>
+            <input required="required" type="text" class="form-control" placeholder="opción 1" ng-model="pregunta_crearasd.option1">
+          </div>
+          
+            
+          <div>
+            <input required="required" type="text" class="form-control" placeholder="opción 2" ng-model="pregunta_crearasd.option2">
+            
+
+          </div>
+                   
+
+          <div>
+            <input required="required" type="text" class="form-control" placeholder="opción 3" ng-model="pregunta_crearasd.option3">
+            
+          </div>
+
+          <div>
+            <input required="required" type="text" class="form-control" placeholder="opción 4" ng-model="pregunta_crearasd.option4">
+          </div>
+
+          <div>
+            <select class="form-control" ng-model="pregunta_crearasd.auditoria"><optgroup label="Auditoria:"><option ng-repeat="auditoria in auditorias" value="{{auditoria.rowid}}"> {{auditoria.fecha}} {{auditoria.hora}} {{auditoria.nombres}} {{auditoria.alias}}</option></optgroup></select>
+
+          </div>
+
+          
+                     
+         
+
+
+          <div>
+            <input class="btn btn-primary btn-block" type="submit" name="" value="Crear Pregunta">
+          </div>
+
+         
+            
+            
+        </form>
+    </div>
+
+
+
+
+<table class="table">
+  <thead>
+
+
+    <tr >
+      <th scope="col">ID </th>
+      <th scope="col">Definición</th>
+      <th scope="col">tipo</th>
+      <th scope="col">Opción 1 </th>
+      <th scope="col">Opción 2 </th>
+      <th scope="col">Opción 3 </th>
+      <th scope="col">Opción 4 </th>
+      <th scope="col">Auditoria</th>
+     
+    
+    
+
+
+    </tr>
+  </thead>
+  <tbody>
+
+
+    
+    <tr ng-repeat="pregunta in preguntas">
+      
+      <td>{{$index + 1}}</td>
+      <td>{{pregunta.definition}}</td>
+      <td>{{pregunta.tipo}}</td>
+      <td>{{pregunta.option1}}</td>
+      <td>{{pregunta.option2}}</td>
+      <td>{{pregunta.option3}}</td>
+      <td>{{pregunta.option4}}</td>
+      <td>{{pregunta.fecha + ' ' + pregunta.hora + ' ' + pregunta.nombres + ' ' + pregunta.alias}}</td>
+    
+     
+      <td scope="col" class=" glyphicon glyphicon-pencil btn btn-primary" href="" ng-click="veractpregunta(pregunta)"></td>
+      <td scope="col" class="glyphicon glyphicon-remove btn btn-danger" href="" ng-click="Eliminarpreg(pregunta)" ></td>
+    </tr>
+
+
+  
+   
+  </tbody>
+</table>
+
+
+
+<div ng-show="actuasdpregunta">
+    <h2>Modificar auditoria</h2>
+    <form ng-submit="preguntactua(pregunta_editar)">
+
+
+      <table style="width: 100%;">
+
+        <tr>
+          <td> Definición :</td>
+          <td><input type="text" class="form-control"  placeholder="definición" ng-model="pregunta_editar.definition"></td>
+        </tr>
+
+        <tr>
+          <td>Tipo :</td>
+          <td><input type="text" class="form-control" placeholder="tipo" ng-model="pregunta_editar.tipo"></td>
+        </tr>
+
+        <tr>
+          <td>Opción 1 :</td>
+          <td><input type="text" class="form-control" placeholder="opción 1" ng-model="pregunta_editar.option1">
+          </td>
+        </tr>
+
+        <tr>
+          <td>Opción 2 :</td>
+          <td>  
+     
+       <input type="text" class="form-control" placeholder="opción 2" ng-model="pregunta_editar.option2"></td>
+        </tr>
+
+        <tr>
+          <td>Opción 3 :</td>
+          <td><input type="text" class="form-control" placeholder="opción 3" ng-model="pregunta_editar.option3"></td>
+        </tr>
+
+        <tr>
+          <td> Opción 4 :</td>
+          <td> 
+          <input type="text" class="form-control" placeholder="opción 4" ng-model="pregunta_editar.option4">
+          </td>
+        </tr>
+
+        <tr>
+          <td>Auditoria :</td>
+          <td> 
+            <select class="form-control" ng-model="pregunta_editar.auditoria_id">
+              <optgroup label="Auditoria:">
+                <option ng-repeat="auditoria in auditorias" value="{{auditoria.rowid}}"> {{auditoria.fecha}} {{auditoria.hora}} {{auditoria.entidad}}</option>
+              </optgroup>
+            </select>
+          </td>
+        </tr>
+            
+
+     </table>
+     
+  
+     
+
+     <div>
+       <input class="btn btn-primary  btn-block" type="submit" ng-click="Actualizarpreguntas(pregunta_editar)" name="" value="Actualizar Pregunta">
+     </div>
+     
+
+     
+
+         
+            
+            
+            
+            
+            
+            
+
+            
+      
+    </form>
+  </div>
+
+
+
+
+

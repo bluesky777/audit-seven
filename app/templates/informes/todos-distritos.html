@@ -1,0 +1,46 @@
+	  
+<div class="row">
+    
+    <div class="col-sm-12"> 
+
+	   <table class="table table-bordered table-condensed table-striped table-hover">
+						<thead>
+							<tr>
+								<th scope="col">ID </th>
+								<th scope="col">Nombre</th>
+								<th scope="col">Alias</th>
+								<th scope="col">Código</th>
+								<th scope="col">zona</th>
+								<th scope="col">Pastor</th>
+								<th scope="col">Tesorero</th>
+						
+								
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr ng-repeat="distrito in distritos">
+
+								<td>{{$index + 1}}</td>
+								<td>{{distrito.nombre}}</td>
+								<td>{{distrito.alias}}</td>
+								<td>{{distrito.codigo}}</td>
+								<td>{{distrito.zona}}</td>
+								<td>{{distrito.pastor_nombres + ' ' + distrito.pastor_apellidos}}</td>
+								<td>{{distrito.tesorero_nombres + ' ' + distrito.tesorero_apellidos}}</td>
+
+								
+								
+								
+							</tr>
+
+
+
+
+						</tbody>
+					</table>
+
+
+  </div>
+</div>
+    

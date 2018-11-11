@@ -1,0 +1,50 @@
+
+<div class="row">
+    
+    <div class="col-sm-12"> 
+
+	<table class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th scope="col">ID </th>
+						<th scope="col">Nombre</th>
+						<th scope="col">Alias</th>
+						<th scope="col">Código</th>
+						<th scope="col">Zona</th>
+						<th scope="col">Union</th>
+						<th scope="col">Tesorero</th>
+					
+					
+						
+						
+					</tr>
+				</thead>
+				<tbody>  
+
+
+
+					<tr ng-repeat="asociation in asociaciones">
+
+						<td>{{$index + 1}}</td>
+						<td>{{asociation.nombre}}</td>
+						<td>{{asociation.alias}}</td>
+						<td>{{asociation.codigo}}</td>
+						<td>{{asociation.zona}}</td>
+						<td>{{asociation.nombre_union}}</td>
+						<td>{{asociation.tesorero_nombres + ' ' +  tesorero_apellidos }}</td>
+
+
+						
+						
+					
+					</tr>
+
+
+
+
+					</tbody>
+				</table>
+				
+  </div>
+</div>
+    

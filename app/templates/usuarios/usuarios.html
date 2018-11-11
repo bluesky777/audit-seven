@@ -1,0 +1,320 @@
+<!-- content starts -->
+<div>
+	<ul class="breadcrumb">
+		<li>
+			<a ui-sref="panel">Inicio</a>
+		</li>
+		<li>
+			<a ui-sref="panel.usuarios">usuarios</a>
+		</li>
+	</ul>
+</div>
+
+
+
+<div class="row">
+	<div class="box col-md-12">
+		<div class="box-inner">
+			<div class="box-header well">
+				<h2><i class="glyphicon glyphicon-info-sign"></i> Usuarios</h2>
+			</div>
+			<div class="box-content row">
+
+				<div class="col-sm-12">
+
+					<button class="btn btn-primary" ng-click="verCreandoUsuario()" ng-show="!ver_crear_usu">
+						Crear usuario
+					</button>
+
+
+					<div class="row" ng-show="ver_crear_usu" style="margin-bottom: 20px;">
+						<div class="box col-md-12">
+							<div class="box-inner">
+								<div class="box-header well">
+									<h2><i class="glyphicon glyphicon-plus"></i> Crear usuario</h2>
+								</div>
+								<div class="box-content row">
+
+									<div class="col-sm-12">
+
+										<form ng-submit="insertarUsuario(usuario_crear)">
+											<table style="width: 100%;">
+
+												<tr>
+													<td style="width: 150px">Nombre</td>
+													<td>
+														<input class="form-control" required="required" type="text" placeholder="Nombre" ng-model="usuario_crear.nombres">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Apellidos</td>
+													<td>
+														<input class="form-control" required="required" type="text" placeholder="Apellidos" ng-model="usuario_crear.apellidos">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Sexo</td>
+													<td>
+														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-6 col-xs-12">
+															<div class="row">
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<img ng-src="{{avatar.masculino.img}}" class="img-gender">
+																			<input type="radio" name="sexo" value="M" ng-model="usuario_crear.sexo"><span class="text">Masculino</span>
+																		</label>
+																	</div>
+																</div>
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<img ng-src="{{avatar.femenino.img}}" class="img-gender">
+																			<input type="radio" name="sexo" value="F" ng-model="usuario_crear.sexo"><span class="text">Femenino</span>
+																		</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Email</td>
+													<td>
+														<input class="form-control" type="email" placeholder="Email" ng-model="usuario_crear.email">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Nombre de usuario</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Nombre de usuario" ng-model="usuario_crear.username">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Contraseña</td>
+													<td>
+														<input class="form-control" type="password" placeholder="Contraseña" ng-model="usuario_crear.password">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Tipo de usuario</td>
+													<td>
+														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-6 col-xs-12">
+															<div class="row">
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<input type="radio" name="tipo" value="Pastor" ng-model="usuario_crear.tipo"><span class="text">Pastor</span>
+																		</label>
+																	</div>
+																</div>
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<input type="radio" name="tipo" value="Tesorero" ng-model="usuario_crear.tipo"><span class="text">Tesorero</span>
+																		</label>
+																	</div>
+																</div>
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<input type="radio" name="tipo" value="Auditor" ng-model="usuario_crear.tipo"><span class="text">Auditor</span>
+																		</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Fecha nacimiento</td>
+													<td>
+														<input class="form-control" type="date" placeholder="Fecha nacimiento" ng-model="usuario_crear.fecha">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Celular</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Celular" ng-model="usuario_crear.celular">
+													</td>
+												</tr>
+
+
+
+
+											</table>
+
+											<div style="text-align: center;">
+												<input class="btn btn-default" type="button" value="Cancelar" ng-click="CancelarEdicion()">
+												<input class="btn btn-primary" type="submit" value="Guardar cambios" ng-disabled="creando">
+											</div>
+
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+					<div class="row" ng-show="ver_edit_usu">
+						<div class="box col-md-12">
+							<div class="box-inner">
+								<div class="box-header well">
+									<h2><i class="glyphicon glyphicon-edit"></i> Modificar usuario</h2>
+								</div>
+								<div class="box-content row">
+
+									<div class="col-sm-12">
+										<form ng-submit="actUsers(user_editars)">
+
+											<table style="width: 100%;">
+
+												<tr>
+													<td style="width: 150px">Nombre</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Nombre" ng-model="user_editars.nombres">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Apellidos</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Apellidos" ng-model="user_editars.apellidos">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Sexo</td>
+													<td>
+														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-6 col-xs-12">
+															<div class="row">
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<img ng-src="{{avatar.masculino.img}}" class="img-gender">
+																			<input type="radio" name="sexo" value="M" ng-model="user_editars.sexo"><span class="text">Masculino</span>
+																		</label>
+																	</div>
+																</div>
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<img ng-src="{{avatar.femenino.img}}" class="img-gender">
+																			<input type="radio" name="sexo" value="F" ng-model="user_editars.sexo"><span class="text">Femenino</span>
+																		</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Email</td>
+													<td>
+														<input class="form-control" type="email" placeholder="Email" ng-model="user_editars.email">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Nombre de usuario</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Nombre de usuario" ng-model="user_editars.username">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Contraseña</td>
+													<td>
+														<input class="form-control" type="password" placeholder="Contraseña" ng-model="user_editars.password">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Tipo de usuario</td>
+													<td>
+														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-6 col-xs-12">
+															<div class="row">
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<input type="radio" name="tipo" value="Pastor" ng-model="user_editars.tipo"><span class="text">Pastor</span>
+																		</label>
+																	</div>
+																</div>
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<input type="radio" name="tipo" value="Tesorero" ng-model="user_editars.tipo"><span class="text">Tesorero</span>
+																		</label>
+																	</div>
+																</div>
+																<div class="col-lg-6 col-sm-4 col-xs-12">
+																	<div class="radio">
+																		<label>
+																			<input type="radio" name="tipo" value="Auditor" ng-model="user_editars.tipo"><span class="text">Auditor</span>
+																		</label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Fecha nacimiento</td>
+													<td>
+														<input class="form-control" type="date" placeholder="Fecha nacimiento" ng-model="user_editars.fecha">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Celular</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Celular" ng-model="usuario_crear.celular">
+													</td>
+												</tr>
+
+
+
+
+											</table>
+
+											<div style="text-align: center;">
+												<input class="btn btn-default" type="button" value="Cancelar" ng-click="CancelarEdicion()">
+												<input class="btn btn-primary" type="submit" value="Guardar cambios" ng-disabled="guardando_cambios">
+											</div>
+
+
+										</form>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+	
+					<p>Mueva las columnas para mayor comodidad y oculte las que desee:</p>
+					<div id="grid1" ui-grid="gridOptions" ui-grid-exporter ui-grid-move-columns ui-grid-edit ui-grid-resize-columns
+						ui-grid-cellnav ui-grid-auto-resize ui-grid-pinning style="height: 600px" class="grid">
+					</div>
+					
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>

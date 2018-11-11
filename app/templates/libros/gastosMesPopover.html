@@ -1,0 +1,7 @@
+<div style="width: 200px">
+    
+	<div ng-repeat="gasto in lib_mes.gastos_detalle">
+        {{ $index+1 }}. {{ gasto.valor | currency:'$':0 }} - {{ gasto.descripcion }}
+    </div>
+	
+</div>

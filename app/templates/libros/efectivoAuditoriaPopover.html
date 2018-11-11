@@ -1,0 +1,8 @@
+<div style="width: 200px">
+    
+	<div ng-repeat="gasto in auditoria.dinero_detalle" class="row">
+        <div class="col-sm-6">{{ gasto.descripcion | currency:'$':0 }}</div>
+        <div class="col-sm-6">{{ gasto.valor }}</div>
+    </div>
+	
+</div>

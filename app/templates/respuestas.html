@@ -1,0 +1,149 @@
+<div>
+    <ul class="breadcrumb">
+        <li>
+            <a ui-sref="panel">Inicio</a>
+        </li>
+        <li>
+            <a ui-sref="panel.respuestas" >Respuestas</a>
+        </li>
+    </ul>
+</div>
+
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2><i class="glyphicon glyphicon-info-sign"></i> Respuestas</h2>
+
+                <div class="box-icon">
+                    <!--
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                    -->
+                </div>
+            </div>
+            <div class="box-content row">
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button  class="btn btn-primary" ng-click="vercreandorespuestas()">Crear</button>
+
+    <div ng-show="vercradasdrepsuestas" class="panel panel-warning">
+      <div class="panel-heading">Ingrese los datos de Las respuestas en los campos correspodientes</div>
+
+         <form ng-submit="insertandorespuesats(respuesta_insertar)">
+
+          <div>
+             <select  required="required" class="form-control selcls" ng-model="respuesta_insertar.pregunta_id"> 
+             	<optgroup label="Preguntas ID:"> 
+             		<option ng-repeat="pregunta in preguntas" value="{{pregunta.rowid}}">{{pregunta.definition}} {{pregunta.tipo}} 
+             		</option>
+             	</optgroup> 
+            
+          </select>
+          </div>
+
+
+
+        
+         
+         <div>
+           <input required="required" class="form-control" type="text" placeholder="Respuestas" ng-model="respuesta_insertar.respuestas">
+         </div>
+
+         <div>
+           <input  class="btn btn-primary  btn-block" type="submit" name="" value="Crear respuesta">
+         </div>
+
+
+         
+   
+            
+            
+            
+        </form>
+    </div>
+
+
+<table class="table">
+  <thead>
+
+
+    <tr >
+      <th scope="col">ID </th>
+      <th scope="col">pregunta ID</th>
+      <th scope="col">Auditoria ID</th>
+      <th scope="col">Respuestas</th>
+    
+
+
+    </tr>
+
+
+    <tr ng-repeat="respuesta in respuestas "  >
+      
+      <td>{{respuesta.rowid}}</td>
+      <td>{{respuesta.definition + ' ' + respuesta.tipo }}</td>
+      <td>{{respuesta.fecha + ' ' + respuesta.hora + ' ' + respuesta.nombres + ' ' + respuesta.alias}}</td>
+      <td>{{respuesta.respuestas}}</td>
+     
+      <td scope="col" class=" glyphicon glyphicon-pencil btn btn-primary" href="" ng-click="veractuausers(respuesta)"></td>
+      <td scope="col" class="glyphicon glyphicon-remove btn btn-danger" href="" ng-click="elimninarespuestas(respuesta)" ></td>
+    </tr>
+  </thead>
+  <tbody>
+    
+    
+
+
+  
+   
+  </tbody>
+</table>
+
+
+<div ng-show="mostrarrespuesta">
+    <h2>Modificar usuario</h2>
+    <form ng-submit="actu_res(respuesta_Actua)">
+
+      <table style="width: 100%;">
+
+        <tr>
+          <td>Pregunta ID:</td>
+          <td><select   class="form-control selcls" ng-model="respuestaActua.pregunta_id">  
+              <optgroup label="Preguntas ID:"> 
+                <option ng-repeat="pregunta in preguntas" value="{{pregunta.rowid}}">{{pregunta.definition}} {{pregunta.tipo}} 
+                </option>
+              </optgroup> 
+
+          </select></td>
+        </tr>
+
+
+
+        <tr>
+          <td>Respuesta:</td>
+          <td>  <input class="form-control" type="text" placeholder="respuestas" ng-model="respuestaActua.respuestas">
+          </td>
+        </tr>
+        
+      </table>
+
+
+      <div>
+        <input class="btn btn-primary  btn-block" type="submit" name="" value="Actualizar respuestas">
+      </div>
+      
+      
+      
+      
+    </form>
+  </div>

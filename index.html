@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Olimpiadas</title>
+    <style type="text/css" media="screen">
+      body {
+        background-image: url('./app/images/fondo-olimpiadas2.jpg');
+        background-size:cover;
+        color: #fff;
+      }
+      h1, h2, h3, h4, h5{
+        text-align: center;
+      }
+      a{
+        color: #fff;
+      }
+    </style>
+    
+  </head>
+  <body>
+    
+    <h1>Olimpiadas Wissen</h1>
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+    Este es el servidor para una red local. Si lo cierra, los clientes ya no podrán funcionar.
+    <br>
+    
+    <input type="button" onclick="crearTablas()" value="Crear tablas">
+    <br>
+    
+    <input type="button" onclick="descargarDatos()" id="btn-descargar" value="Descargar datos para la prueba">
+    <br>
+    <br>
+    <input type="button" onclick="borrarDatos()" value="Borrar datos">
+    
+    <br>
+    <input type="button" onclick="descargarExcel()" value="Descargar Excel" disabled="disabled">
+    
+    <br>
+    <br>
+    <h3>Acceso en las siguientes IP:</h3>
+    <h1 id="contenido-ip"></h1>
+    <h2>
+      <a href="#" onclick="abrirAppEnNavegador()"> ..:: Abrir ::.. </a>
+    </h2>
+    
+    <br>
+    <br>
+    <hr>
+
+    Versión actual: <span id="version">vX.Y.Z</span>
+    <div id="messages"></div>
+    
+    
+    
+    
+    
+    
+
+    <script>
+      (function() {
+        // You can also require other files to run in this process
+        require('./renderer.js')
+        
+        // Display the current version
+        let version = window.location.hash.substring(1);
+        document.getElementById('version').innerText = version;
+        // Listen for messages
+        const {ipcRenderer} = require('electron');
+        ipcRenderer.on('message', function(event, text) {
+          var container = document.getElementById('messages');
+          var message = document.createElement('div');
+          message.innerHTML = text;
+          container.appendChild(message);
+        })
+        
+        var ip = require('ip');
+        var ip = ip.address();
+        
+        
+        crearTablas = function () {
+          const {shell} = require('electron');
+          shell.openExternal('http://' + ip + ':' + process.env.NODE_PORT + '/api/welcome/crear-tablas');
+        }
+        
+        
+        descargarDatos_original = function () {
+          const {shell} = require('electron');
+          shell.openExternal('http://' + ip + ':' + process.env.NODE_PORT + '/api/welcome/descargar-datos');
+        }
+        
+        descargarDatos = function () {
+          let btn       = document.getElementById('btn-descargar');
+          btn.value     = 'Descargando, espere...';
+          btn.disabled  = true;
+          
+          const path    = require('path');
+          
+          require(path.join(__dirname, 'app/conexion/connDescargarDatos'))().then(()=>{
+            console.log('Datos descargados');
+            alert('Datos descargados y agregados');
+          }, (r2)=>{
+            console.log('Hubo un error descargando Datos', r2);
+          })
+        }
+      
+        descargarExcel = function () {
+          const {shell} = require('electron');
+          shell.openExternal('http://' + ip + ':' + process.env.NODE_PORT + '/api/welcome/descargar-excel');
+        }
+      
+        borrarDatos = function () {
+          let resp = confirm('¡Peligro! ¿Seguro que quieres borrar datos?');
+          if (resp) {
+            const {shell} = require('electron');
+            shell.openExternal('http://' + ip + ':' + process.env.NODE_PORT + '/api/welcome/borrar-datos');
+          }
+          
+        }
+      
+        abrirAppEnNavegador = function () {
+          const {shell} = require('electron');
+          shell.openExternal('http://' + ip + ':' + process.env.NODE_PORT);
+        }
+      
+        
+        // Buscamos y mostramos las IPs
+        require('dotenv').config();
+        var os = require('os');
+        var ifaces = os.networkInterfaces();
+        //console.log(ifaces);
+        
+        Object.keys(ifaces).forEach(function (ifname) {
+          var alias = 0;
+
+          ifaces[ifname].forEach(function (iface) {
+            if ('IPv4' !== iface.family || iface.internal !== false) {
+              // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+              return;
+            }
+
+            if (alias >= 1) {
+              // this single interface has multiple ipv4 addresses
+              document.getElementById("contenido-ip").innerHTML += alias + ' ' + iface.address + ':' + process.env.NODE_PORT + '<br>';
+            } else {
+              // this interface has only one ipv4 adress
+              document.getElementById("contenido-ip").innerHTML += iface.address + ':' + process.env.NODE_PORT + '<br>';
+            }
+            ++alias;
+          });
+        });
+
+        
+      })();
+
+      
+      
+      
+
+    </script>
+  </body>
+</html>

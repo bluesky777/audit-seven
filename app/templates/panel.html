@@ -1,0 +1,235 @@
+
+<!-- topbar starts -->
+
+
+   <div class="navbar navbar-default hidden-print" role="navigation">
+
+        <div class="navbar-inner">
+            <button type="button" ng-click="sidebar_activar()" class="navbar-toggle pull-left animated flip">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href=""> <img alt="Charisma Logo" src="img/audit fast 2.0.png" class="hidden-xs"/>
+                <span>Auditoría</span></a>
+
+            <!-- user dropdown starts -->
+            <div class="btn-group pull-right" uib-dropdown>
+                <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle>
+                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"> {{ USER.nombres }}</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu >
+                    <li><a href="#">Perfil</a></li>
+                    <li class="divider"></li>
+                    <li><a href="" ng-click="cerrar_sesion()">Cerrar sesión</a></li>
+                </ul>
+            </div>
+            <!-- user dropdown ends -->
+
+            <!-- theme selector starts -->
+            <!-- 
+            <div class="btn-group pull-right theme-container animated tada">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-tint"></i><span
+                        class="hidden-sm hidden-xs"> Cambiar tema</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="themes">
+                    <li><a data-value="classic" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Classic</a></li>
+                    <li><a data-value="cerulean" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Cerulean</a></li>
+                    <li><a data-value="cyborg" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Cyborg</a></li>
+                    <li><a data-value="simplex" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Simplex</a></li>
+                    <li><a data-value="darkly" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Darkly</a></li>
+                    <li><a data-value="lumen" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Lumen</a></li>
+                    <li><a data-value="slate" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Slate</a></li>
+                    <li><a data-value="spacelab" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Spacelab</a></li>
+                    <li><a data-value="united" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> United</a></li>
+                </ul>
+            </div>
+            -->
+            <!-- theme selector ends -->
+
+            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
+                
+                <li class="dropdown">
+                    <a href="" data-toggle="dropdown" ng-click="seleccionarDistrito()"><i class="glyphicon glyphicon-star"></i> 
+                        <span ng-show="!USER.iglesia_id">Iglesia</span>
+                        {{USER.iglesia_alias}} 
+                    </a>
+                </li>
+                
+                <li>
+                    <form class="navbar-search pull-left">
+                        <input placeholder="Buscar" class="search-query form-control col-md-10" name="query"
+                               type="text">
+                    </form>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <!-- topbar ends -->
+
+<style>
+    .main-menu .panel-default>.panel-heading {
+        background-color: #ffffff;
+    }
+    .main-menu .panel-default {
+        border-color: #fff;
+    }
+    .main-menu .panel-body {
+        padding: 0px;
+    }
+    .main-menu span[uib-accordion-header]{
+        color: #2fa4e7;
+        font-size: 14px;
+    }
+    .main-menu .panel-heading a{
+        text-decoration: none;
+    }
+    .main-menu .panel-heading a:hover{
+        text-decoration: none;
+    }
+    
+</style>
+
+<div class="ch-container">
+    <div class="row">
+        
+        <!-- MENU IZQUIERDO starts -->
+        <div class="col-sm-2 col-lg-2 hidden-print">
+            <div class="sidebar-nav" ng-class="{'active': sidebar_active}">
+                <div class="nav-canvas">
+                    <div class="nav-sm nav nav-stacked">
+
+                    </div>
+                    <ul class="nav nav-pills nav-stacked main-menu">
+                        <li class="nav-header">Menú</li>
+                        <li><a class="ajax-link" ui-sref="panel"><i class="glyphicon glyphicon-home"></i><span> Inicio</span></a></li>
+                        
+
+                        <li>
+                            <a class="ajax-link" ui-sref="panel.entidades">
+                                <i class="glyphicon glyphicon-align-justify"></i><span> Entidades</span>
+                            </a>
+                        </li>
+                        
+                                
+                        <li><a class="ajax-link" href="" ui-sref="panel.usuarios">
+                            <i class="glyphicon glyphicon-user"></i><span> Usuarios</span></a>
+                        </li>
+                         <li><a class="ajax-link" href="" ui-sref="panel.auditorias">
+                            <i class="glyphicon glyphicon-folder-open"></i><span> Auditorias</span></a>
+                        </li>
+
+                        <li><a class="ajax-link" href="" ui-sref="panel.libromes">
+                            <i class="glyphicon glyphicon-book"></i><span> Libro Mes</span></a>
+                        </li>
+
+                         <li><a class="ajax-link" href="" ui-sref="panel.informe">
+                            <i class="glyphicon glyphicon-list-alt"></i><span> Informes</span></a>
+                        </li>
+
+                        <li><a class="ajax-link" href="" ui-sref="panel.recomendaciones">
+                            <i class="glyphicon glyphicon-list-alt"></i><span> Recomendaciones</span></a>
+                        </li>
+
+                        <li><a class="ajax-link" href="" ui-sref="panel.sincronizacion">
+                            <i class="glyphicon glyphicon-retweet"></i><span> Sincronización</span></a>
+                        </li>
+
+
+
+
+
+                         
+                        <li uib-accordion close-others="true" class="accordion ">
+                            
+                            <div uib-accordion-group class="panel-default" is-open="status.open">
+                                <uib-accordion-heading>
+                                    Datos 
+                                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                </uib-accordion-heading>
+                                <ul class="nav nav-pills nav-stacked" style="display: block;">
+                                    
+                                    <li><a class="ajax-link" href="" ui-sref="panel.preguntas">
+                                        <i class="glyphicon glyphicon-tags"></i><span> Preguntas</span></a>
+                                    </li>
+                                    
+            
+                                    <li><a class="ajax-link" href="" ui-sref="panel.respuestas">
+                                        <i class="glyphicon glyphicon-file"></i><span> Respuestas</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+        <!--/span-->
+        <!-- left menu ends -->
+
+        <noscript>
+            <div class="alert alert-block col-md-12">
+                <h4 class="alert-heading">¡Atención!</h4>
+
+                <p>Necesitas tener <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a>
+                    habilitado para usar este sitio.</p>
+            </div>
+        </noscript>
+
+
+
+
+
+
+        <div id="content" class="col-lg-10 col-sm-10">
+            
+            <ui-view>
+
+                <div>
+                    <ul class="breadcrumb">
+                        <li>
+                            <a ui-sref="panel">Inicio</a>
+
+                        </li>
+                    </ul>
+                </div>
+
+            </ui-view>
+
+          
+
+        </div><!--/#content.col-md-0-->
+
+
+
+
+
+
+
+    </div><!--/fluid-row-->
+
+
+    <hr class="hidden-print">
+
+
+    <footer class="row hidden-print">
+        <p class="col-md-9 col-sm-9 col-xs-12 copyright">&copy; 
+            <a href=# target="_blank">Auditoría de iglesias</a> 2018.
+            <span>
+                Versión: <span id="version">{{version}}</span>
+                <div id="messages"></div>
+            </span>
+        </p>
+
+        
+        <p class="col-md-3 col-sm-3 col-xs-12 powered-by">Creado por: <a
+                href="https://www.micolevirtual.com">Grandes desarrolladores</a></p>
+    </footer>
+
+</div><!--/.fluid-container-->

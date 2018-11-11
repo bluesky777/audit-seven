@@ -1,0 +1,42 @@
+
+<div class="row">
+    
+    <div class="col-sm-12"> 
+    
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col">ID </th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Alias</th>
+                        <th scope="col">Código</th>
+                
+                            
+                            
+                    </tr>
+                </thead>
+                <tbody>  
+    
+    
+    
+                    <tr ng-repeat="union in uniones">
+
+                        <td>{{$index + 1}}</td>
+                        <td>{{union.nombre}}</td>
+                        <td>{{union.alias}}</td>
+                        <td>{{union.codigo}}</td>
+                        
+                        
+                    </tr>
+    
+    
+    
+                </tbody>
+            </table>
+        
+    
+        
+    
+    </div>
+</div>
+    

@@ -1,0 +1,235 @@
+
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Mes: {{libro.mes}} - {{libro.year}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+
+    <table>
+        <tr>
+            <td>No</td>
+            <td>Diezmo</td>
+            <td>Ofrenda</td>
+            <td>Ofrenda Especial</td>
+            <td>Total</td>
+            <td>Diáconos</td>
+            <td>Diferencia</td>
+        </tr>
+
+        <tr>
+            <td class="no-padding bold">Sem 1</td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.diezmo_1" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'diezmo_1', 'diezmos')"  enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.ofrenda_1" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'ofrenda_1', 'ofrendas')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.especial_1" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'especial_1', 'especiales')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4 fondo-sum-sem">
+                {{ libro.diezmo_1 + libro.ofrenda_1 + libro.especial_1 | currency:'':0 }}
+            </td>
+            
+            <td class="padding4">
+                <input type="text" ng-model="libro.diaconos_1" class="valor-sm"
+                    ng-change="cambiaDiaconos(libro, 'diaconos_1')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ (libro.diezmo_1 + libro.ofrenda_1 + libro.especial_1) - libro.diaconos_1 | currency:'':0 }}
+            </td>
+            
+        </tr>
+
+        <tr>
+            <td class="no-padding bold">Sem 2</td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.diezmo_2" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'diezmo_2', 'diezmos')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.ofrenda_2" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'ofrenda_2', 'ofrendas')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.especial_2" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'especial_2', 'especiales')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4 fondo-sum-sem">
+                {{ libro.diezmo_2 + libro.ofrenda_2 + libro.especial_2 | currency:'':0 }}
+            </td>
+            
+            <td class="padding4">
+                <input type="text" ng-model="libro.diaconos_2" class="valor-sm"
+                    ng-change="cambiaDiaconos(libro, 'diaconos_2')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ (libro.diezmo_2 + libro.ofrenda_2 + libro.especial_2) - libro.diaconos_2 | currency:'':0 }}
+            </td>
+            
+        </tr>
+
+        <tr>
+            <td class="no-padding bold">Sem 3</td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.diezmo_3" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'diezmo_3', 'diezmos')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.ofrenda_3" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'ofrenda_3', 'ofrendas')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.especial_3" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'especial_3', 'especiales')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ libro.diezmo_3 + libro.ofrenda_3 + libro.especial_3 | currency:'':0 }}
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.diaconos_3" class="valor-sm"
+                    ng-change="cambiaDiaconos(libro, 'diaconos_3')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ (libro.diezmo_3 + libro.ofrenda_3 + libro.especial_3) - libro.diaconos_3 | currency:'':0 }}
+            </td>
+            
+        </tr>
+
+        <tr>
+            <td class="no-padding bold">Sem 4</td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.diezmo_4" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'diezmo_4', 'diezmos')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.ofrenda_4" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'ofrenda_4', 'ofrendas')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.espcial_4" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'especial_4', 'especiales')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4 fondo-sum-sem">
+                {{ libro.diezmo_4 + libro.ofrenda_4 + libro.espcial_4 | currency:'':0 }}
+            </td>
+            
+            <td class="padding4">
+                <input type="text" ng-model="libro.diaconos_4" class="valor-sm"
+                    ng-change="cambiaDiaconos(libro, 'diaconos_4')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ (libro.diezmo_4 + libro.ofrenda_4 + libro.especial_4) - libro.diaconos_4 | currency:'':0 }}
+            </td>
+            
+        </tr>
+
+        <tr>
+            <td class="no-padding bold">Sem 5</td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.diezmo_5" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'diezmo_5')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.ofrenda_5" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'ofrenda_5', 'ofrendas')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="libro.especial_5" class="valor-sm"
+                    ng-change="cambiaValor(libro, 'especial_5', 'especiales')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4 fondo-sum-sem">
+                {{ libro.diezmo_5 + libro.ofrenda_5 + libro.especial_5 | currency:'':0 }}
+            </td>
+            
+            <td class="padding4">
+                <input type="text" ng-model="libro.diaconos_5" class="valor-sm"
+                    ng-change="cambiaDiaconos(libro, 'diaconos_5')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ (libro.diezmo_5 + libro.ofrenda_5 + libro.especial_5) - libro.diaconos_5 | currency:'':0 }}
+            </td>
+            
+        </tr>
+
+
+        <tr>
+            <td class="padding4 bold">Mes</td>
+            <td class="padding4 bold">
+                {{ libro.diezmo_1 + libro.diezmo_2 + libro.diezmo_3 + libro.diezmo_4 + libro.diezmo_5 | currency:'$':0 }}
+            </td>
+            <td class="padding4 bold">
+                {{ libro.ofrenda_1 + libro.ofrenda_2 + libro.ofrenda_3 + libro.ofrenda_4 + libro.ofrenda_5 | currency:'$':0 }}
+            </td>
+            <td class="padding4 bold">
+                {{ libro.especial_1 + libro.especial_2 + libro.especial_3 + libro.especial_4 + libro.especial_5 | currency:'$':0 }}
+            </td>
+            <td class="padding4 bold fondo-sum-sem">
+                {{ libro.diezmo_1 + libro.diezmo_2 + libro.diezmo_3 + libro.diezmo_4 + libro.diezmo_5 + libro.ofrenda_1 + libro.ofrenda_2 + libro.ofrenda_3 + libro.ofrenda_4 + libro.ofrenda_5 + libro.especial_1 + libro.especial_2 + libro.especial_3 + libro.especial_4 + libro.especial_5 | currency:'$':0 }}
+            </td>
+            
+            <td class="padding4">
+                {{ libro.diaconos_1 + libro.diaconos_2 + libro.diaconos_3 + libro.diaconos_4 + libro.diaconos_5 | currency:'$':0 }}
+            </td>
+            
+            <td class="padding4 fondo-sum-sem">
+                {{ (libro.diezmo_1 + libro.diezmo_2 + libro.diezmo_3 + libro.diezmo_4 + libro.diezmo_5 + libro.ofrenda_1 + libro.ofrenda_2 + libro.ofrenda_3 + libro.ofrenda_4 + libro.ofrenda_5 + libro.especial_1 + libro.especial_2 + libro.especial_3 + libro.especial_4 + libro.especial_5) - (libro.diaconos_1 + libro.diaconos_2 + libro.diaconos_3 + libro.diaconos_4 + libro.diaconos_5 )  | currency:'$':0 }}
+            </td>
+            
+        </tr>
+
+    </table>
+
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Cerrar</button>
+</div>

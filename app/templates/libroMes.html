@@ -1,0 +1,582 @@
+<!-- content starts -->
+<div>
+	<ul class="breadcrumb">
+		<li>
+			<a ui-sref="panel">Inicio</a>
+		</li>
+		<li>
+			<a ui-sref="panel.libromes">Libro Mes</a>
+		</li>
+	</ul>
+</div>
+
+
+
+
+<div class="row panel-auditoria-meses">
+    <div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized}">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+					<i class="glyphicon glyphicon-info-sign"></i> 
+					AUDITORÍA {{ USER.fecha_audit }}
+				</h2>
+
+                <div class="box-icon maximizar">
+                    
+                    <a href="" ng-click="widget_maximized=!widget_maximized" uib-tooltip="Maximizar" class="btn btn-close btn-round btn-default">
+						<i class="glyphicon " ng-class="{ 'glyphicon-resize-full': !widget_maximized, 'glyphicon-resize-small': widget_maximized }"></i>
+					</a>
+                    
+                </div>
+            </div>
+            <div class="box-content " style="overflow: auto;">
+				
+				<div class="row">
+                
+					<div class="col-sm-12">
+
+							<h3>Selecciona auditoria</h3>
+							<button ng-click="seleccionarAuditorias(audit)" 
+								ng-repeat="audit in auditorias" 
+								class="btn " ng-class="{'btn-primary': audit.rowid==auditoria.rowid, 'btn-default': audit.rowid!=auditoria.rowid }">
+
+								{{ audit.fecha }}
+							</button>
+							
+							<hr>
+						
+					
+						<table class="table table-bordered table-condensed" style="margin-bottom: 2px;">
+
+
+					
+							<tr>
+								<td class="success"> <label>Distrito: </label></td>
+								<td class="success">{{ USER.distrito_nombre }}</td>
+								
+								<td class="info"> <label>Iglesia: </label></td>
+								<td class="info">{{ USER.iglesia_nombre }}</td>
+								
+								<td class="success"> <label>Fecha</label></td>
+								<td class="success">{{ USER.fecha_audit }}</td>
+							</tr>
+						</table>
+						
+						<table class="table table-bordered table-condensed">
+							<tr>
+								<td class="success"> <label>Pastor: </label></td>
+								<td class="success" colspan="2">{{ USER.pastor_nombres }} {{ USER.pastor_apellidos }}</td>
+								
+								<td class="info" style="text-align: right;"> <label>Tesorero(a): </label></td>
+								<td class="info" colspan="2">{{ USER.tesorero_nombres }} {{ USER.tesorero_apellidos }}</td>
+							</tr>
+						</table>
+
+						
+						<hr>
+						<!--
+						Recomendaciones
+						-->
+						<div style="margin-bottom: 20px;">
+							<a href="" ng-show="!vercomends" ng-click="funcvercomend()">Ver recomendaciones</a>
+							<a href="" ng-show="vercomends" ng-click="funcvercomend()">Ocultar recomendaciones</a>
+							<div ng-if="vercomends">
+								<recomendaciones-dir></recomendaciones-dir>
+							</div>
+						</div>
+						<!--
+						// Recomendaciones
+						-->
+						<hr>
+										
+						<div>
+							
+							<form ng-submit="crear_libronuevo(librocreater)">
+								
+								<select multiple="multiple" ng-model="librocreater.year" class="form-control" style="display: inline-block; width: auto;">
+									<option ng-repeat="year in years" value="{{year.year}}">{{year.year}}</option> 
+								</select>
+
+								<select multiple="multiple" ng-model="librocreater.mes" class="form-control" style="display: inline-block; width: auto;">
+									<option ng-repeat="mes in meses" value="{{mes.mes}}">{{mes.mes}}</option> 
+								</select>
+
+								<div style="display: inline-block;">
+									<button  class="btn btn-primary " ng-disabled="creando_libro" style="margin-top: -50px;" type="submit" uib-tooltip="Agregar mes">
+										<i class="glyphicon glyphicon-plus"></i>
+									</button>
+
+								</div>
+							</form>
+
+						</div>
+
+
+											
+						<table class="table tabla-mes table-striped table-hover table-condensed">
+							<thead>
+								<tr>
+									<th scope="col" class="center">ID </th>
+									<th scope="col" class="center">Año</th>
+									<th scope="col" class="center">Mes</th>
+									<th scope="col" class="center">Diezmo</th>
+									<th scope="col" class="center">Ofrenda</th>
+									<th scope="col" class="center"><span uib-tooltip="Ofrenda especial">Especial</span></th>
+									<th scope="col" class="center">Total</th>
+									<th scope="col" class="center">Diáconos</th>
+									<th scope="col" class="center">Diferencia</th>
+									<th scope="col" class="center">20% DSLLO</th>
+									<th scope="col" class="center">20% OMM</th>
+									<th scope="col" class="center" style="min-width: 60px;">60% + EE</th>
+									<th scope="col" class="center">Gastos</th>
+									<th scope="col" class="center">
+										<span uib-tooltip="Gastos con soporte">Gastos soportados</span></th>
+									<th scope="col" class="center">
+										<span uib-tooltip="Gastos - Gastos soportados">Diferencia gastos</th>
+									<th scope="col" class="center">Remesa</th>
+									<th scope="col" class="center">Remesa Enviada</th>
+									<th scope="col" class="center">Diferencia Remesa</th>
+								
+								</tr>
+							</thead>
+							<tbody>
+
+								<tr ng-repeat="lib_mes in lib_meses">
+
+									<td class="no-padding-bottom">{{$index + 1}}</td>
+									<td class="no-padding-bottom">{{lib_mes.year}}</td>
+									<td style="padding: 0px">
+										<input type="button" ng-click="abrirLibroSemanal(lib_mes)" class="btn btn-info btn-sm" value="{{lib_mes.mes}}">
+									</td>
+									<td class="no-padding">
+										<input type="text" ng-model="lib_mes.diezmos" class="valor-sm"
+											ng-change="cambiaValor(lib_mes, 'diezmos')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											popover-append-to-body="false" uib-popover-template="'templates/libros/diezmosSemanalesPopover.html'"
+											popover-title="Diezmos semanales" popover-popup-delay="300"
+											popover-trigger="'mouseenter'"
+											ui-number-mask="0" enter-as-tab>
+									</td>
+									<td class="no-padding">
+										<input type="text" ng-model="lib_mes.ofrendas" class="valor-sm"
+											ng-change="cambiaValor(lib_mes, 'ofrendas')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											popover-append-to-body="false" uib-popover-template="'templates/libros/ofrendasSemanalesPopover.html'"
+											popover-title="Ofrendas semanales" popover-popup-delay="300"
+											popover-trigger="'mouseenter'"
+											ui-number-mask="0" enter-as-tab>
+									</td>
+									<td class="no-padding">
+										<input type="text" ng-model="lib_mes.especiales" class="valor-sm"
+											ng-change="cambiaValor(lib_mes, 'especiales')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											popover-append-to-body="false" uib-popover-template="'templates/libros/especialesSemanalesPopover.html'"
+											popover-title="Ofrendas especiales semanales" popover-popup-delay="300"
+											popover-trigger="'mouseenter'"
+											ui-number-mask="0" enter-as-tab>
+									</td>
+									<!-- Total -->
+									<td class="no-padding-bottom align-right">{{ lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales | currency:'':0 }}</td>
+									<!-- Diáconos -->
+									<td class="no-padding-bottom align-right">{{ lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5 | currency:'':0 }}</td>
+									<!-- Diferencia -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales)-(lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5) | currency:'':0 }}</td>
+									<!-- 20% DESARROLLO -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
+									<!-- 20% OMM -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
+									<!-- 60% -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.especiales + lib_mes.ofrendas * 0.6) | currency:'':0 }}</td>
+									
+									<!-- Gastos -->
+									<td class="no-padding-bottom align-right">
+										<input type="text" ng-model="lib_mes.gastos" class="valor-sm"
+											ng-change="cambiaValor(lib_mes, 'gastos')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>	
+									</td>
+									<!-- Gastos soportados-->
+									<td class="no-padding-bottom align-right">
+										<div class="input-group">
+											<input type="text" ng-model="lib_mes.gastos_soportados" class="valor-sm "
+												ng-change="cambiaValor(lib_mes, 'gastos_soportados')" 
+												ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+												popover-append-to-body="false" uib-popover-template="'templates/libros/gastosMesPopover.html'"
+												popover-title="Soporte de gastos" popover-popup-delay="300"
+												popover-trigger="'mouseenter'"
+												ui-number-mask="0" ng-dblclick="abrirGastos(lib_mes)" enter-as-tab>	
+												
+											<span class="input-group-btn" popover-append-to-body="false" uib-popover-template="'templates/libros/gastosMesPopover.html'"
+												popover-title="Soporte de gastos" popover-popup-delay="300"
+												popover-trigger="'mouseenter'">
+												<button class="btn btn-default btn-xs" type="button" ng-click="abrirGastos(lib_mes)">
+													<i class="glyphicon glyphicon-pencil"></i>
+													<span class="badge" ng-show="lib_mes.gastos_detalle.length>0" style="position: absolute;">
+														{{lib_mes.gastos_detalle.length}}
+													</span>
+												</button>
+											</span>
+										</div>
+									</td>
+									<!-- Diferencia gastos -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.gastos - lib_mes.gastos_soportados) | currency:'':0 }}</td>
+										
+									<!-- Remesa -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.diezmos + lib_mes.ofrendas * 0.4) | currency:'':0 }}</td>
+									<!-- Remesa enviada -->
+									<td class="no-padding-bottom align-right">
+										<input type="text" ng-model="lib_mes.remesa_enviada" class="valor-sm"
+											ng-change="cambiaValor(lib_mes, 'remesa_enviada')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>	
+									</td>
+									<!-- Diferencia remesa -->
+									<td class="no-padding-bottom align-right">{{ (lib_mes.remesa_enviada - (lib_mes.diezmos + lib_mes.ofrendas * 0.4)) | currency:'':0 }}</td>
+									
+
+									<td class="no-padding" style="">
+
+										<button ng-show="false" href="" class="btn btn-primary btn-sm" ng-click="modificar_lib(lib_mes)">
+											<i class="glyphicon glyphicon-pencil"></i>
+										</button>
+
+										<button href="" class="btn btn-danger btn-xs" ng-click="EliminarLibroMensul(lib_mes)" uib-tooltip="Eliminar mes">
+											<i class="glyphicon glyphicon-remove"></i>
+										</button>
+										
+									</td>
+								</tr>
+								
+							</tbody>
+							
+							<tfoot>
+								
+								
+								<tr>
+
+									<td class="no-padding-bottom"></td>
+									<td class="no-padding-bottom">Totales</td>
+									<td></td>
+									<td class="no-padding align-right">{{ sum_diezmos }}</td>
+									<td class="no-padding align-right">{{ sum_ofrendas }}</td>
+									<td class="no-padding align-right">{{ sum_especiales }}</td>
+									<!-- Total -->
+									<td class="no-padding-bottom align-right">{{ sum_totales }}</td>
+									<!-- Diáconos -->
+									<td class="no-padding-bottom align-right">{{ sum_diaconos }}</td>
+									<!-- Diferencia -->
+									<td class="no-padding-bottom align-right">{{ sum_diferencia }}</td>
+									<!-- 20% DESARROLLO -->
+									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
+									<!-- 20% OMM -->
+									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
+									<!-- 60% -->
+									<td class="no-padding-bottom align-right">{{ sum_60_ofrendas }}</td>
+									
+									<!-- Gastos -->
+									<td class="no-padding-bottom align-right">{{ sum_gastos }}</td>
+									<!-- Gastos soportados-->
+									<td class="no-padding-bottom align-right">{{ sum_gastos_sop }}</td>
+									<!-- Diferencia gastos -->
+									<td class="no-padding-bottom align-right">{{ sum_dif_gastos }}</td>
+										
+									<!-- Remesa -->
+									<td class="no-padding-bottom align-right">{{ sum_remesa }}</td>
+									<!-- Remesa enviada -->
+									<td class="no-padding-bottom align-right">{{ sum_remesa_env }}</td>
+									<!-- Diferencia remesa -->
+									<td class="no-padding-bottom align-right">{{ sum_dif_remesa }}</td>
+									
+
+									<td class="no-padding">
+
+										
+									</td>
+								</tr>
+
+							</tfoot>
+						</table>
+									
+
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized_totales}">
+		<div class="box-inner">
+			<div class="box-header well">
+				<h2>
+					<i class="glyphicon glyphicon-info-sign"></i> 
+					TOTALES
+				</h2>
+
+				<div class="box-icon maximizar">
+					
+					<a href="" ng-click="widget_maximized_totales=!widget_maximized_totales" uib-tooltip="Maximizar" class="btn btn-close btn-round btn-default">
+						<i class="glyphicon " ng-class="{ 'glyphicon-resize-full': !widget_maximized_totales, 'glyphicon-resize-small': widget_maximized_totales }"></i>
+					</a>
+					
+				</div>
+			</div>
+			<div class="box-content " style="overflow: auto;">
+				
+				<div class="row">
+				
+					<div class="col-sm-6">
+						
+						<table class="table table-bordered table-condensed">
+							
+							<tr>
+								<td class="success"> <label>Saldo anterior auditado</label></td>
+								<td class="success align-right">
+									<input type="text" ng-model="auditoria.saldo_ant" class="align-right"
+										ng-change="cambiaAuditoria('saldo_ant')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+							
+							<tr>
+								<td> Total ingreso periodo </td>
+								<td class="align-right">{{ sum_60_ofrendas }}</td>
+							</tr>
+
+							<tr>
+								<td> <label>Total Disponible del periodo</label></td>
+								<td class="align-right">{{ sum_disponi_perio }}</td>
+							</tr>
+
+							<tr>
+								<td class="warning"> <label>Menos Gastos Del Periodo</label></td>
+								<td class="warning align-right" class="align-right">{{sum_gastos}}</td>
+							</tr>
+
+						</table>
+
+						<table  class="table table-bordered table-condensed">
+
+							<tr>
+								<td> <label>Total fondos de iglesia</label></td>
+								<td class="align-right">{{ sum_total_fondos }}</td>
+							</tr>
+
+							<tr>
+								<td>Ingresos por registrar</td>
+								<td class="align-right">
+									<input type="text" ng-model="auditoria.ingre_por_registrar" class="align-right"
+									ng-change="cambiaAuditoria('ingre_por_registrar')" 
+									ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+									ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+
+							<tr>
+								<td><label>Fondos Locales iglesia</label></td>
+								<td class="align-right">{{ sum_locales_igl }}</td>
+							</tr>
+
+							<tr>
+								<td>Ingreso Sábados</td>
+								<td class="align-right">
+										<input type="text" ng-model="auditoria.ingre_sabados" class="align-right"
+										ng-change="cambiaAuditoria('ingre_sabados')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+
+							<tr>
+								<td>Cuenta por pagar</td>
+								<td class="align-right">
+									<input type="text" ng-model="auditoria.cta_por_pagar" class="align-right"
+										ng-change="cambiaAuditoria('cta_por_pagar')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+
+							<tr>
+								<td>Ajuste de auditoria por enviar</td>
+								<td class="align-right">
+									<input type="text" ng-model="auditoria.ajuste_por_enviar" class="align-right"
+										ng-change="cambiaAuditoria('ajuste_por_enviar')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+							<tr>
+								<td class="info"><label>Total</label></td>
+								<td class="info align-right">{{ total_fondos }}</td>
+							</tr>
+							
+						</table >							
+
+						
+
+						<table class="table table-bordered table-condensed">
+							<tr>
+								<td colspan="2"><label>Respaldado por</label></td>
+
+							</tr>
+								<td>Saldo de banco</td>
+								<td class="align-right">
+									<input type="text" ng-model="auditoria.saldo_banco" class="align-right"
+										ng-change="cambiaAuditoria('saldo_banco')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+
+							<tr>
+								<td>Consig. en fondos confiados</td>
+								<td class="align-right">
+									<input type="text" ng-model="auditoria.consig_fondos_confia" class="align-right"
+										ng-change="cambiaAuditoria('consig_fondos_confia')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+
+							<tr>
+								<td>Gastos del mes por registrar</td>
+								<td class="align-right">
+									<div class="input-group">
+										<input type="text" ng-model="auditoria.gastos_mes_por_regis" class="align-right"
+											ng-change="cambiaAuditoria('gastos_mes_por_regis')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab
+											uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
+											popover-title="Gastos auditoria" popover-popup-delay="300"
+											popover-trigger="'mouseenter'">
+											
+										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
+											popover-title="Gastos auditoria" popover-popup-delay="300"
+											popover-trigger="'mouseenter'">
+											<button class="btn btn-default btn-xs" type="button" ng-click="abrirGastosAuditoria(auditoria)">
+												<i class="glyphicon glyphicon-pencil"></i>
+												<span class="badge" ng-show="auditoria.gastos_detalle.length>0" style="position: absolute;">
+													{{auditoria.gastos_detalle.length}}
+												</span>
+											</button>
+										</span>
+									</div>
+								</td>
+							</tr>
+
+
+							<tr>
+								<td>Dinero efectivo</td>
+								<td class="align-right">
+									<div class="input-group">
+										<input type="text" ng-model="auditoria.dinero_efectivo" class="align-right"
+											ng-change="cambiaAuditoria('dinero_efectivo')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab
+											uib-popover-template="'templates/libros/efectivoAuditoriaPopover.html'"
+											popover-title="Dinero efectivo" popover-popup-delay="300"
+											popover-trigger="'mouseenter'">
+											
+										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/efectivoAuditoriaPopover.html'"
+											popover-title="Gastos auditoria" popover-popup-delay="300"
+											popover-trigger="'mouseenter'">
+											<button class="btn btn-default btn-xs" type="button" ng-click="abrirDineroEfectivo(auditoria)">
+												<i class="glyphicon glyphicon-pencil"></i>
+											</button>
+										</span>
+									</div>
+											
+								</td>
+							</tr>
+
+							<tr>
+								<td>Cuentas por cobrar</td>
+								<td class="align-right">
+									<input type="text" ng-model="auditoria.cta_por_cobrar" class="align-right"
+										ng-change="cambiaAuditoria('cta_por_cobrar')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
+								</td>
+							</tr>
+						
+							<tr>
+								<td class="info"><label>Total</label></td>
+								<td class="info align-right">{{ total_respaldado }}</td>
+							</tr>
+							
+							<tr>
+								<td class="warning"><label>Diferencia</label></td>
+								<td class="warning align-right">{{ total_dif }}</td>
+							</tr>
+						</table>
+
+					</div>
+					
+					<div class="col-sm-6">
+						
+							<table class="table table-striped table-bordered table-condensed">
+								<thead>
+									<tr>
+										<th colspan="2" class="center">PROMEDIOS</th>
+										<th colspan="2" class="center">PORCENTAJES</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>DIEZMOS</td>
+										<td>098709709</td>
+										<td>0</td>
+										<td>0</td>
+									</tr>
+									<tr>
+										<td>OF. GLOBAL</td>
+										<td>098709709</td>
+										<td>60%</td>
+										<td>0</td>
+									</tr>
+
+									<tr>
+										<td>ENT. ESP.</td>
+										<td>098709709 </td>
+										<td>500</td>
+										<td>60</td>
+									</tr>
+
+									<tr>
+										<td>Gastos</td>
+										<td>5004</td>
+										<td>6789</td>
+										<td>4000</td>
+									</tr>
+
+
+
+								</tbody>
+								
+							</table>
+
+
+
+	
+	
+						</div>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+
+
+
+	
+
+

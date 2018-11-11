@@ -1,0 +1,97 @@
+
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Mes: {{libro.mes}} - {{libro.year}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+
+    <table style="margin: 0 auto;">
+        <tr>
+            <td class="center bold">No</td>
+            <td class="center bold">Valor</td>
+            <td class="center bold">Descripción</td>
+            <td class="center bold"></td>
+        </tr>
+
+        <tr ng-repeat="gasto in gastos">
+            <td class="no-padding bold align-right">
+                {{ $index + 1 }}
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="gasto.valor" class="valor-sm"
+                    ng-change="cambiaValor(gasto, 'valor')"  enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="gasto.descripcion" style="widows: 100px;"
+                    ng-change="cambiaValor(gasto, 'descripcion')" enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    uib-typeahead="gasto_search for gasto_search in getConcordancias($viewValue)" 
+                    typeahead-on-select="cambiaValor(gasto, 'descripcion')">
+                
+                <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+                <div ng-show="gasto.noResults">
+                    No hay gasto como este
+                </div>
+                
+            </td>
+            
+            <td class="padding4">
+                <button ng-click="eliminarGasto(gasto)" class="btn btn-danger btn-sm" uib-tooltip="Eliminar gasto">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </button>
+            </td>
+            
+        </tr>
+
+
+
+        <tr>
+            <td class="no-padding bold">
+                Nuevo
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="valor_gasto_new" focus-me="focusOnValorNew" placeholder="Valor gasto*" class="valor-sm" ui-number-mask="0" enter-as-tab>
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="descrip_gasto_new" placeholder="Descripción" style="widows: 100px;" enter-as-tab
+                    uib-typeahead="gasto_search for gasto_search in getConcordancias($viewValue)" >
+                <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+                <div ng-show="noResults">
+                    No hay gasto como este
+                </div>
+            </td>
+            
+            <td class="padding4">
+                <button ng-click="agregarGasto(libro)" class="btn btn-primary btn-sm" uib-tooltip="Agregar gasto">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </button>
+            </td>
+            
+        </tr>
+
+    
+
+
+        <tr>
+                <td class="padding4 bold">Total</td>
+                <td class="padding4 bold">
+                    {{ sumatoriaGastos() | currency:'$':0 }}
+                </td>
+                <td class="padding4 bold">
+                    
+                </td>
+                <td class="padding4 bold">
+                    
+                </td>
+                
+            </tr>
+                
+                
+    </table>
+
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Cerrar</button>
+</div>

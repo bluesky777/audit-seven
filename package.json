@@ -1,0 +1,72 @@
+{
+  "name": "audit-system",
+  "version": "0.0.9",
+  "description": "Aplicación auditar las iglesias Adventistas",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "build --dir",
+    "build": "build --mac --win",
+    "build-mac": "build --mac",
+    "dist": "build -p always",
+    "never": "build -p never",
+    "publish": "build --mac --win -p always",
+    "postinstall": "install-app-deps"
+  },
+  "repository": "https://github.com/bluesky777/auditorias-electron.git",
+  "keywords": [
+    "Tesorería",
+    "Auditoría",
+    "Adventista"
+  ],
+  "author": "Joseth Guerrero",
+  "license": "CC0-1.0",
+  "build": {
+    "appId": "auditSystem",
+    "mac": {
+      "category": "com.education.audit.system"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    }
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "electron-is-dev": "^0.3.0",
+    "electron-log": "^2.2.16",
+    "electron-updater": "^3.0.3",
+    "express": "^4.15.2",
+    "ip": "^1.1.5",
+    "node-excel-export": "^1.4.4",
+    "socket.io": "^2.1.0"
+  },
+  "devDependencies": {
+    "@angular/cli": "^6.0.5",
+    "electron": "^2.0.8",
+    "electron-builder": "^20.28.2",
+    "electron-reload": "^1.2.5"
+  }
+}

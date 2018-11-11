@@ -1,0 +1,44 @@
+
+ <div class="row">
+    
+    <div class="col-sm-12"> 
+		
+		<h2 style="text-align: center;">Iglesias</h2>
+
+		<table class="table table-bordered table-condensed table-striped table-hover">
+			<thead>
+				<tr>
+					<th scope="col">ID </th>
+					<th scope="col">Nombre</th>
+					<th scope="col">Alias</th>
+					<th scope="col">Código</th>
+					<th scope="col">distrito</th>
+					<th scope="col">Pastor</th>
+					<th scope="col">Tesorero</th>
+					<th scope="col">zona</th>
+
+			
+					
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr ng-repeat="iglesia in iglesias">
+
+					<td>{{$index + 1}}</td>
+					<td>{{iglesia.nombre}}</td>
+					<td>{{iglesia.alias}}</td>
+					<td>{{iglesia.codigo}}</td>
+					<td>{{iglesia.nombre_distrito}}</td>
+					<td>{{ (iglesia.pastor_nombres || '') + ' ' + pastor_apellidos}}</td>
+					<td>{{ (iglesia.tesorero_nombres || '') + ' ' + tesorero_apellidos}}</td>
+					<td>{{iglesia.zona}}</td>
+					
+				</tr>
+			</tbody>
+		</table>
+
+
+  </div>
+</div>
+    

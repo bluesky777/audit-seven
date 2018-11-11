@@ -1,0 +1,68 @@
+
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Efectivo: {{total}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+
+    <table class="table table-hovered table-bordered table-condensed">
+        <tr>
+            <td class="center bold">Billete</td>
+            <td class="center bold">Valor</td>
+            <td class="center bold">Total</td>
+        </tr>
+
+        <tr ng-repeat="dinero in auditoria.dinero_detalle">
+            <td class="padding4 align-right">
+                {{ dinero.descripcion_str }}
+            </td>
+            <td class="padding4">
+                <input type="text" ng-model="dinero.valor" class="form-control" style="padding: 2px 8px; height: initial;"
+                    ng-change="cambiaValor(dinero, 'valor')"  enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }">
+            </td>
+            
+            <td class="padding4">
+                {{ dinero.sum_billetes }}
+            </td>
+            
+        </tr>
+
+
+
+        <tr>
+            <td class="padding4">
+                {{  }}
+            </td>
+            <td class="padding4">
+                {{  }}
+            </td>
+            
+            <td class="padding4">
+                {{  }}
+            </td>
+            
+        </tr>
+
+    
+
+
+        <tr>
+                <td class="padding4 bold"></td>
+                <td class="padding4 bold">
+                    Total
+                </td>
+                <td class="padding4 bold">
+                    {{ total }}
+                </td>
+                
+            </tr>
+                
+                
+    </table>
+    
+    <input type="button" class="btn btn-danger" value="Eliminar cantidades" ng-click="eliminarTodo()">
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Cerrar</button>
+</div>

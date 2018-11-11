@@ -1,0 +1,92 @@
+<div class="row" class="hidden-print">
+	<div class="box col-md-12 hidden-print">
+		<div class="box-inner">
+			<div class="box-header well">
+				<h2>
+					<i class="glyphicon glyphicon-info-sign"></i> Informes
+				</h2>
+			
+				<div class="box-icon"></div>
+			</div>
+			
+			<div class="box-content">
+				
+				<button class="btn btn-primary" ng-click="VerUniones()">Uniones</button>
+				<button class="btn btn-primary" ng-click="VerAsociaciones()" >Asociones</button>
+	  			<button ng-click="VerDistritos()" class="btn btn-primary">Distritos</button>
+	  			<button ng-click="VerIglesias()" class="btn btn-primary">Iglesias</button>
+				  
+				<button ng-click="imprimir()" class="btn btn-default">
+					<i class="glyphicon glyphicon-print"></i>
+					Imprimir</button>
+                                         
+                 <div>
+                 	   <BUTTON class="btn btn-default" ng-click="exportarDatosAExcel()">EXPORTAR DATOS A EXCEL</BUTTON>
+                 </div>
+              
+			  
+				<hr class="wide">
+				<h5>Orientación de la página:</h5>
+				<div class="control-group">
+					<div class="radio">
+						<label>
+						<input type="radio" ng-model="config.orientacion" value="oficio_horizontal">
+						<div class="text">Oficio Horizontal</div>
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" ng-model="config.orientacion" value="carta_horizontal">
+						<div class="text">Carta horizontal</div>
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" ng-model="config.orientacion" value="vertical">
+						<div class="text">Vertical</div>
+						</label>
+					</div>
+				</div>
+				
+			</div>
+			
+
+
+			
+		</div>	
+	</div>	
+</div>
+
+
+
+<div ui-view class="informes-pages altura-informe row">
+	<h5 style="text-align: center">Aquí saldrán tus reportes</h5>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

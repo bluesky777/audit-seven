@@ -1,0 +1,43 @@
+<div class="modal-body" id="modal-body" style="max-height: 650px; overflow: auto;">
+	
+	<form class="form-inline">
+		<div class="form-group">
+			<label for="text-search-iglesia">Filtrar: </label>
+			<input class="form-control" focus-me="focusSearchIglesia" id="text-search-iglesia" 
+				type="text" placeholder="Buscar iglesia..." ng-model="textSearchIglesia" ng-change="changeSearch(textSearchIglesia)" />
+		</div>
+	</form>
+	
+	<br>
+	<br>
+	
+	<uib-accordion close-others="true">
+
+		<div uib-accordion-group class="panel-default" is-open="distrito.seleccionado"
+			ng-repeat="distrito in distritos" >
+			<uib-accordion-heading>
+				<span ng-class="{'accordion-distrito-seleccionado': distrito.rowid == distrito_id}">
+					{{distrito.nombre}}
+					<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': distrito.seleccionado, 'glyphicon-chevron-right': !distrito.seleccionado}"></i>
+				</span>
+			</uib-accordion-heading>
+			
+			<div ng-repeat="iglesia in distrito.iglesias">
+				<button ng-click="seleccionarIglesia(iglesia)" uib-tooltip="{{iglesia.alias}}"
+					class="btn btn-default" ng-class="{'btn-primary': iglesia.rowid==USER.iglesia_id, 'btn-default': iglesia.rowid!=USER.iglesia_id}">
+					{{ iglesia.nombre }}
+				</button>
+			</div>
+		</div>
+		
+	</uib-accordion>
+	
+	
+	
+
+
+
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+</div>

@@ -1,0 +1,1135 @@
+<div>
+    <ul class="breadcrumb">
+        <li>
+            <a ui-sref="panel">Inicio</a>
+        </li>
+        <li>
+            <a ui-sref="panel.sincronizacion" >Sincronización</a>
+        </li>
+    </ul>
+</div>
+<DIV>
+    <BUTTON class="btn btn-default" NG-CLICK="descargar_datos()">DESCARGAR DATOS</BUTTON>
+
+    <BUTTON class="btn btn-default" NG-CLICK="subir_datos()">SUBIR DATOS</BUTTON>
+
+
+</DIV>
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleUniones()">Uniones</a> 
+                </h2>
+
+                <div class="box-icon"></div>
+            </div>
+
+
+            <div ng-if="ver_uniones" class="box-content row">
+                <div class="col-sm-12">
+                   
+
+
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Alias</th>
+                                <th scope="col">Código</th>
+                                <th scope="col">CAMBIO</th>
+                                <th scope="col">Editar</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="union in uniones">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{union.nombre}}</td>
+                                <td>{{union.alias}}</td>
+                                <td>{{union.codigo}}</td>
+                                <td>
+                                    <span ng-show="!union.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="union.modificado" style="background-color: #dd5600" >Modificado</span>
+                                    <span ng-show="union.eliminado != 0" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+
+
+
+
+                    <div id="nueva_new_new_union" ng-show="verCreandoUniones" class="row" style="margin-bottom: 50px">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                    <h2>
+                                        <i class="glyphicon glyphicon-plus"></i> Nueva Union
+                                    </h2>
+                    
+                                    <div class="box-icon"></div>
+                                </div>
+                    
+                    
+                                <div class="box-content row">
+                    
+                                    <div class="col-sm-12">
+                                        <form ng-submit="inserter_union(creatar_union)">
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                                                    <label for="nombre_union_new">Nombre</label>
+                                                    <input required="required" class="form-control" id="nombre_union_new" type="text" placeholder="Nombre" ng-model="creatar_union.nombre">
+                                                </div>
+                                            </div>
+                    
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alias_union_new">Alias</label>
+                    
+                                                    <input required="required" class="form-control" id="alias_union_new" type="text" placeholder="Alias" ng-model="creatar_union.alias">
+                                                </div>
+                    
+                    
+                    
+                                                <div class="form-group col-sm-6">
+                                                    <label for="codigo_union_new">Codigo</label>
+                                                    <input required="required" class="form-control" id="codigo_union_new" type="text" placeholder="Codigo" ng-model="creatar_union.codigo">
+                    
+                                                </div>
+                    
+                                            </div>
+                    
+                    
+                    
+                    
+                                            <div class="center">
+                                                <input class="btn btn-warning " type="button" ng-click="CancelarCrearUnion()" value="Cancelar">
+                                                <input class="btn btn-primary " type="submit" value="Guardar Union">
+                                            </div>
+                    
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <div ng-show="VeractualizandoUniones" id="editar-uniones" class="row" style="margin-bottom: 50px">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                    <h2>
+                                        <i class="glyphicon glyphicon-plus"></i> Editar Union
+                                    </h2>
+                    
+                                    <div class="box-icon"></div>
+                                </div>
+                    
+                                <div class="box-content row">
+                    
+                                    <div class="col-sm-12">
+                    
+                                        <form ng-submit="ActualizarUniones(union_creatar_new)">
+                    
+                    
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                    
+                                                    <label for="alias_distrito_new">Nombre</label>
+                                                    <input required="required" class="form-control" id="nombre_union_new" type="text" placeholder="Nombre" ng-model="union_creatar_new.nombre">
+                                                </div>
+                                            </div>
+                    
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alias_union_new">Alias</label>
+                                                    <input required="required" class="form-control" id="alias_union_new" type="text" placeholder="Alias" ng-model="union_creatar_new.alias">
+                                                </div>
+                    
+                    
+                    
+                                                <div class="form-group col-sm-6">
+                                                    <label for="codigo_union_new">Codigo</label>
+                                                    <input required="required" class="form-control" id="codigo_union_new" type="text" placeholder="Codigo" ng-model="union_creatar_new.codigo">
+                    
+                                                </div>
+                    
+                    
+                                            </div>
+                    
+                    
+                    
+                    
+                                            <div class="center">
+                                                <input class="btn btn-warning " type="button" ng-click="CancelarActualizarUniones()" value="Cancelar">
+                                                <input class="btn btn-primary " type="submit" value="Actualizar Union">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleAsociaciones()"> Asociaciones</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+
+            <div ng-if="ver_asociaciones" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Alias</th>
+                                <th scope="col">Código</th>
+                                <th scope="col">CAMBIO</th>
+                                <th scope="col">Editar</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="asociation in asociaciones">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{asociation.nombre}}</td>
+                                <td>{{asociation.alias}}</td>
+                                <td>{{asociation.codigo}}</td>
+                                <td>
+                                    <span ng-show="!asociation.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="asociation.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="asociation.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+
+
+                    <div ng-show="MostrandoAsociaciones" class="row" style="margin-bottom: 50px" id="nueva_asociacion">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                    <h2>
+                                        <i class="glyphicon glyphicon-plus"></i> Nueva Asociación
+                                    </h2>
+                    
+                                    <div class="box-icon"></div>
+                                </div>
+                    
+                    
+                                <div class="box-content row">
+                    
+                                    <div class="col-sm-12">
+                                        <form ng-submit="Insertar_asociaciones(creatar_new_asocaciones)">
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                                                    <label for="nombre_asocacion_new">Nombre</label>
+                                                    <input required="required" class="form-control" id="nombre_union_new" type="text" placeholder="Nombre" ng-model="creatar_new_asocaciones.nombre">
+                                                </div>
+                                            </div>
+                    
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alias_asocacion_new">Alias</label>
+                                                    <input required="required" class="form-control" id="alias_union_new" type="text" placeholder="Alias" ng-model="creatar_new_asocaciones.alias">
+                                                </div>
+                    
+                    
+                    
+                                                <div class="form-group col-sm-6">
+                                                    <label for="codigo_asocacion_new">Codigo</label>
+                                                    <input required="required" class="form-control" id="codigo_union_new" type="text" placeholder="Codigo" ng-model="creatar_new_asocaciones.codigo">
+                    
+                                                </div>
+                    
+                    
+                                                <div class="form-group col-sm-12">
+                                                    <label>Union</label>
+                    
+                                                    <ui-select ng-model="creatar_new_asocaciones.union" style="width: 100%;" theme="bootstrap">
+                                                        <ui-select-match placeholder="Union">
+                                                            <span ng-bind="$select.selected.            nombre"></span>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in (uniones |  filter: $select.search) track by $index">
+                                                            <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                    
+                                                </div>
+                    
+                    
+                    
+                                            </div>
+                    
+                    
+                    
+                    
+                                            <div class="center">
+                                                <input class="btn btn-warning " type="button" ng-click="CancelarVerCreandoAsoaciones()" value="Cancelar">
+                                                <input class="btn btn-primary " type="submit" value="Guardar Union">
+                                            </div>
+                    
+                                        </form>
+                                    </div>
+                                </div>
+                    
+                    
+                    
+                    
+                    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <div ng-show="VerActualizandoAsociaciones" class="row" style="margin-bottom: 50px" id="editar_new_new_asociation">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                    <h2>
+                                        <i class="glyphicon glyphicon-plus"></i> Editar Asociación
+                                    </h2>
+                    
+                                    <div class="box-icon"></div>
+                                </div>
+                    
+                    
+                                <div class="box-content row">
+                    
+                                    <div class="col-sm-12">
+                                        <form ng-submit="ActualizarAsociaciones(actuali_new_asociation)">
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                                                    <label for="nombre_asocacion_new">Nombre</label>
+                                                    <input required="required" class="form-control" id="nombre_union_new" type="text" placeholder="Nombre" ng-model="actuali_new_asociation.nombre">
+                                                </div>
+                                            </div>
+                    
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alias_asocacion_new">Alias</label>
+                                                    <input required="required" class="form-control" id="alias_union_new" type="text" placeholder="Alias" ng-model="actuali_new_asociation.alias">
+                                                </div>
+                    
+                    
+                    
+                                                <div class="form-group col-sm-6">
+                                                    <label for="codigo_asocacion_new">Codigo</label>
+                                                    <input required="required" class="form-control" id="codigo_union_new" type="text" placeholder="Codigo" ng-model="actuali_new_asociation.codigo">
+                    
+                                                </div>
+                    
+                    
+                                                <div class="form-group col-sm-12">
+                                                    <label>Union</label>
+                    
+                                                    <ui-select ng-model="actuali_new_asociation.union" style="width: 100%;" theme="bootstrap">
+                                                        <ui-select-match placeholder="Union">
+                                                            <span ng-bind="$select.selected.            nombre"></span>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in (uniones |  filter: $select.search) track by $index">
+                                                            <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                    
+                                                </div>
+                    
+                    
+                    
+                                            </div>
+                    
+                    
+                    
+                    
+                                            <div class="center">
+                                                <input class="btn btn-warning " type="button" ng-click="CancelarVerActualizarAsociaciones()" value="Cancelar">
+                                                <input class="btn btn-primary " type="submit" value="Guardar Union">
+                                            </div>
+                    
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleDistritos()"> Distritos</a>
+                </h2>
+
+                <div class="box-icon"></div>
+            </div>
+
+
+            <div ng-if="ver_distritos" class="box-content row">
+
+                <div class="col-sm-12">
+                    <div id="nueva_new_new_distrito" ng-show="verCrearDistrito" class="row" style="margin-bottom: 50px">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                    <h2>
+                                        <i class="glyphicon glyphicon-plus"></i> Nuevo distrito
+                                    </h2>
+
+                                    <div class="box-icon"></div>
+                                </div>
+
+
+                                <div class="box-content row">
+
+                                    <div class="col-sm-12">
+                                        <form ng-submit="insertar_distrito(distrito_new)">
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                                                    <label for="nombre_distrito_new">Nombre</label>
+                                                    <input required="required" class="form-control" id="nombre_distrito_new" type="text" placeholder="Nombre" ng-model="distrito_new.nombre">
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alias_distrito_new">Alias</label>
+                                                    <input class="form-control" id="alias_distrito_new" type="text" placeholder="Alias" ng-model="distrito_new.alias">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="codigo_distrito_new">Código</label>
+                                                    <input class="form-control" id="codigo_distrito_new" type="text" placeholder="Código" ng-model="distrito_new.codigo">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label>Pastor</label>
+
+                                                    <ui-select ng-model="distrito_new.pastor" style="width: 100%;" theme="bootstrap">
+                                                        <ui-select-match placeholder="Pastor">
+                                                            <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Pastor'}  |  filter: $select.search) track by $index">
+                                                            <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label>Tesorero</label>
+
+                                                    <ui-select ng-model="distrito_new.tesorero" style="width: 100%;" theme="bootstrap">
+                                                        <ui-select-match placeholder="Tesorero">
+                                                            <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero'}  |  filter: $select.search) track by $index">
+                                                            <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-sm-12">
+                                                    <label for="zona_distrito_new">Zona</label>
+                                                    <input class="form-control" id="zona_distrito_new" type="text" placeholder="Zona" ng-model="distrito_new.zona">
+                                                </div>
+
+                                            </div>
+                                            <div class="center">
+                                                <input class="btn btn-warning " type="button" ng-click="cancelar_crear_distrito()" value="Cancelar">
+                                                <input class="btn btn-primary " type="submit" value="Guardar distrito">
+                                            </div>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div ng-show="" id="editar-distrito" class="row" style="margin-bottom: 50px">
+                        <div class="box col-md-12">
+                            <div class="box-inner">
+                                <div class="box-header well">
+                                    <h2>
+                                        <i class="glyphicon glyphicon-plus"></i> Editar distrito
+                                    </h2>
+
+                                    <div class="box-icon"></div>
+                                </div>
+
+                                <div class="box-content row">
+
+                                    <div class="col-sm-12">
+
+                                        <form ng-submit="ActualizarDistrito(distrito_new_distric)">
+                                            <div class="row">
+                                                <div class="form-group col-sm-12">
+                                                    <label for="nombre_distrito_new">Nombre</label>
+                                                    <input required="required" class="form-control" id="nombre_distrito_new" type="text" placeholder="Nombre" ng-model="distrito_new_distric.nombre">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="form-group col-sm-6">
+                                                    <label for="alias_distrito_new">Alias</label>
+                                                    <input class="form-control" id="alias_distrito_new" type="text" placeholder="Alias" ng-model="distrito_new_distric.alias">
+                                                </div>
+
+
+                                                <div class="form-group col-sm-6">
+                                                    <label for="codigo_distrito_new">Código</label>
+                                                    <input class="form-control" id="codigo_distrito_new" type="text" placeholder="Código" ng-model="distrito_new_distric.codigo">
+                                                </div>
+
+                                                <div class="form-group col-sm-6">
+                                                    <label>Pastor</label>
+
+                                                    <ui-select ng-model="distrito_new_distric.pastor" style="width: 100%;" theme="bootstrap">
+                                                        <ui-select-match placeholder="Pastor">
+                                                            <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Pastor'}  |  filter: $select.search) track by $index">
+                                                            <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+
+                                                </div>
+
+
+                                                <div class="form-group col-sm-6">
+                                                    <label>Tesorero</label>
+
+                                                    <ui-select ng-model="distrito_new_distric.tesorero" style="width: 100%;" theme="bootstrap">
+                                                        <ui-select-match placeholder="Tesorero">
+                                                            <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
+                                                        </ui-select-match>
+                                                        <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero'}  |  filter: $select.search) track by $index">
+                                                            <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-sm-12">
+                                                    <label for="zona_distrito_new">Zona</label>
+                                                    <input class="form-control" id="zona_distrito_new" type="text" placeholder="Zona" ng-model="distrito_new_distric.zona">
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="center">
+                                                <input class="btn btn-warning " type="button" ng-click="Cancelar_Actualizar_Distrito()" value="Cancelar">
+                                                <input class="btn btn-primary " type="submit" value="Actualizar distrito">
+                                            </div>
+
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                   
+
+
+                    <div style="height: 500px; overflow: auto;">
+                        <table class="table table-bordered table-condensed table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID </th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Alias</th>
+                                    <th scope="col">Código</th>
+                                    <th scope="col">Pastor</th>
+                                    <th scope="col">Zona</th>
+                                    <th scope="col">Cambio</th>
+                                    <th scope="col">Editar</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                  
+
+                                <tr ng-repeat="distrito in distritos">
+
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{distrito.nombre}}</td>
+                                    <td>{{distrito.alias}}</td>
+                                    <td>{{distrito.codigo}}</td>
+                                    <td>{{distrito.pastor_nombres}}</td>
+                                    
+                                    <td>{{distrito.zona}}</td>
+                                    <td>
+                                        
+
+                                        <span ng-show="!distrito.id">Nuevo</span>
+                                        <span ng-show="distrito.modificado != '0' ">Modificado</span>
+                                        <span ng-show="distrito.eliminado != '0' " style="background-color: red">Eliminado</span>
+
+
+                                    </td>
+
+
+                                    <td style="padding-top: 0; padding-bottom: 0;">
+
+                                        <a href="" class="glyphicon glyphicon-pencil btn btn-primary btn-xs" ng-click="VerActualizarDistrito(distrito)"></a>
+
+                                        <a href="" class="glyphicon glyphicon-remove btn btn-danger btn-xs" ng-click="EliminarDistrito(distrito)"></a>
+                                    </td>
+
+                                </tr>
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleIglesias()"> Iglesias</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+
+            <div ng-if="ver_iglesias" class="box-content row">
+                <div class="col-sm-12">
+                    
+                    
+
+                    <div ui-grid="gridOptions" style="height: 500px" ui-grid-exporter ui-grid-edit ui-grid-cellnav ui-grid-move-columns ui-grid-resize-columns
+                     ui-grid-auto-resize ui-grid-pinning></div>
+
+
+
+          
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleusuarios()"> Usuarios</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+
+            <div ng-if="ver_usuarios" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Sexo</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">is active</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="usuario in usuarios">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{usuario.nombres}}</td>
+                                <td>{{usuario.apellidos}}</td>
+                                <td>{{usuario.sexo}}</td>
+                                <td>{{usuario.tipo}}</td>
+                                <td>{{usuario.is_active}}</td>
+                                <td>
+                                    <span ng-show="!usuario.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="usuario.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="usuario.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+
+
+                    
+                    
+                
+                    
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleauditorias()"> auditorias</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+             
+            <div ng-if="ver_auditorias" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Hora</th>
+                                <th scope="col">saldo_ant</th>
+                                <th scope="col">iglesia_id</th>
+                                
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="auditoria in auditorias">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{auditoria.fecha}}</td>
+                                <td>{{auditoria.hora}}</td>
+                                <td>{{auditoria.saldo_ant}}</td>
+                                <td>{{auditoria.iglesia_ant}}</td>
+                                <td>
+                                    <span ng-show="!auditoria.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="auditoria.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="auditoria.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+
+
+                    
+                    
+                    
+                    
+                    
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                
+                    
+
+                </div>
+            </div>
+
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglelibromes()"> Libro mes</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+             
+            <div ng-if="ver_libromes" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Mes</th>
+                                <th scope="col">Diezmo</th>
+                                <th scope="col">Ofrenda</th>
+                                <th scope="col">Diaconos</th>
+                                <th scope="col">Diferencia</th>
+                                <th scope="col">Auditoria</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="LibMes in lib_mensuales">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{LibMes.year}}</td>
+                                <td>{{LibMes.mes}}</td>
+                                <td>{{LibMes.diezmos}}</td>
+                                <td>{{LibMes.ofrendas}}</td>
+                                <td>{{LibMes.diaconos}}</td>
+                                <td>{{ LibMes.diaconos_1 + LibMes.diaconos_2 + LibMes.diaconos_3 + LibMes.diaconos_4 + LibMes.diaconos_5 | currency:'':0 }}</td>
+                                <td>{{LibMes.auditoria_id}}</td>
+                                <td>
+                                    <span ng-show="!LibMes.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="LibMes.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="LibMes.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                    
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglepreguntas()">Preguntas</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+             
+            <div ng-if="ver_preguntas" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Definicion</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Opcion 1</th>
+                                <th scope="col">Opcion 2</th>
+                                <th scope="col">Opcion 3</th>
+                                <th scope="col">Opcion 4</th>
+                                
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="pregunta in preguntas">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{pregunta.definition}}</td>
+                                <td>{{pregunta.tipo}}</td>
+                                <td>{{pregunta.option1}}</td>
+                                <td>{{pregunta.option2}}</td>
+                                <td>{{pregunta.option3}}</td>
+                                <td>{{pregunta.option4}}</td>
+                                
+                                <td>
+                                    <span ng-show="!pregunta.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="pregunta.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="pregunta.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                    
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerespuestas()">Respuestas</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+             
+            <div ng-if="ver_respuestas" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Pregunta_ID</th>
+                                <th scope="col">Auditoria_ID</th>
+                                <th scope="col">Respuesta</th>
+                                
+                                
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="respuesta in respuestas">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{respuesta.pregunta_id}}</td>
+                                <td>{{respuesta.auditoria_id}}</td>
+                                <td>{{respuesta.respuestas}}</td>
+                                
+                                
+                                <td>
+                                    <span ng-show="!pregunta.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="pregunta.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="pregunta.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                    
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerecomendaciones()">recomendacion</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+             
+            <div ng-if="ver_recomendaciones" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">recomendacion</th>
+                                <th scope="col">justificacion</th>
+                                <th scope="col">superada</th>
+                                <th scope="col">fecha</th>
+                                
+                                
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+
+                            <tr ng-repeat="recomendacion in recomendaciones">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{recomendacion.recomendacion}}</td>
+                                <td>{{recomendacion.justificacion}}</td>
+                                <td>{{recomendacion.superada}}</td>
+                                <td>{{recomendacion.fecha}}</td>
+                                
+                                
+                                <td>
+                                    <span ng-show="!recomendacion.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="recomendacion.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="recomendacion.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                    
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
