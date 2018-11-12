@@ -13,8 +13,15 @@ angular.module('auditoriaApp')
 			toastr.warning('Nombre de usuario incorrecto');
 		}
         
-        AuthServ.loguear(user).then(function(){
-            $state.go('panel')
+        AuthServ.loguear(user).then(function(data){
+			console.log(data);
+			//toastr.clear()
+			if(data.to_sync){
+				$state.go('panel.sincronizacion');
+				toastr.info('Debes descargar los datos si no lo has hecho.', 'Descargar');
+			}else{
+				$state.go('panel');
+			}
         }, function(){
             toastr.error('Datos incorrectos');
         })
@@ -47,7 +54,7 @@ angular.module('auditoriaApp')
 		
 	};
 	
-	$scope.insertar_dato_inicial();
+	//$scope.insertar_dato_inicial();
 	
 	
     $scope.insertar_datos_iniciales = function() {

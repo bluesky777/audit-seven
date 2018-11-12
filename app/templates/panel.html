@@ -213,12 +213,18 @@
 
                 <div>
                     <ul class="breadcrumb">
-                        <li>
+                        <li class="li-breadcrumb">
                             <a ui-sref="panel">Inicio</a>
 
                         </li>
+                        <li style="float: right;" class="refresh-breadcrumb">
+                            <a href="" ng-click="refresh()">
+                                <i class="glyphicon glyphicon-refresh"></i>
+                                Actualizar</a>
+                        </li>
                     </ul>
                 </div>
+                
 
             </ui-view>
 

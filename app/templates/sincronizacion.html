@@ -1,21 +1,30 @@
 <div>
     <ul class="breadcrumb">
-        <li>
+        <li class="li-breadcrumb">
             <a ui-sref="panel">Inicio</a>
         </li>
-        <li>
+        <li class="li-breadcrumb">
             <a ui-sref="panel.sincronizacion" >Sincronización</a>
         </li>
     </ul>
 </div>
 <DIV>
-    <BUTTON class="btn btn-default" NG-CLICK="descargar_datos()">DESCARGAR DATOS</BUTTON>
+    <BUTTON class="btn btn-default" ng-click="descargar_datos()">DESCARGAR DATOS</BUTTON>
 
-    <BUTTON class="btn btn-default" NG-CLICK="subir_datos()">SUBIR DATOS</BUTTON>
-
-
+    <BUTTON class="btn btn-default" ng-click="subir_datos()">SUBIR DATOS</BUTTON>
+    <div ng-show="estado_descarga.length > 0">
+        {{estado_descarga}}. 
+        <span ng-show="estado_descarga!='insertados'">{{valor_insertado}}/{{valor_maximo}}</span>
+    </div>
+    <div class="progress" ng-show="estado_descarga=='insertando' || estado_descarga=='insertados'">
+        <div class="progress-bar progress-bar-striped " ng-class="{active: estado_descarga=='insertando'}" role="progressbar" aria-valuenow="{{valor_insertado}}" aria-valuemin="0" aria-valuemax="{{valor_maximo}}" style="width: {{valor_insertado}}%">
+            <span class="sr-only">{{valor_insertado}}% Complete</span>
+        </div>
+    </div>
+    
 </DIV>
 
+<hr>
 
 <div class="row">
     <div class="box col-md-12">

@@ -143,8 +143,8 @@ angular.module('auditoriaApp', [
 
 
 .constant('rutaServidor', {
-    ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias'
-    //ruta: 'http://192.168.100.31/feryz_server/public/auditorias'
+    //ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias'
+    ruta: 'http://192.168.100.31/feryz_server/public/auditorias'
 })
 
 

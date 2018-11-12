@@ -19,6 +19,20 @@ if (!process.env.NODE_PORT) {
 }
 
 
+var reload = ()=>{
+	console.log('fdvdfvdfvdfvfvdf');
+	getCurrentWindow().reload()
+}
+const {getCurrentWindow, globalShortcut} = require('electron').remote;
+globalShortcut.register('F5', reload);
+globalShortcut.register('CommandOrControl+R', reload);
+
+window.addEventListener('beforeunload', ()=>{
+	globalShortcut.unregister('F5', reload);
+	globalShortcut.unregister('CommandOrControl+R', reload);
+})
+  
+
 app.use(cors());
 app.use(bodyParser.json()); // Para recibir json desde Angular
 app.use("/images", express.static(path.join(__dirname, 'app/img')));

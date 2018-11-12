@@ -27,13 +27,27 @@ if (isDev) {
 //-------------------------------------------------------------------
 let win;
 
+
+
+
 function sendStatusToWindow(text) {
   win.webContents.send('message', text);
 }
+
 const {ipcMain} = require('electron')
 ipcMain.on('dame-version', (event, arg) => {
   event.sender.send('toma-version', app.getVersion())
 })
+
+
+
+ipcMain.on('refrescar-app', (event, arg) => {
+  console.log('Main Window');
+  win.reload();
+})
+
+
+
 
 function createDefaultWindow() {
   win = new BrowserWindow({width: 1200, height: 600});

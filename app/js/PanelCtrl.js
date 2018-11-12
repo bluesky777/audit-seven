@@ -28,6 +28,11 @@ angular.module('auditoriaApp')
     
     
     
+    $scope.refresh = function () {
+        const {ipcRenderer} = require('electron');
+        ipcRenderer.send('refrescar-app');
+    }
+    
     $scope.sidebar_activar = function () {
         $scope.sidebar_active = !$scope.sidebar_active;
     }

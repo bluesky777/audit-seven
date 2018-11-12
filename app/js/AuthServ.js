@@ -1,8 +1,8 @@
 angular.module('auditoriaApp')
 
-.factory('AuthServ', function($q, $http, $timeout, ConexionServ, $state) {
+.factory('AuthServ', function($q, $http, $timeout, ConexionServ, $state, toastr, rutaServidor) {
 
-    var consulta_user = 'SELECT u.rowid, u.id, u.nombres, u.apellidos, u.tipo, u.username, u.sexo, u.distrito_id, u.iglesia_id, u.celular,  '+
+    var consulta_user = 'SELECT u.rowid, u.id, u.nombres, u.apellidos, u.tipo, u.username, u.password, u.sexo, u.distrito_id, u.iglesia_id, u.celular,  '+
                 'd.nombre as distrito_nombre, u.auditoria_id, d.alias as distrito_alias, i.nombre as iglesia_nombre, i.alias as iglesia_alias, '+
                 'a.fecha as fecha_audit, a.hora as hora_audit, a.saldo_ant, a.ingre_por_registrar, a.iglesia_id as iglesia_audit_id, ' +
                 't.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, i.tipo as iglesia_tipo, ' +
@@ -16,6 +16,11 @@ angular.module('auditoriaApp')
             'WHERE  ';
 
 
+    function loguear_online(datos){
+        toastr.info('Entrando online...');
+        return $http.post(rutaServidor.ruta + '/loguear', datos);
+    }
+            
 
                 
     result = {
@@ -48,20 +53,66 @@ angular.module('auditoriaApp')
             var defered = $q.defer();
             
             
-            ConexionServ.query(consulta_user+' u.username=? and u.password=? ', [datos.username, datos.password]).then(function(result){
+            ConexionServ.query('SELECT * FROM usuarios', []).then(function(result){
                 
                 if (result.length > 0) {
-                    localStorage.logueado   = true
-                    localStorage.USER       = JSON.stringify(result[0]);
-                    defered.resolve(result[0]);
+                    // LOGUEAMOS EN LA DB LOCAL OFFLINE
+                    ConexionServ.query(consulta_user+' u.username=? and u.password=? ', [datos.username, datos.password]).then(function(result){
+                        
+                        if (result.length > 0) {
+                            localStorage.logueado   = true
+                            localStorage.USER       = JSON.stringify(result[0]);
+                            defered.resolve(result[0]);
+                        }else{
+                            loguear_online(datos).then(function(usu){
+                                usu                     = usu.data[0];
+                                localStorage.logueado   = true
+                                localStorage.USER       = JSON.stringify(usu);
+                                
+                                ConexionServ.query('DELETE FROM usuarios').then(function(){
+                                    consulta = 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?)';
+                                    ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha, usu.tipo, usu.celular]).then(function(result){
+                                        defered.resolve(usu);
+                                    }, function(){
+                                        console.log('Error logueando');
+                                        defered.reject('Error logueando')
+                                    })
+                                })
+                                
+                            }, function(){
+                                defered.reject('DATOS INVÁLIDOS')
+                            });
+                        }
+                        
+                    }, function(){
+                        console.log('Error logueando');
+                        defered.reject('Error logueando')
+                    })
+                    
                 }else{
-                    defered.reject('DATOS INVÁLIDOS')
+                    // LLAMAMOS A INTERNET PARA LOGUEAR, YA QUE NO HAY DATOS LOCALES
+                    loguear_online(datos).then(function(usu){
+                        usu                     = usu.data[0];
+                        localStorage.logueado   = true
+                        localStorage.USER       = JSON.stringify(usu); 
+                         
+                        consulta = 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?)';
+                        ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha, usu.tipo, usu.celular]).then(function(result){
+                            defered.resolve({to_sync: true});
+                        }, function(){
+                            console.log('Error logueando');
+                            defered.reject('Error logueando')
+                        })
+                        
+                    });
+                    
                 }
                 
             }, function(){
                 console.log('Error logueando');
                 defered.reject('Error logueando')
             })
+            
   
             return defered.promise;
         
