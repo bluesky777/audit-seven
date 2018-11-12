@@ -3,11 +3,13 @@
 angular.module("auditoriaApp")
 
 .controller("sincronizacionCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
-	$scope.entidades = true;
-    $scope.distrito_new = {};
-    $scope.modentidades = false;
-    $scope.verCrearDistrito = false;
-	$scope.usuarios = [];
+	$scope.entidades 				= true;
+    $scope.distrito_new 			= {};
+    $scope.modentidades 			= false;
+    $scope.verCrearDistrito 		= false;
+	$scope.usuarios 				= [];
+	$scope.$parent.sidebar_active 	= false;
+	
 	
 	$scope.tpl_igle = {
 		nombre: '',

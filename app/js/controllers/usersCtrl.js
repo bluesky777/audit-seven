@@ -2,8 +2,9 @@ angular.module("auditoriaApp")
 
 .controller("usuariosCtrl", function($scope, ConexionServ, $filter, toastr, uiGridConstants, uiGridEditConstants, $uibModal) {
 	  
-	$scope.gridScope 		= $scope
-	$scope.gridOptions 		= {};
+	$scope.gridScope 				= $scope
+	$scope.gridOptions 				= {};
+	$scope.$parent.sidebar_active 	= false;
 
 	
 	$scope.avatar = {

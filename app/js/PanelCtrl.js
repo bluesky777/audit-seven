@@ -2,9 +2,10 @@ angular.module('auditoriaApp')
 
 .controller('PanelCtrl', function($scope, ConexionServ, $uibModal, USER, AuthServ){
     
-    $scope.USER             = USER;
-    $scope.sidebar_active   = false;
-    $scope.version          = 'X.Y.Z';
+    $scope.USER                     = USER;
+    $scope.sidebar_active           = false;
+    $scope.version                  = 'X.Y.Z';
+    $scope.sidebar_active 	        = false;
     
     //ConexionServ.createTables()
 	

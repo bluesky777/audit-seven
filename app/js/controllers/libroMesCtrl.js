@@ -2,7 +2,7 @@ angular.module("auditoriaApp")
 
 .controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll ) {
 
-	
+	$scope.$parent.sidebar_active 	= false;
 	$scope.entidades 				= true;
 	$scope.widget_maximized 		= false;
 	$scope.widget_maximized_totales = false;
@@ -61,6 +61,8 @@ angular.module("auditoriaApp")
 		}
 	};
 	
+	
+	
 
 
     $scope.funcvercomend = function() {
@@ -74,13 +76,12 @@ angular.module("auditoriaApp")
 		$scope.traerRecos();
 
 		$timeout(function() {
-			$location.hash("nueva_new_new_union");
+			$location.hash("caja-recomendaciones");
 			$anchorScroll();
 		}, 100);
     };
 
 	$scope.abrirLibroSemanal = function(libro_mes) {
-
 
 	    var modalInstance = $uibModal.open({
 	        templateUrl: 'templates/libros/libroSemanalModal.html',
@@ -278,10 +279,20 @@ angular.module("auditoriaApp")
 		AuthServ.update_user_storage($scope.USER).then((actualizado)=>{
 			$scope.USER 		= actualizado;
 			$scope.lib_meses 	= [];
+			
+			
+			consulta 	= 'SELECT *, rowid FROM auditorias WHERE iglesia_id=?';
+			ConexionServ.query(consulta, [$scope.USER.iglesia_id]).then(function(rAudi) {
+				$scope.auditorias = rAudi;
+			}, function(tx) {
+				console.log("Error no se pudo traer auditorias", tx);
+			});
+			
+			
 
 			consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid as lib_semanal_id FROM lib_mensuales m ' + 
 						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null and m.auditoria_id =? ';
-			ConexionServ.query(consulta, [$scope.USER.auditoria_rowid]).then(function(result) {
+			ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
 				$scope.lib_meses = result;
 				
 				angular.forEach($scope.lib_meses, function(lib_mes, indice){
@@ -291,7 +302,7 @@ angular.module("auditoriaApp")
 				
 				
 				consulta 	= 'SELECT a.*, a.rowid FROM auditorias a WHERE rowid=?';
-				ConexionServ.query(consulta, [$scope.USER.auditoria_rowid]).then(function(result) {
+				ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
 					if (result.length == 0) {
 						toastr.warning('No se encuentra la auditoría seleccionada.');
 						return
@@ -302,25 +313,17 @@ angular.module("auditoriaApp")
 			
 					
 					consulta 	= 'SELECT *, rowid FROM gastos_mes WHERE auditoria_id=?';
-					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rGastos) {
+					ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(rGastos) {
 						$scope.auditoria.gastos_detalle = rGastos;
 					}, function(tx) {
 						console.log("Error no se pudo traer datos", tx);
 					});
 					
 					consulta 	= 'SELECT *, rowid FROM dinero_efectivo WHERE auditoria_id=?';
-					ConexionServ.query(consulta, [$scope.USER.iglesia_audit_id]).then(function(rEfectivo) {
+					ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(rEfectivo) {
 						$scope.auditoria.dinero_detalle = rEfectivo;
 					}, function(tx) {
 						console.log("Error no se pudo traer datos", tx);
-					});
-					
-					consulta 	= 'SELECT *, rowid FROM auditorias';
-					ConexionServ.query(consulta, []).then(function(rAudi) {
-						console.log(rAudi);
-						$scope.auditorias = rAudi;
-					}, function(tx) {
-						console.log("Error no se pudo traer auditorias", tx);
 					});
 					
 					$scope.actualizar_sumatorias();
@@ -410,6 +413,7 @@ angular.module("auditoriaApp")
 		
 		ConexionServ.query(consulta, [$scope.auditoria[columna], $scope.auditoria.rowid]).then(function(){
 			toastr.success('Saldo guardado');
+			$scope.actualizar_sumatorias();
 		}, function(){
 			toastr.error('Saldo NO guardado');
 		});
@@ -417,7 +421,6 @@ angular.module("auditoriaApp")
 	}
 
 	$scope.seleccionarAuditorias = function(auditoria) {
-
 
 		ConexionServ.query('UPDATE usuarios SET auditoria_id=? WHERE rowid=? ', [ auditoria.rowid, $scope.USER.rowid ]).then(function(result) {
 			$scope.USER.auditoria_id 		= auditoria.rowid;

@@ -2,7 +2,9 @@ angular.module('auditoriaApp')
 
 .controller('auditoriasctrl' , function($scope, ConexionServ, $filter, AuthServ, toastr){
 	
-	$scope.iglesias = [];
+	$scope.$parent.sidebar_active 	= false;
+	$scope.iglesias 				= [];
+	$scope.auditorias 				= [];
 	
 	
 	consulta = 'SELECT i.*, i.rowid, d.nombre as nombre_distrito, d.alias as alias_distrito ' +
@@ -67,8 +69,13 @@ angular.module('auditoriaApp')
 	} 
 
 	$scope.verMostrarAuditoriasTabla = function(){
-
-		ConexionServ.query('SELECT a.*, a.rowid, i.nombre, i.alias from auditorias a INNER JOIN iglesias i ON a.iglesia_id = i.rowid  ', []).then(function(result){
+		consulta = 'SELECT a.*, a.rowid, i.nombre, i.alias from auditorias a ' +
+			'INNER JOIN iglesias i ON a.iglesia_id = i.rowid and a.iglesia_id=? ';
+		ConexionServ.query(consulta, [$scope.USER.iglesia_id]).then(function(result){
+			if(result.length == 0){
+				toastr.warning('Debes seleccionar una iglesia.');
+				return;
+			}
 	        $scope.auditorias = result;
 		} , function(tx){
 		   	console.log('Error no es posbile traer auditorias' , tx)

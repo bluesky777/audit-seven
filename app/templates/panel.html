@@ -51,7 +51,7 @@
             -->
             <!-- theme selector ends -->
 
-            <ul class="collapse navbar-collapse nav navbar-nav top-menu">
+            <ul class="navbar-collapse nav navbar-nav" style="width: 500px;">
                 
                 <li class="dropdown">
                     <a href="" data-toggle="dropdown" ng-click="seleccionarDistrito()"><i class="glyphicon glyphicon-star"></i> 
@@ -60,7 +60,7 @@
                     </a>
                 </li>
                 
-                <li>
+                <li class="hidden-xs">
                     <form class="navbar-search pull-left">
                         <input placeholder="Buscar" class="search-query form-control col-md-10" name="query"
                                type="text">
@@ -107,7 +107,11 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">Menú</li>
-                        <li><a class="ajax-link" ui-sref="panel"><i class="glyphicon glyphicon-home"></i><span> Inicio</span></a></li>
+                        <li>
+                            <a class="ajax-link" ui-sref="panel">
+                                <i class="glyphicon glyphicon-home"></i><span> Inicio</span>
+                            </a>
+                        </li>
                         
 
                         <li>
@@ -117,27 +121,39 @@
                         </li>
                         
                                 
-                        <li><a class="ajax-link" href="" ui-sref="panel.usuarios">
-                            <i class="glyphicon glyphicon-user"></i><span> Usuarios</span></a>
+                        <li>
+                            <a class="ajax-link" href="" ui-sref="panel.usuarios">
+                                <i class="glyphicon glyphicon-user"></i><span> Usuarios</span>
+                            </a>
                         </li>
-                         <li><a class="ajax-link" href="" ui-sref="panel.auditorias">
-                            <i class="glyphicon glyphicon-folder-open"></i><span> Auditorias</span></a>
-                        </li>
-
-                        <li><a class="ajax-link" href="" ui-sref="panel.libromes">
-                            <i class="glyphicon glyphicon-book"></i><span> Libro Mes</span></a>
-                        </li>
-
-                         <li><a class="ajax-link" href="" ui-sref="panel.informe">
-                            <i class="glyphicon glyphicon-list-alt"></i><span> Informes</span></a>
+                         <li>
+                            <a class="ajax-link" href="" ui-sref="panel.auditorias">
+                                <i class="glyphicon glyphicon-folder-open"></i><span> Auditorias</span>
+                            </a>
                         </li>
 
-                        <li><a class="ajax-link" href="" ui-sref="panel.recomendaciones">
-                            <i class="glyphicon glyphicon-list-alt"></i><span> Recomendaciones</span></a>
+                        <li>
+                            <a class="ajax-link" href="" ui-sref="panel.libromes">
+                                <i class="glyphicon glyphicon-book"></i><span> Libro Mes</span>
+                            </a>
                         </li>
 
-                        <li><a class="ajax-link" href="" ui-sref="panel.sincronizacion">
-                            <i class="glyphicon glyphicon-retweet"></i><span> Sincronización</span></a>
+                         <li>
+                            <a class="ajax-link" href="" ui-sref="panel.informe">
+                                <i class="glyphicon glyphicon-list-alt"></i><span> Informes</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="ajax-link" href="" ui-sref="panel.recomendaciones">
+                                <i class="glyphicon glyphicon-list-alt"></i><span> Recomendaciones</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="ajax-link" href="" ui-sref="panel.sincronizacion">
+                                <i class="glyphicon glyphicon-retweet"></i><span> Sincronización</span>
+                            </a>
                         </li>
 
 
@@ -154,13 +170,17 @@
                                 </uib-accordion-heading>
                                 <ul class="nav nav-pills nav-stacked" style="display: block;">
                                     
-                                    <li><a class="ajax-link" href="" ui-sref="panel.preguntas">
-                                        <i class="glyphicon glyphicon-tags"></i><span> Preguntas</span></a>
+                                    <li>
+                                        <a class="ajax-link" href="" ui-sref="panel.preguntas" style="color: #2fa4e7;">
+                                            <i class="glyphicon glyphicon-tags"></i><span> Preguntas</span>
+                                        </a>
                                     </li>
                                     
             
-                                    <li><a class="ajax-link" href="" ui-sref="panel.respuestas">
-                                        <i class="glyphicon glyphicon-file"></i><span> Respuestas</span></a>
+                                    <li>
+                                        <a class="ajax-link" href="" ui-sref="panel.respuestas" style="color: #2fa4e7;">
+                                            <i class="glyphicon glyphicon-file"></i><span> Respuestas</span>
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

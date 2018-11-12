@@ -73,3 +73,8 @@
 	padding-bottom: 0px;
 	padding-top: 0px;
 }
+@media only screen and (max-width: 500px) {
+	.navbar-collapse.nav{
+		width: 360px!important;
+	}
+}

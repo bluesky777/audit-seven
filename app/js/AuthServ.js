@@ -4,7 +4,7 @@ angular.module('auditoriaApp')
 
     var consulta_user = 'SELECT u.rowid, u.id, u.nombres, u.apellidos, u.tipo, u.username, u.sexo, u.distrito_id, u.iglesia_id, u.celular,  '+
                 'd.nombre as distrito_nombre, u.auditoria_id, d.alias as distrito_alias, i.nombre as iglesia_nombre, i.alias as iglesia_alias, '+
-                'a.rowid as auditoria_rowid, a.fecha as fecha_audit, a.hora as hora_audit, a.saldo_ant, a.ingre_por_registrar, a.iglesia_id as iglesia_audit_id, ' +
+                'a.fecha as fecha_audit, a.hora as hora_audit, a.saldo_ant, a.ingre_por_registrar, a.iglesia_id as iglesia_audit_id, ' +
                 't.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, i.tipo as iglesia_tipo, ' +
                 'p.nombres as pastor_nombres, p.apellidos as pastor_apellidos ' +
             'FROM usuarios u '+

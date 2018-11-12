@@ -1,11 +1,12 @@
 angular.module("auditoriaApp")
 
 .controller("EntidadesCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal) {
-	$scope.entidades = true;
-    $scope.distrito_new = {};
-    $scope.modentidades = false;
-    $scope.verCrearDistrito = false;
-	$scope.usuarios = [];
+	$scope.entidades 				= true;
+    $scope.distrito_new 			= {};
+    $scope.modentidades 			= false;
+    $scope.verCrearDistrito 		= false;
+	$scope.usuarios 				= [];
+	$scope.$parent.sidebar_active 	= false;
 	
 	$scope.tpl_igle = {
 		nombre: '',
@@ -25,8 +26,8 @@ angular.module("auditoriaApp")
 		codigo: null
 	}
 	
-	$scope.iglesia_new 	= angular.copy($scope.tpl_igle);
-	$scope.distrito_new = angular.copy($scope.tpl_distr);
+	$scope.iglesia_new 		= angular.copy($scope.tpl_igle);
+	$scope.distrito_new 	= angular.copy($scope.tpl_distr);
 	
 	$scope.ver_uniones 		= false;
 	$scope.ver_asociaciones = false;

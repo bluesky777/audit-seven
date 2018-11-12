@@ -1,2 +1,4 @@
 node_modules
 dist
+!app/bower_components/angular-ui-select/dist
+!app/bower_components/bootstrap/dist
