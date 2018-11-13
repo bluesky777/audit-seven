@@ -15,7 +15,11 @@ angular.module('auditoriaApp')
 	$scope.reco_crear 				= {};
 
 	$scope.reco_crear = {
-		superada: 0
+		superada: 0,
+		hallazgo: '',
+		tipo: '',
+		recomendacion: '',
+		justificacion: ''
 	};
 	
 	$scope.recomendaciones 	= [];
@@ -76,7 +80,7 @@ angular.module('auditoriaApp')
 	    
 
 	 	consulta ="INSERT INTO recomendaciones(fecha, auditoria_id, hallazgo, justificacion, superada, recomendacion, modificado) VALUES(?,?,?,?,?,?,?)  "
-		ConexionServ.query(consulta,[reco.fecha, $scope.USER.auditoria_id, reco.justificacion, reco.justificacion, reco.superada, reco.recomendacion, '0']).then(function(result){
+		ConexionServ.query(consulta,[reco.fecha, $scope.USER.auditoria_id, reco.hallazgo, reco.justificacion, reco.superada, reco.recomendacion, '0']).then(function(result){
 
 			toastr.success('Recomendación creada.');
 			$scope.verDtosrecomendacion();

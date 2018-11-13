@@ -7,7 +7,7 @@ angular.module("auditoriaApp")
 	$scope.distrito_id 		= USER.distrito_id;
 	$scope.distritos_ori 	= [];
 	
-	console.log($scope.USER);
+
 	ConexionServ.query('SELECT *, rowid FROM distritos', []).then(function(result) {
 		
 		$scope.distritos = result;
@@ -43,7 +43,7 @@ angular.module("auditoriaApp")
 
 	
 	$scope.seleccionarIglesia = function(iglesia) {
-		
+
 		ConexionServ.query('UPDATE usuarios SET distrito_id=?, iglesia_id=? WHERE rowid=? ', [ iglesia.distrito_id, iglesia.rowid, $scope.USER.rowid ]).then(function(result) {
 			$scope.USER.iglesia_id 		= iglesia.rowid;
 			$scope.USER.distrito_id 	= iglesia.distrito_id;

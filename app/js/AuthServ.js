@@ -93,6 +93,7 @@ angular.module('auditoriaApp')
                     // LLAMAMOS A INTERNET PARA LOGUEAR, YA QUE NO HAY DATOS LOCALES
                     loguear_online(datos).then(function(usu){
                         usu                     = usu.data[0];
+                        usu.rowid               = usu.id;
                         localStorage.logueado   = true
                         localStorage.USER       = JSON.stringify(usu); 
                          

@@ -73,8 +73,14 @@
 	padding-bottom: 0px;
 	padding-top: 0px;
 }
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
 	.navbar-collapse.nav{
-		width: 360px!important;
+		width: 300px!important;
+	}
+}
+
+@media only screen and (max-width: 770px) {
+	.navbar-collapse.nav{
+		margin-left: 60px;
 	}
 }
