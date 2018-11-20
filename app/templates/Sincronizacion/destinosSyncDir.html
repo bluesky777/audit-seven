@@ -1,0 +1,62 @@
+
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleDestinos()"> Destinos</a>
+                </h2>
+                <div class="box-icon"></div>
+            </div>
+             
+            <div ng-if="ver_destinos" class="box-content row">
+                <div class="col-sm-12">
+
+                   
+                    <table class="table table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID </th>
+                                <th scope="col">Iglesia</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Cambio</th>
+                                <th scope="col">Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="destino in destinos">
+
+                                <td>{{$index + 1}}</td>
+                                <td>{{destino.iglesia}}</td>
+                                <td>{{destino.nombre}}</td>
+                                <td>{{destino.descripcion}}</td>
+                                <td>{{destino.fecha}}</td>
+                                
+                                
+                                <td>
+                                    <span ng-show="!recomendacion.id" style="background-color: #2fa4e7">Nuevo</span>
+                                    <span ng-show="recomendacion.modificado" style="background-color: #dd5600">Modificado</span>
+                                    <span ng-show="recomendacion.eliminado" style="background-color: red">Eliminado</span>
+                                </td>
+
+
+
+
+                                <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
+                                <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                    
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>

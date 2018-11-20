@@ -2,6 +2,13 @@
 
 angular.module("auditoriaApp")
 
+.directive('destinosSyncDir',['toastr', function(toastr){
+	return {
+		restrict: 'E',
+		templateUrl: "templates/Sincronizacion/destinosSyncDir.html"
+	}
+}])
+
 .controller("sincronizacionCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
 	$scope.entidades 				= true;
     $scope.distrito_new 			= {};
@@ -9,6 +16,7 @@ angular.module("auditoriaApp")
     $scope.verCrearDistrito 		= false;
 	$scope.usuarios 				= [];
 	$scope.$parent.sidebar_active 	= false;
+	$scope.datos_eliminados 		= false;
 	
 	
 	$scope.tpl_igle = {
@@ -72,6 +80,9 @@ angular.module("auditoriaApp")
 	}
 	$scope.togglerecomendaciones = ()=>{
 		$scope.ver_recomendaciones = !$scope.ver_recomendaciones;
+	}
+	$scope.toggleDestinos = ()=>{
+		$scope.ver_destinos = !$scope.ver_destinos;
 	}
 	
 
@@ -168,32 +179,125 @@ angular.module("auditoriaApp")
 		})
 	}
 
+	
 
+    $scope.eliminar_datos_locales = function (elemento){
+		
+		res = confirm('¿Seguro que desea eliminar los datos locales? (no afecta la nube)');
+		
+		if(res){
+			$scope.datos_eliminados = false;
+		
+			promesas = [];
+			
+			prom = ConexionServ.query('DELETE FROM auditorias')
+			prom.then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM iglesias').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM uniones').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM distritos').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM asociaciones').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM usuarios').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM lib_mensuales').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM lib_semanales').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM recomendaciones').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM preguntas').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM respuestas').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM dinero_efectivo').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM destinos').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM destinos_pagos').then(function(result){
+				console.log('Eliminado gastos_mes');
+			});
+			promesas.push(prom);
+			prom = ConexionServ.query('DELETE FROM gastos_mes').then(function(result){
+				console.log('Eliminado gastos_mes');
+			})
+			promesas.push(prom);
+			
+			Promise.all(promesas).then(function(result){
+				console.log('Eliminado');
+				$scope.datos_eliminados = true;
+				console.log($scope.datos_eliminados);
+			})
+		}
+		
+	}
+	
+	
 
     $scope.descargar_datos = function (elemento){
+		
+		if (!$scope.datos_eliminados) {
+			toastr.info('Primero debes eliminar los datos locales');
+			return;
+		}
 		
 		$scope.estado_descarga = 'descargando';
     	
 		$http.get(rutaServidor.ruta + '/all', {params: {username: $scope.USER.username, password: $scope.USER.password}}).then (function(result){
 			$scope.estado_descarga = 'insertando';
 			
-			auditorias 		= result.data.auditorias;
-			iglesias 		= result.data.iglesias;
-			uniones 		= result.data.uniones;
-			distritos 		= result.data.distritos;
-			asociaciones 	= result.data.asociaciones;
-			usuarios 		= result.data.usuarios;
-			lib_mensuales 	= result.data.lib_mensuales;
-			lib_semanales 	= result.data.lib_semanales;
-			recomendaciones = result.data.recomendaciones;
-			preguntas 		= result.data.preguntas;
-			respuestas 		= result.data.respuestas;
+			auditorias 			= result.data.auditorias;
+			iglesias 			= result.data.iglesias;
+			uniones 			= result.data.uniones;
+			distritos 			= result.data.distritos;
+			asociaciones 		= result.data.asociaciones;
+			usuarios 			= result.data.usuarios;
+			lib_mensuales 		= result.data.lib_mensuales;
+			lib_semanales 		= result.data.lib_semanales;
+			recomendaciones 	= result.data.recomendaciones;
+			preguntas 			= result.data.preguntas;
+			respuestas 			= result.data.respuestas;
+			dinero_efectivo 	= result.data.dinero_efectivo;
+			destinos 			= result.data.destinos;
+			destinos_pagos 		= result.data.destinos_pagos;
+			gastos_mes 			= result.data.gastos_mes;
+			
 			
 			promesas 				= [];
 			$scope.valor_insertado 	= 0;
 			$scope.valor_maximo 	= auditorias.length + iglesias.length + uniones.length + distritos.length + 
 				asociaciones.length + usuarios.length + lib_mensuales.length + lib_semanales.length + 
-				recomendaciones.length + preguntas.length + respuestas.length;
+				recomendaciones.length + preguntas.length + respuestas.length + dinero_efectivo.length + 
+				destinos.length + destinos_pagos.length + gastos_mes.length;
 			
 				
 				
@@ -337,6 +441,54 @@ angular.module("auditoriaApp")
 				promesas.push(prome);
 			} 
 
+			for (var i = 0; i < dinero_efectivo.length; i++) {
+				rec 		= dinero_efectivo[i];
+				consulta 	= 'INSERT INTO dinero_efectivo (rowid, id, auditoria_id, valor, descripcion) VALUES(?,?,?,?,?)';
+				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.auditoria_id, rec.valor, rec.descripcionr]);
+				prome.then(function(result){
+					$scope.valor_insertado++;
+				}, function(tx){
+					console.log('error', tx);
+				});
+				promesas.push(prome);
+			} 
+
+			for (var i = 0; i < destinos.length; i++) {
+				rec 		= destinos[i];
+				consulta 	= 'INSERT INTO destinos (rowid, id, iglesia_id, nombre, descripcion) VALUES(?,?,?,?,?)';
+				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.iglesia_id, rec.nombre, rec.descripcion]);
+				prome.then(function(result){
+					$scope.valor_insertado++;
+				}, function(tx){
+					console.log('error', tx);
+				});
+				promesas.push(prome);
+			} 
+
+			for (var i = 0; i < destinos_pagos.length; i++) {
+				rec 		= destinos_pagos[i];
+				consulta 	= 'INSERT INTO destinos_pagos (rowid, id, destino_id, libro_mes_id, pago, fecha, descripcion) VALUES(?,?,?,?,?,?,?)';
+				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.destino_id, rec.libro_mes_id, rec.pago, rec.fecha, rec.descripcion]);
+				prome.then(function(result){
+					$scope.valor_insertado++;
+				}, function(tx){
+					console.log('error', tx);
+				});
+				promesas.push(prome);
+			} 
+
+			for (var i = 0; i < gastos_mes.length; i++) {
+				rec 		= gastos_mes[i];
+				consulta 	= 'INSERT INTO gastos_mes (rowid, id, libro_mes_id, auditoria_id, valor, descripcion) VALUES(?,?,?,?,?,?)';
+				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.libro_mes_id, rec.auditoria_id, rec.valor, rec.descripcion]);
+				prome.then(function(result){
+					$scope.valor_insertado++;
+				}, function(tx){
+					console.log('error', tx);
+				});
+				promesas.push(prome);
+			} 
+
 			
 			Promise.all(promesas).then(function(result){
 				$scope.estado_descarga = 'insertados';
@@ -440,14 +592,41 @@ angular.module("auditoriaApp")
 			});
 
 			consulta = "SELECT rowid, * from recomendaciones rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
-
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.recomendaciones = result;
 			},function(tx) {
 				console.log("Error no es posbile traer recomendaciones", tx);
 			});
 
+			consulta = "SELECT rowid, * from destinos rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.destinos = result;
+			},function(tx) {
+				console.log("Error no es posbile traer recomendaciones", tx);
+			});
+			
+			consulta = "SELECT rowid, * from dinero_efectivo rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.dinero_efectivo = result;
+			},function(tx) {
+				console.log("Error no es posbile traer recomendaciones", tx);
+			});
 
+
+			consulta = "SELECT rowid, * from destinos_pagos rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.destinos_pagos = result;
+			},function(tx) {
+				console.log("Error no es posbile traer recomendaciones", tx);
+			});
+			
+			
+			consulta = "SELECT rowid, * from gastos_mes rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.gastos_mes = result;
+			},function(tx) {
+				console.log("Error no es posbile traer recomendaciones", tx);
+			});
 			/*
 			consulta = "SELECT rowid, * from respuestas where res.modificado=1 or res.elimiado=1";
 

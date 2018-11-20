@@ -9,7 +9,9 @@
     </ul>
 </div>
 <DIV>
-    <BUTTON class="btn btn-default" ng-click="descargar_datos()">DESCARGAR DATOS</BUTTON>
+    <BUTTON class="btn btn-danger" ng-click="eliminar_datos_locales()">Eliminar datos locales</BUTTON>
+    <BUTTON class="btn btn-default" type="button" ng-click="descargar_datos()">DESCARGAR DATOS</BUTTON>
+    
 
     <BUTTON class="btn btn-default" ng-click="subir_datos()">SUBIR DATOS</BUTTON>
     <div ng-show="estado_descarga.length > 0">
@@ -1081,7 +1083,7 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerecomendaciones()">recomendacion</a>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerecomendaciones()"> Recomendación</a>
                 </h2>
                 <div class="box-icon"></div>
             </div>
@@ -1142,3 +1144,6 @@
 
     </div>
 </div>
+
+
+<destinos-sync-dir></destinos-sync-dir>

@@ -87,7 +87,7 @@ angular.module("auditoriaApp")
 	
   
 	$scope.ok = function () {
-		$uibModalInstance.dismis('Sin nada');
+		$uibModalInstance.close($scope.USER);
 	};
   
 });
