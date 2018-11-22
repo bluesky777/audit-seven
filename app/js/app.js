@@ -143,8 +143,8 @@ angular.module('auditoriaApp', [
 
 
 .constant('rutaServidor', {
-    ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias'
-    //ruta: 'http://192.168.100.31/feryz_server/public/auditorias'
+    //ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias'
+    ruta: 'http://192.168.100.31/feryz_server/public/auditorias'
 })
 
 
@@ -163,7 +163,7 @@ window.fixDate = function(fec, con_hora){
 	  mes = '0' + mes;
 	}
   
-	fecha   = '' + year + '-' + mes  + '-' + dia;
+	fecha   = '' + year + '/' + mes  + '/' + dia;
 	
 	if (con_hora){
 		hora 	= fec.getHours();
@@ -176,6 +176,17 @@ window.fixDate = function(fec, con_hora){
 	}
 	
 	return fecha;
+}
+window.fixHora = function(ti){
+	hora 	= ti.getHours();
+	if (hora<10) { hora = '0' + hora; };
+	min 	= ti.getMinutes();
+	if (min<10) { min = '0' + min; };
+	sec 	= ti.getSeconds();
+	if (sec<10) { sec = '0' + sec; };
+	time 	= hora + ':' + min + ':' + sec;
+	
+	return time;
 }
 window.getRandomInt = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;

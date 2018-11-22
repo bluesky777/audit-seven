@@ -18,6 +18,16 @@ angular.module("auditoriaApp")
 		anombre_propiedad: '',
 		fecha_propiedad: null,
 		fecha_fin: null,
+		
+		tipo_propiedad2: '',
+		anombre_propiedad2: '',
+		fecha_propiedad2: null,
+		fecha_fin2: null,
+		
+		tipo_propiedad3: '',
+		anombre_propiedad3: '',
+		fecha_propiedad3: null,
+		fecha_fin3: null
 	}
 	
 	$scope.tpl_distr = {
@@ -87,8 +97,9 @@ angular.module("auditoriaApp")
 						return;
 					}
 				}
-				ConexionServ.query("UPDATE iglesias SET "+colDef.field+"='"+newValue+"', modificado=1 WHERE rowid=?", [ rowEntity.rowid ] ).then(function(r) {
-					return toastr.success("Iglesia actualizada con éxito");
+				fecha_update = window.fixDate(new Date(), true);
+				ConexionServ.query("UPDATE iglesias SET "+colDef.field+"='"+newValue+"', modificado=? WHERE rowid=?", [ fecha_update, rowEntity.rowid ] ).then(function(r) {
+					return toastr.success("Iglesia actualizada.");
 				}, function(r2) {
 					rowEntity[colDef.field] = oldValue;
 					return toastr.error("Cambio no guardado", "Error");
@@ -136,11 +147,11 @@ angular.module("auditoriaApp")
 
 			ConexionServ.query(consulta, [distrito.nombre,distrito.alias,distrito.codigo,distrito.zona,$scope.pastor_new_id,$scope.tesorero_new_id]).then(function(result) {
 				$scope.traerDatos();
-				toastr.success("Se ha creado un nuevo Distrito Exitosamente.");
+				toastr.success("Distrito creado.");
 				$scope.guardando_distrito 	= false;
 				$scope.verCrearDistrito 	= false;
 			},function(tx) {
-				console.log("Error no es posbile traer Distritos", tx);
+				toastr.error("Error creando distrito.", tx);
 				$scope.guardando_distrito 	= false;
 			});
     };
@@ -157,12 +168,12 @@ angular.module("auditoriaApp")
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
 			// Traemos USUARIOS
-			consulta = "SELECT rowid, nombres, apellidos, sexo, tipo, celular, username from usuarios";
+			consulta = "SELECT rowid, nombres, apellidos, sexo, tipo, celular, username FROM usuarios WHERE eliminado is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.usuarios = result;
 			},function(tx) {
-				console.log("Error no es posbile traer usuarios", tx);
+				toastr.error("Error, no es posbile traer usuarios");
 			});
 
 			// Traemos IGLESIAS
@@ -173,15 +184,15 @@ angular.module("auditoriaApp")
 					"i.tipo_propiedad2, i.anombre_propiedad2, i.fecha_propiedad2, i.fecha_fin2, " + 
 					"i.tipo_propiedad3, i.anombre_propiedad3, i.fecha_propiedad3, i.fecha_fin3 " + 
 				"FROM iglesias i " +
-				"LEFT JOIN distritos d ON d.rowid=i.distrito_id " +
-				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=i.tesorero_id " + 
-				"where i.eliminado is null or i.eliminado=='0'";
+				"LEFT JOIN distritos d ON d.rowid=i.distrito_id AND d.eliminado is null " +
+				"LEFT JOIN usuarios t ON t.tipo='Tesorero' AND t.rowid=i.tesorero_id AND t.eliminado is null " + 
+				"WHERE i.eliminado is null";
 
 			ConexionServ.query($scope.consulta_igle, []).then(function(result) {
 				$scope.iglesias = result;
 				$scope.gridOptions.data = result;
 			}, function(tx) {
-				console.log("Error no es posbile traer iglesias", tx);
+				toastr.error("Error no es posbile traer iglesias", tx);
 			});
 
 			// Traemos DISTRITOS
@@ -189,33 +200,35 @@ angular.module("auditoriaApp")
 					"p.nombres as pastor_nombres, p.apellidos as pastor_apellidos, " +
 					"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos " +
 				"FROM distritos d " +
-				"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=d.tesorero_id " +
-				"LEFT JOIN usuarios p ON p.tipo='Pastor' and p.rowid=d.pastor_id  where d.eliminado = '0'";
+				"LEFT JOIN usuarios t ON t.tipo='Tesorero' AND t.rowid=d.tesorero_id AND t.eliminado is null " +
+				"LEFT JOIN usuarios p ON p.tipo='Pastor' AND p.rowid=d.pastor_id AND p.eliminado is null  " +
+				"WHERE d.eliminado is null";
 
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.distritos = result;
 			}, function(tx) {
-				console.log("Error no es posbile traer distritos", tx);
+				toastr.error("Error no es posbile traer distritos", tx);
 			});
 
 			// Traemos Uniones
-			consulta = "SELECT rowid, nombre, alias, codigo, division_id from uniones  where eliminado ='0'";
+			consulta = "SELECT rowid, nombre, alias, codigo, division_id FROM uniones WHERE eliminado is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.uniones = result;
 			}, function(tx) {
-				console.log("Error no es posbile traer Uniones", tx);
+				toastr.error("Error no es posbile traer Uniones", tx);
 			});
 
 			// Traemos Asociaciones
-			consulta = "SELECT aso.rowid, aso.* , un.nombre as nombre_union  from asociaciones  aso INNER JOIN uniones un ON aso.union_id = un.rowid  WHERE aso.eliminado=0 ";
+			consulta = "SELECT aso.rowid, aso.* , un.nombre as nombre_union FROM asociaciones aso " +
+				"INNER JOIN uniones un ON aso.union_id = un.rowid and un.eliminado is null " +
+				"WHERE aso.eliminado is null ";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.asociaciones = result;
-				console.log('asociaciones',	$scope.asociaciones)
 			}, function(tx) {
-				console.log("Error no es posbile traer asociaciones", tx);
+				toastr.error("Error no es posbile traer asociaciones", tx);
 			});
     };
 
@@ -227,42 +240,36 @@ angular.module("auditoriaApp")
 				console.log("entidad creada", result);
 				toastr.success("Entidad creada exitosamente");
 			}, function(tx) {
-				console.log("entidad no se pudo crear", tx);
+				toastr.error("Entidad no se pudo crear", tx);
 			});
     };
 
     $scope.actuentidad = function(entidad_cambiar) {
-			consulta = "UPDATE entidades SET nombres=?, alias=?, pastor=?, celular=?, modificado=? WHERE rowid=? ";
-			ConexionServ.query(consulta, [entidad_cambiar.nombres, entidad_cambiar.alias, entidad_cambiar.pastor,entidad_cambiar.celular, 1, entidad_cambiar.rowid]).then(function(result) {
-				console.log("entidad Actualizada", result);
-			}, function(tx) {
-				console.log("entidad no se pudo actualizar", tx);
-			});
-    };
-
-    $scope.eliminarentidad = function(entidad) {
-			consulta = "DELETE FROM entidades WHERE rowid=? ";
-
-			ConexionServ.query(consulta, [entidad.rowid]).then(function(result) {
-				console.log("entidad eliminida", result);
-				$scope.entidades = $filter("filter")($scope.entidades, {rowid: "!" + entidad.rowid});
-			}, function(tx) {
-				console.log("Entidad no se pudo Eliminar", tx);
-			});
-    };
+		fecha_update = window.fixDate(new Date(), true);
+		
+		consulta = "UPDATE entidades SET nombres=?, alias=?, pastor=?, celular=?, modificado=? WHERE rowid=? ";
+		ConexionServ.query(consulta, [entidad_cambiar.nombres, entidad_cambiar.alias, entidad_cambiar.pastor,entidad_cambiar.celular, fecha_update, entidad_cambiar.rowid]).then(function(result) {
+			toastr.success("Entidad actualizada");
+		}, function(tx) {
+			toastr.error("Entidad no se pudo actualizar", tx);
+		});
+	};
+	
 
     $scope.EliminarDistrito = function(distrito) {
-			var res = confirm("¿Seguro que desea eliminar ? ");
+		var res = confirm("¿Seguro que desea eliminar ? ");
 
 		if (res == true) {
-			consulta = "UPDATE  distritos SET eliminado=? WHERE rowid=? ";
-		ConexionServ.query(consulta, ['1', distrito.rowid]).then( function(result) {
-			console.log("distrito Eliminada", result);
-			toastr.success("distrito eliminado Exitosamente.");
-		},function(tx) {
-			toastr.info("El distrito que intenta eliminar no se pudo eliminar.");
-		});
-	}
+			fecha_del = window.fixDate(new Date(), true);
+			
+			consulta = "UPDATE distritos SET eliminado=? WHERE rowid=? ";
+			ConexionServ.query(consulta, [fecha_del, distrito.rowid]).then( function(result) {
+				toastr.success("Distrito eliminado.");
+				$scope.traerDatos();
+			},function(tx) {
+				toastr.error("Distrito no se pudo eliminar.");
+			});
+		}
     };
 
     $scope.VerActualizarDistrito = function(distrito) {
@@ -271,10 +278,10 @@ angular.module("auditoriaApp")
 			$scope.distrito_new_distric = distrito;
 
 			for (var i = 0; i < $scope.usuarios.length; i++) {
-				if (distrito.pastor_id == $scope.usuarios[i].rowid) {
+				if (distrito.pastor_id == $scope.usuarios[i].rowid && distrito.tipo=='Pastor') {
 					$scope.distrito_new_distric.pastor = $scope.usuarios[i];
 				}
-				if (distrito.tesorero_id == $scope.usuarios[i].rowid) {
+				if (distrito.tesorero_id == $scope.usuarios[i].rowid && distrito.tipo=='Tesorero') {
 					$scope.distrito_new_distric.tesorero = $scope.usuarios[i];
 				}
 			}
@@ -294,15 +301,14 @@ angular.module("auditoriaApp")
 			if (distrito.tesorero) {
 				tesorero_id 		= distrito.tesorero.rowid;
 			}
-			console.log(distrito);
+			fecha_update = window.fixDate(new Date(), true);
+			
 			consulta = "UPDATE distritos SET nombre=?, alias=?, codigo=?, zona=?, pastor_id=?, tesorero_id=?, modificado=? WHERE rowid=? ";
-			ConexionServ.query(consulta, [distrito.nombre, distrito.alias, distrito.codigo, distrito.zona, pastor_id, tesorero_id, '1', distrito.rowid]).then( function(result) {
-				console.log("Distrito Actualizado", result);
-				toastr.success("Distrito Actualizado Exitosamente.");
+			ConexionServ.query(consulta, [distrito.nombre, distrito.alias, distrito.codigo, distrito.zona, pastor_id, tesorero_id, fecha_update, distrito.rowid]).then( function(result) {
+				toastr.success("Distrito actualizado.");
 				$scope.VerActualizandoDistrito = false;
 			}, function(tx) {
-				console.log("Distrito no se pudo actualizar", tx);
-				toastr.info("Distrito no se pudo actualizar.");
+				toastr.error("Distrito no se pudo actualizar.");
 			});
     };
 
@@ -331,21 +337,21 @@ angular.module("auditoriaApp")
 			if (iglesia.tesorero) {
 				teso_id 		= iglesia.tesorero.rowid;
 			}
-
-			consulta = "UPDATE iglesias SET nombre=?, alias=?,  distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, tipo_propiedad=?, anombre_propiedad=?, fecha_propiedad=?, fecha_fin=?, " + 
-					"tipo_propiedad2=?, anombre_propiedad2=?, fecha_propiedad2=?, fecha_fin2=?, tipo_propiedad3=?, anombre_propiedad3=?, fecha_propiedad3=?, fecha_fin3=?, modificado=1 " +
+			
+			fecha_update = window.fixDate(new Date(), true);
+			
+			consulta = "UPDATE iglesias SET nombre=?, alias=?, distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, tipo_propiedad=?, anombre_propiedad=?, fecha_propiedad=?, fecha_fin=?, " + 
+					"tipo_propiedad2=?, anombre_propiedad2=?, fecha_propiedad2=?, fecha_fin2=?, tipo_propiedad3=?, anombre_propiedad3=?, fecha_propiedad3=?, fecha_fin3=?, modificado=? " +
 				"WHERE rowid=? ";
 			ConexionServ.query(consulta, [iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.codigo, iglesia.tipo, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad, iglesia.fecha_fin, 
 				iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad2, iglesia.fecha_fin2, 
-				iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad3, iglesia.fecha_fin3, iglesia.modificado, iglesia.rowid 
+				iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad3, iglesia.fecha_fin3, fecha_update, iglesia.rowid 
 			]).then(function(result) {
-				console.log("Iglesia Actualizado", result);
-				toastr.success("Iglesia Actualizado Exitosamente.");
+				toastr.success("Iglesia actualizado.");
 				$scope.guardando_iglesia 		= false;
 				$scope.ver_Actualizando_iglesia = false;
 			}, function(tx) {
-				console.log("Iglesia no se pudo actualizar", tx);
-				toastr.info("Iglesia no se pudo actualizar.");
+				toastr.error("Iglesia no se pudo actualizar.");
 				$scope.guardando_iglesia = false;
 			});
     };
@@ -396,10 +402,12 @@ angular.module("auditoriaApp")
 		var res = confirm("¿Seguro que desea eliminar ? ");
 
 		if (res == true) {
-			consulta = "UPDATE  iglesias SET eliminado=? WHERE rowid=? ";
-			ConexionServ.query(consulta, ['1', iglesia.rowid]).then( function(result) {
-				console.log("iglesia Eliminada", result);
-				toastr.success("iglesia Eliminada Exitosamente.");
+			fecha_update = window.fixDate(new Date(), true);
+			
+			consulta = "UPDATE iglesias SET eliminado=? WHERE rowid=? ";
+			ConexionServ.query(consulta, [fecha_update, iglesia.rowid]).then( function(result) {
+				toastr.success("iglesia eliminada.");
+				$scope.traerDatos();
 			},function(tx) {
 				toastr.info("La iglesia que intenta eliminar no se pudo eliminar.");
 			});
@@ -411,14 +419,23 @@ angular.module("auditoriaApp")
 
 		$scope.guardando_iglesia = true;
 		
-		if (iglesia.fecha_propiedad) { iglesia.fecha_propiedad_new = window.fixDate(iglesia.fecha_propiedad); }
-		if (iglesia.fecha_fin) { iglesia.fecha_fin_new 		= window.fixDate(iglesia.fecha_fin); }
+		fecha_propiedad = null;
+		if (iglesia.fecha_propiedad) { fecha_propiedad = window.fixDate(iglesia.fecha_propiedad); }
 		
-		if (iglesia.fecha_propiedad2) { iglesia.fecha_propiedad_new2 = window.fixDate(iglesia.fecha_propiedad2); }
-		if (iglesia.fecha_fin2) { iglesia.fecha_fin_new2 		= window.fixDate(iglesia.fecha_fin2); }
+		fecha_fin = null;
+		if (iglesia.fecha_fin) { fecha_fin 		= window.fixDate(iglesia.fecha_fin); }
 		
-		if (iglesia.fecha_propiedad3) { iglesia.fecha_propiedad_new3 = window.fixDate(iglesia.fecha_propiedad3); }
-		if (iglesia.fecha_fin3) { iglesia.fecha_fin_new3 		= window.fixDate(iglesia.fecha_fin3); }
+		fecha_propiedad2 = null;
+		if (iglesia.fecha_propiedad2) { fecha_propiedad2 = window.fixDate(iglesia.fecha_propiedad2); }
+		
+		fecha_fin2 = null;
+		if (iglesia.fecha_fin2) { fecha_fin2 		= window.fixDate(iglesia.fecha_fin2); }
+		
+		fecha_propiedad3 = null;
+		if (iglesia.fecha_propiedad3) { fecha_propiedad3 = window.fixDate(iglesia.fecha_propiedad3); }
+		
+		fecha_fin3 = null;
+		if (iglesia.fecha_fin3) { fecha_fin3 		= window.fixDate(iglesia.fecha_fin3); }
 		
 		distrito_id = null;
 		if (iglesia.distrito) {
@@ -429,16 +446,21 @@ angular.module("auditoriaApp")
 			teso_id 		= iglesia.tesorero.rowid;
 		}
 		
+		tipo_propiedad = null;
+		if (iglesia.tipo_propiedad) {
+			tipo_propiedad 		= iglesia.tipo_propiedad;
+		}
+		
 		
 		consulta = "INSERT INTO iglesias(nombre, alias, distrito_id, zona, tesorero_id, tipo_propiedad, anombre_propiedad, fecha_propiedad, fecha_fin, tipo_propiedad2, anombre_propiedad2, fecha_propiedad2, fecha_fin2, tipo_propiedad3, anombre_propiedad3, fecha_propiedad3, fecha_fin3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad_new, iglesia.fecha_fin_new, iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, iglesia.fecha_fin_new2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad_new3, iglesia.fecha_fin_new3]).then(function(result) {
+		
+		
+		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, tipo_propiedad, iglesia.anombre_propiedad, fecha_propiedad, fecha_fin, fecha_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, fecha_fin2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, fecha_propiedad3, fecha_fin3]).then(function(result) {
 			$scope.traerDatos();
 			toastr.success("Iglesia creada exitosamente.");
 			$scope.guardando_iglesia 	= false;
 			$scope.ver_creando_iglesia 	= false;
 		}, function(tx) {
-			console.log("Error al guardar iglesia", tx);
 			toastr.success("Error al guardar iglesia.");
 			$scope.guardando_iglesia 	= false;
 			$scope.ver_creando_iglesia 	= false;
@@ -447,7 +469,8 @@ angular.module("auditoriaApp")
 
     $scope.VerCreandoIglesia = function() {
 		$scope.ver_creando_iglesia = true;
-
+		$scope.iglesia_new = angular.copy($scope.tpl_igle);
+		
 		$timeout(function() {
 			$location.hash("nueva_new_new_iglesia");
 			$anchorScroll();
@@ -464,9 +487,10 @@ angular.module("auditoriaApp")
 
 		ConexionServ.query(consulta, [creatar_union.nombre, creatar_union.alias, creatar_union.codigo]).then(function(result) {
 			$scope.traerDatos();
-			toastr.success("Se ha creado una Nueva Union Exitosamente.");
+			toastr.success("Unión creada.");
+			$scope.verCreandoUniones = false;
 		}, function(tx) {
-			console.log("Error no es posbile traer Uniones", tx);
+			console.log("Error creando unión", tx);
 		});
     };
 
@@ -484,12 +508,14 @@ angular.module("auditoriaApp")
     };
 
     $scope.ActualizarUniones = function(actuali_union) {
-		consulta = "UPDATE  uniones SET nombre=?, alias=?, codigo=?, modificado=? WHERE rowid=? ";
-		ConexionServ.query(consulta, [ actuali_union.nombre, actuali_union.alias, actuali_union.codigo, '1', actuali_union.rowid ]).then( function(result) {
-			console.log("Union Actualizada", result);
-			toastr.success("Union Actualizada Exitosamente.");
+		fecha_update = window.fixDate(new Date(), true);
+		
+		consulta = "UPDATE uniones SET nombre=?, alias=?, codigo=?, modificado=? WHERE rowid=? ";
+		ConexionServ.query(consulta, [ actuali_union.nombre, actuali_union.alias, actuali_union.codigo, fecha_update, actuali_union.rowid ]).then( function(result) {
+			$scope.VeractualizandoUniones = false;
+			toastr.success("Unión actualizada.");
 		},function(tx) {
-			toastr.info("La Union que intenta actualizar no se pudo actualizar.");
+			toastr.error("No se pudo actualizar unión.");
 		});
     };
 
@@ -512,26 +538,28 @@ angular.module("auditoriaApp")
 		var res = confirm("¿Seguro que desea eliminar ? ");
 
 		if (res == true) {
-			consulta = "UPDATE  uniones SET eliminado=? WHERE rowid=? ";
-		ConexionServ.query(consulta, ['1', union.rowid]).then( function(result) {
-			console.log("Union Eliminada", result);
-			toastr.success("Union Eliminada Exitosamente.");
-		},function(tx) {
-			toastr.info("La Union que intenta eliminar no se pudo actualizar.");
-		});
-	}
+			fecha_update = window.fixDate(new Date(), true);
+			
+			consulta = "UPDATE uniones SET eliminado=? WHERE rowid=? ";
+			ConexionServ.query(consulta, [fecha_update, union.rowid]).then( function(result) {
+				$scope.traerDatos();
+				toastr.success("Unión eliminada.");
+			},function(tx) {
+				toastr.error("La unión no se pudo eliminar.");
+			});
+		}
     };
 
     $scope.Insertar_asociaciones = function(creater_asociaciones) {
-		console.log(creater_asociaciones, 'bruto');
-
+		
 		consulta = "INSERT INTO asociaciones(nombre, alias, codigo, union_id) VALUES(?,?,?,?)";
 
 		ConexionServ.query(consulta, [ creater_asociaciones.nombre, creater_asociaciones.alias, creater_asociaciones.codigo, creater_asociaciones.union.rowid ]).then( function(result) {
 			$scope.traerDatos();
-			toastr.success("Se ha creado una Nueva asocación  Exitosamente.");
+			toastr.success("Asocación creada.");
+			$scope.MostrandoAsociaciones = false;
 		}, function(tx) {
-			console.log("Error no es posbile traer asocaciones", tx);
+			toastr.error("Error creando asociación.", tx);
     	});
     };
 
@@ -552,13 +580,15 @@ angular.module("auditoriaApp")
 		var res = confirm("¿Seguro que desea eliminar ? ");
 
 		if (res == true) {
+			fecha_update = window.fixDate(new Date(), true);
+			
 			consulta = "UPDATE  asociaciones SET eliminado=? WHERE rowid=? ";
-		ConexionServ.query(consulta, ['1', asociation.rowid]).then( function(result) {
-			console.log("asociacion Eliminada", result);
-			toastr.success("asociacion Eliminada Exitosamente.");
-		},function(tx) {
-			toastr.info("La Union que intenta eliminar no se pudo actualizar.");
-		});
+			ConexionServ.query(consulta, [fecha_update, asociation.rowid]).then( function(result) {
+				toastr.success("Asociación eliminada.");
+				$scope.traerDatos();
+			},function(tx) {
+				toastr.error("No se pudo eliminar.");
+			});
 		}
     };
 
@@ -579,12 +609,13 @@ angular.module("auditoriaApp")
     };
 
     $scope.ActualizarAsociaciones = function(actuali_asociation) {
-		consulta = "UPDATE  asociaciones SET nombre=?, alias=?, codigo=?, union_id=?, modificado=?  WHERE rowid=? ";
-		ConexionServ.query(consulta, [ actuali_asociation.nombre, actuali_asociation.alias, actuali_asociation.codigo, actuali_asociation.union.rowid, '1', actuali_asociation.rowid,]).then( function(result) {
-			console.log("Asocacion Actualizada", result);
-			toastr.success("Asociación Actualizada Exitosamente.");
+		fecha_update = window.fixDate(new Date(), true);
+		consulta = "UPDATE asociaciones SET nombre=?, alias=?, codigo=?, union_id=?, modificado=?  WHERE rowid=? ";
+		ConexionServ.query(consulta, [ actuali_asociation.nombre, actuali_asociation.alias, actuali_asociation.codigo, actuali_asociation.union.rowid, fecha_update, actuali_asociation.rowid ]).then( function(result) {
+			toastr.success("Asociación actualizada.");
+			$scope.VerActualizandoAsociaciones = false;
 		}, function(tx) {
-			toastr.info("La Asociación que intenta actualizar no se pudo actualizar.");
+			toastr.error("No se pudo actualizar.");
 		});
     };
 
@@ -605,11 +636,11 @@ angular.module("auditoriaApp")
 
 	$scope.ok = ()=>{
 
+		fecha_update = window.fixDate(new Date(), true);
 		
-		consulta = "DELETE FROM iglesias WHERE rowid=? ";
+		consulta = "UPDATE iglesias SET eliminado=? WHERE rowid=? ";
 
-		ConexionServ.query(consulta, [elemento.rowid]).then(function(result) {
-			console.log("Iglesia eliminada", elemento);
+		ConexionServ.query(consulta, [ fecha_update, elemento.rowid]).then(function(result) {
 			$modalInstance.close(elemento)
 		}, function(tx) {
 			console.log("iglesia no se pudo Eliminar", tx);

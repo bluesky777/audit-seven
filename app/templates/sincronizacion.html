@@ -6,6 +6,11 @@
         <li class="li-breadcrumb">
             <a ui-sref="panel.sincronizacion" >Sincronización</a>
         </li>
+        <li style="float: right;" class="refresh-breadcrumb">
+            <a href="" ng-click="refresh()">
+                <i class="glyphicon glyphicon-refresh"></i>
+                Actualizar</a>
+        </li>
     </ul>
 </div>
 <DIV>
@@ -15,12 +20,15 @@
 
     <BUTTON class="btn btn-default" ng-click="subir_datos()">SUBIR DATOS</BUTTON>
     <div ng-show="estado_descarga.length > 0">
+        <span ng-show="estado_descarga == 'Insertados'">
+            <i class="glyphicon glyphicon-ok"></i>
+        </span>
         {{estado_descarga}}. 
-        <span ng-show="estado_descarga!='insertados'">{{valor_insertado}}/{{valor_maximo}}</span>
+        <span ng-show="estado_descarga!='Insertados'">{{ valor_insertado() }}/{{ valor_maximo() }}</span>
     </div>
-    <div class="progress" ng-show="estado_descarga=='insertando' || estado_descarga=='insertados'">
-        <div class="progress-bar progress-bar-striped " ng-class="{active: estado_descarga=='insertando'}" role="progressbar" aria-valuenow="{{valor_insertado}}" aria-valuemin="0" aria-valuemax="{{valor_maximo}}" style="width: {{valor_insertado}}%">
-            <span class="sr-only">{{valor_insertado}}% Complete</span>
+    <div class="progress" ng-show="estado_descarga=='insertando' || estado_descarga=='Insertados'">
+        <div class="progress-bar progress-bar-striped " ng-class="{active: estado_descarga=='insertando'}" role="progressbar" aria-valuenow="{{ valor_insertado() }}" aria-valuemin="0" aria-valuemax="{{ valor_maximo() }}" style="width: {{ valor_insertado() }}%">
+            <span class="sr-only">{{ valor_insertado() }}% Complete</span>
         </div>
     </div>
     
@@ -235,8 +243,10 @@
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Alias</th>
                                 <th scope="col">Código</th>
-                                <th scope="col">CAMBIO</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col">Nueva</th>
+                                <th scope="col">Cambiada</th>
+                                <th scope="col">Eliminada</th>
+                                <th scope="col"></th>
 
 
                             </tr>
@@ -252,13 +262,14 @@
                                 <td>{{asociation.alias}}</td>
                                 <td>{{asociation.codigo}}</td>
                                 <td>
-                                    <span ng-show="!asociation.id" style="background-color: #2fa4e7">Nuevo</span>
-                                    <span ng-show="asociation.modificado" style="background-color: #dd5600">Modificado</span>
-                                    <span ng-show="asociation.eliminado" style="background-color: red">Eliminado</span>
+                                    <span ng-show="!asociation.id" style="background-color: #2fa4e7">Si</span>
                                 </td>
-
-
-
+                                <td>
+                                    <span style="background-color: #fdcaa9">{{asociation.modificado}}</span>
+                                </td>
+                                <td>
+                                    <span style="background-color: #fdcaa9">{{asociation.eliminado}}</span>
+                                </td>
 
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
@@ -740,9 +751,12 @@
                                 <th scope="col">ID </th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Apellido</th>
-                                <th scope="col">Sexo</th>
                                 <th scope="col">Tipo</th>
-                                <th scope="col">is active</th>
+                                <th scope="col">Activo</th>
+                                <th scope="col">Nuevo</th>
+                                <th scope="col">Modificado</th>
+                                <th scope="col">Eliminado</th>
+                                <th scope="col"></th>
 
 
                             </tr>
@@ -756,13 +770,16 @@
                                 <td>{{$index + 1}}</td>
                                 <td>{{usuario.nombres}}</td>
                                 <td>{{usuario.apellidos}}</td>
-                                <td>{{usuario.sexo}}</td>
                                 <td>{{usuario.tipo}}</td>
                                 <td>{{usuario.is_active}}</td>
                                 <td>
-                                    <span ng-show="!usuario.id" style="background-color: #2fa4e7">Nuevo</span>
-                                    <span ng-show="usuario.modificado" style="background-color: #dd5600">Modificado</span>
-                                    <span ng-show="usuario.eliminado" style="background-color: red">Eliminado</span>
+                                    <span ng-show="!usuario.id" style="background-color: #2fa4e7">Si</span>
+                                </td>
+                                <td>
+                                    <span style="background-color: #fdcaa9">{{usuario.modificado}}</span>
+                                </td>
+                                <td>
+                                    <span style="background-color: #fdcaa9">{{usuario.eliminado}}</span>
                                 </td>
 
 

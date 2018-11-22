@@ -6,7 +6,8 @@ angular.module('auditoriaApp')
 	$scope.iglesias 				= [];
 	$scope.auditorias 				= [];
 	$scope.auditoria_crear 			= {
-		fecha: new Date()
+		fecha: new Date(),
+		saldo_ant: 0
 	}
 	
 	
@@ -70,25 +71,44 @@ angular.module('auditoriaApp')
 		hora_fix = null;
 		
 		if (audit.hora) {
-			hora_fix = new Date(audit.hora);
-			hora_fix = '' + audit.hora.getHours() + ':' + audit.hora.getMinutes() + ':' + audit.hora.getSeconds() ;
+			hora_fix = window.fixHora(audit.hora);
+			console.log(hora_fix);
 		}
 		
 		if (audit.iglesia) {
 			
 			consulta ="INSERT INTO auditorias(fecha, hora, iglesia_id, saldo_ant) VALUES(?,?,?,?) "
-			ConexionServ.query(consulta,[fecha_fix, hora_fix, audit.iglesia.rowid, audit.saldo_ant]).then(function(result){
-	
+			ConexionServ.query(consulta,[fecha_fix, hora_fix, audit.iglesia.rowid, audit.saldo_ant]).then(function(resInsert){
+
+				ConexionServ.query('UPDATE usuarios SET auditoria_id=?, distrito_id=?, iglesia_id=? WHERE rowid=? ', [ resInsert.insertId, audit.iglesia.distrito_id, audit.iglesia.rowid, $scope.USER.rowid ]).then(function(result) {
+					$scope.USER.iglesia_id 			= audit.iglesia.rowid;
+					$scope.USER.distrito_id 		= audit.iglesia.distrito_id;
+					$scope.USER.iglesia_nombre 		= audit.iglesia.iglesia_nombre;
+					$scope.USER.iglesia_tipo 		= audit.iglesia.iglesia_tipo;
+					$scope.USER.distrito_nombre 	= audit.iglesia.distrito_nombre;
+					$scope.USER.iglesia_alias 		= audit.iglesia.iglesia_alias;
+					$scope.USER.auditoria_id 		= resInsert.insertId;
+					$scope.USER.fecha_audit 		= fecha_fix;
+					$scope.USER.hora_audit 			= hora_fix;
+					$scope.USER.iglesia_audit_id 	= audit.iglesia.rowid;
+					
+					AuthServ.update_user_storage($scope.USER).then(function(usuario){
+						const {ipcRenderer} = require('electron');
+						ipcRenderer.send('refrescar-app');
+					});
+					
+				});
+					
 				$scope.verMostrarAuditoriasTabla();
+				//$scope.vermostrandocrarauditorias = false;
 				toastr.success('Auditoria creada exitosamente');
-				$scope.vermostrandocrarauditorias = false;
 	
 			} , function(tx){
 				console.log('Auditoria no se pudo crear' , tx)
 			});
 			
 		}else{
-			toastr.warning('Debe seleccionar una iglesia.');
+			toastr.warning('Debes seleccionar una iglesia.');
 			return
 		}
 
@@ -97,6 +117,7 @@ angular.module('auditoriaApp')
 	$scope.verMostrarAuditoriasTabla = function(){
 		consulta = 'SELECT a.*, a.rowid, i.nombre, i.alias from auditorias a ' +
 			'INNER JOIN iglesias i ON a.iglesia_id = i.rowid and a.iglesia_id=? ';
+
 		ConexionServ.query(consulta, [$scope.USER.iglesia_id]).then(function(result){
 			if(result.length == 0){
 				toastr.warning('Debes seleccionar una iglesia.');
@@ -122,19 +143,27 @@ angular.module('auditoriaApp')
 
 	$scope.actusersauditoria = function(auditoria_cambiar){
 
-		console.log(auditoria_cambiar);
+		fecha_update = window.fixDate(new Date(), true);
+		
+		fecha = null;
+		if (auditoria_cambiar.fecha_new) {
+			fecha = window.fixDate(auditoria_cambiar.fecha_new);
+		}
+		
+		hora = null;
+		if (auditoria_cambiar.hora_new) {
+			hora = window.fixHora(auditoria_cambiar.hora_new);
+		}
+		
 
-		fecha = '' + auditoria_cambiar.fecha_new.getFullYear() + '-' + auditoria_cambiar.fecha_new.getMonth() + '-' + auditoria_cambiar.fecha_new.getDate();
+	 	consulta ="UPDATE auditorias SET fecha=?, hora=?, iglesia_id=?, saldo_ant=?, modificado=? WHERE rowid=? "
+		ConexionServ.query(consulta,[fecha, hora, auditoria_cambiar.iglesia.rowid, auditoria_cambiar.saldo_ant, fecha_update, auditoria_cambiar.rowid]).then(function(result){
 
-		hora = '' + auditoria_cambiar.hora_new.getHours() + ':' + auditoria_cambiar.hora_new.getMinutes();
-
-	 	consulta ="UPDATE auditorias SET fecha=?, hora=?, iglesia_id=?, saldo_ant=? WHERE rowid=? "
-		ConexionServ.query(consulta,[fecha, hora, auditoria_cambiar.iglesia.rowid, auditoria_cambiar.saldo_ant, auditoria_cambiar.rowid]).then(function(result){
-
-		   toastr.success('Actualizado correctamente. Presione F5 para recargar');
-
+			toastr.success('Actualizado correctamente.');
+			$scope.modusers = false;
+			$scope.verMostrarAuditoriasTabla();
 		} , function(tx){
-			console.log('auditoria no se pudo actualizar' , tx)
+			toastr.error('Auditoria no se pudo actualizar');
 		});
 	} 
 
@@ -142,21 +171,24 @@ angular.module('auditoriaApp')
 
 
 	 $scope.elimninaradutiroiar = function(auditoria){
-	  	
-	 	consulta ="DELETE FROM auditorias WHERE rowid=? ";
+		 
+		res = confirm('¿Seguro que desea eliminar auditoría?');
+		
+		if (res) {
+			fecha_update = window.fixDate(new Date(), true);
+		
+			consulta ="UPDATE auditorias SET eliminado=? WHERE rowid=? ";
 
-	   ConexionServ.query(consulta,[auditoria.rowid]).then(function(result){
+			ConexionServ.query(consulta,[fecha_update, auditoria.rowid]).then(function(result){
+				toastr.success('Auditoría eliminada.');
+				$scope.verMostrarAuditoriasTabla();
+			} , function(tx){
+				toastr.error('Auditoria no se pudo Eliminar' , tx)
+			});
 
-
-		   console.log('auditoria eliminido', result);
-		   $scope.auditorias = $filter('filter') ($scope.auditorias, {rowid: '!' + auditoria.rowid})
-	   } , function(tx){
-
-	   	console.log('auditoria no se pudo Eliminar' , tx)
-
-	   });
-
-	 } 
+		}
+		
+	} 
 
 
 	$scope.seleccionarAuditoria = function(auditoria) {
@@ -171,10 +203,6 @@ angular.module('auditoriaApp')
 	}
 
 
-
-	$scope.InsertarMesAño = function(){
-   
-	};
 
 
 

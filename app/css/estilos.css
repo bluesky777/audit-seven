@@ -84,3 +84,11 @@
 		margin-left: 60px;
 	}
 }
+.input-totales{
+	height: 30px;
+}
+.btn .badge{
+	position: absolute;
+    top: -4px;
+	z-index: 99999;
+}

@@ -43,16 +43,32 @@ angular.module("auditoriaApp")
 
 	
 	$scope.seleccionarIglesia = function(iglesia) {
-
-		ConexionServ.query('UPDATE usuarios SET distrito_id=?, iglesia_id=? WHERE rowid=? ', [ iglesia.distrito_id, iglesia.rowid, $scope.USER.rowid ]).then(function(result) {
-			$scope.USER.iglesia_id 		= iglesia.rowid;
-			$scope.USER.distrito_id 	= iglesia.distrito_id;
+		
+		auditoria_id = null;
+		
+		// Traigo auditorias de la iglesia seleccionada
+		ConexionServ.query('SELECT *, rowid FROM auditorias WHERE iglesia_id=? and eliminado is null', [ iglesia.rowid ]).then(function(auditorias) {
+			if(auditorias.length > 0){
+				auditoria_id = auditorias[auditorias.length-1].rowid;
+			}
 			
-			AuthServ.update_user_storage($scope.USER).then(function(usuario){
-				$uibModalInstance.close(usuario);
+			// Guardo la iglesia y última auditoría
+			ConexionServ.query('UPDATE usuarios SET distrito_id=?, iglesia_id=?, auditoria_id=? WHERE rowid=? ', [ iglesia.distrito_id, iglesia.rowid, auditoria_id, $scope.USER.rowid ]).then(function(result) {
+				$scope.USER.iglesia_id 		= iglesia.rowid;
+				$scope.USER.distrito_id 	= iglesia.distrito_id;
+				$scope.USER.auditoria_id 	= auditoria_id;
+				
+				AuthServ.update_user_storage($scope.USER).then(function(usuario){
+					const {ipcRenderer} = require('electron');
+					ipcRenderer.send('refrescar-app');
+					
+					$uibModalInstance.close(usuario);
+				});
+				
 			});
 			
 		});
+		
 	}
 
 	

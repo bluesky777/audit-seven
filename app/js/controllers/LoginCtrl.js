@@ -30,8 +30,10 @@ angular.module('auditoriaApp')
     }
     
     
-    
-    ConexionServ.createTables();
+    $scope.tablas_creadas = false;
+    ConexionServ.createTables().then(function(){
+		$scope.tablas_creadas = true;
+	})
 	
     $scope.insertar_dato_inicial = function() {
 		

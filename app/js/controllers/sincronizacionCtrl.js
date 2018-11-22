@@ -9,7 +9,7 @@ angular.module("auditoriaApp")
 	}
 }])
 
-.controller("sincronizacionCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
+.controller("sincronizacionCtrl", function($scope, ConexionServ, DescargarTodoServ, toastr, AuthServ, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
 	$scope.entidades 				= true;
     $scope.distrito_new 			= {};
     $scope.modentidades 			= false;
@@ -190,72 +190,71 @@ angular.module("auditoriaApp")
 		
 			promesas = [];
 			
-			prom = ConexionServ.query('DELETE FROM auditorias')
+			prom = ConexionServ.query('DROP TABLE auditorias')
 			prom.then(function(result){
-				console.log('Eliminado gastos_mes');
+				console.log('Eliminado auditorias');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM iglesias').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE iglesias').then(function(result){
+				console.log('Eliminado iglesias');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM uniones').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE uniones').then(function(result){
+				console.log('Eliminado uniones');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM distritos').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE distritos').then(function(result){
+				console.log('Eliminado distritos');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM asociaciones').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE asociaciones').then(function(result){
+				console.log('Eliminado asociaciones');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM usuarios').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE usuarios').then(function(result){
+				console.log('Eliminado usuarios');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM lib_mensuales').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE lib_mensuales').then(function(result){
+				console.log('Eliminado lib_mensuales');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM lib_semanales').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE lib_semanales').then(function(result){
+				console.log('Eliminado lib_semanales');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM recomendaciones').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE recomendaciones').then(function(result){
+				console.log('Eliminado recomendaciones');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM preguntas').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE preguntas').then(function(result){
+				console.log('Eliminado preguntas');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM respuestas').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE respuestas').then(function(result){
+				console.log('Eliminado respuestas');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM dinero_efectivo').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE dinero_efectivo').then(function(result){
+				console.log('Eliminado dinero_efectivo');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM destinos').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE destinos').then(function(result){
+				console.log('Eliminado destinos');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM destinos_pagos').then(function(result){
-				console.log('Eliminado gastos_mes');
+			prom = ConexionServ.query('DROP TABLE destinos_pagos').then(function(result){
+				console.log('Eliminado destinos_pagos');
 			});
 			promesas.push(prom);
-			prom = ConexionServ.query('DELETE FROM gastos_mes').then(function(result){
+			prom = ConexionServ.query('DROP TABLE gastos_mes').then(function(result){
 				console.log('Eliminado gastos_mes');
 			})
 			promesas.push(prom);
 			
 			Promise.all(promesas).then(function(result){
-				console.log('Eliminado');
 				$scope.datos_eliminados = true;
-				console.log($scope.datos_eliminados);
+				toastr.success('Tablas borradas.');
 			})
 		}
 		
@@ -270,231 +269,27 @@ angular.module("auditoriaApp")
 			return;
 		}
 		
-		$scope.estado_descarga = 'descargando';
+		$scope.estado_descarga = 'Descargando';
     	
 		$http.get(rutaServidor.ruta + '/all', {params: {username: $scope.USER.username, password: $scope.USER.password}}).then (function(result){
 			$scope.estado_descarga = 'insertando';
 			
-			auditorias 			= result.data.auditorias;
-			iglesias 			= result.data.iglesias;
-			uniones 			= result.data.uniones;
-			distritos 			= result.data.distritos;
-			asociaciones 		= result.data.asociaciones;
-			usuarios 			= result.data.usuarios;
-			lib_mensuales 		= result.data.lib_mensuales;
-			lib_semanales 		= result.data.lib_semanales;
-			recomendaciones 	= result.data.recomendaciones;
-			preguntas 			= result.data.preguntas;
-			respuestas 			= result.data.respuestas;
-			dinero_efectivo 	= result.data.dinero_efectivo;
-			destinos 			= result.data.destinos;
-			destinos_pagos 		= result.data.destinos_pagos;
-			gastos_mes 			= result.data.gastos_mes;
+			$scope.valor_insertado 	= function(){
+				return DescargarTodoServ._valor_insertado;
+			};
+			$scope.valor_maximo 	= function(){
+				return DescargarTodoServ._valor_maximo;
+			};
 			
-			
-			promesas 				= [];
-			$scope.valor_insertado 	= 0;
-			$scope.valor_maximo 	= auditorias.length + iglesias.length + uniones.length + distritos.length + 
-				asociaciones.length + usuarios.length + lib_mensuales.length + lib_semanales.length + 
-				recomendaciones.length + preguntas.length + respuestas.length + dinero_efectivo.length + 
-				destinos.length + destinos_pagos.length + gastos_mes.length;
-			
+			ConexionServ.createTables().then(function(){
+				toastr.info('Datos descargados.', 'Tablas creadas.');
 				
-				
-			for (var i = 0; i < auditorias.length; i++) {
-			 	
-				consulta 	= 'INSERT INTO auditorias (rowid, id, fecha, saldo_ant, iglesia_id) VALUES(?, ?, ?, ?, ?)';
-				prome 		= ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].saldo_ant, auditorias[i].iglesia_id]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			}
-
-			for (var i = 0; i < distritos.length; i++) {
- 
-				consulta 	= 'INSERT INTO distritos (rowid, id, nombre, alias, codigo, pastor_id) VALUES(?, ?, ?, ?, ?, ?)';
-				prome 		= ConexionServ.query(consulta, [distritos[i].id, distritos[i].id, distritos[i].nombre, distritos[i].alias, distritos[i].codigo, distritos[i].pastor_id]).then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			for (var i = 0; i < asociaciones.length; i++) {
-			
-				consulta 	= 'INSERT INTO asociaciones(rowid, id, nombre, alias, codigo, union_id) VALUES(?, ?, ?, ?, ?, ?)';
-				prome 		= ConexionServ.query(consulta, [asociaciones[i].id, asociaciones[i].id, asociaciones[i].nombre, asociaciones[i].alias, asociaciones[i].codigo, asociaciones[i].union_id]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-			
-			
-			ConexionServ.query('DELETE FROM usuarios').then(function(){
-				for (var i = 0; i < usuarios.length; i++) {
-					usu 		= usuarios[i];
-					consulta 	= 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?) ';
-					prome 		= ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha_new, usu.tipo, usu.celular]);
-					prome.then(function(result){
-						$scope.valor_insertado++;
-					}, function(tx){
-						console.log('error', tx);
-					});
-					promesas.push(prome);
-				} 
+				DescargarTodoServ.insertar_datos_descargados(result.data).then(function(result){
+					$scope.estado_descarga = 'Insertados';
+					console.log('Todas los datos Insertados', result);
+				})
 			})
 			
-			
-			for (var i = 0; i < iglesias.length; i++) {
-
-				consulta	= 'INSERT INTO iglesias (id, nombre, alias, codigo, distrito_id) VALUES(?, ?, ?, ?, ?)';
-				prome 		= ConexionServ.query(consulta, [iglesias[i].id, iglesias[i].nombre, iglesias[i].alias, iglesias[i].codigo, iglesias[i].distrito_id]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-			
-			for (var i = 0; i < uniones.length; i++) {
-
-				consulta 	= 'INSERT INTO uniones (id, nombre, alias, codigo) VALUES(?, ?, ?, ?)';
-				prome 		= ConexionServ.query(consulta, [uniones[i].id, uniones[i].nombre, uniones[i].alias, uniones[i].codigo]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-			
-			for (var i = 0; i < lib_mensuales.length; i++) {
-				lib 		= lib_mensuales[i];
-				consulta	= 'INSERT INTO lib_mensuales(rowid, id, year, mes, orden, auditoria_id, diezmos, ofrendas, especiales, gastos, gastos_soportados, remesa_enviada) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [lib.id, lib.id, lib.year, lib.mes, lib.orden, lib.auditoria_id, lib.diezmos, lib.ofrendas, lib.especiales, lib.gastos, lib.gastos_soportados, lib.remesa_enviada]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-			
-			for (var i = 0; i < lib_semanales.length; i++) {
-				lib 		= lib_semanales[i];
-				consulta	= 'INSERT INTO lib_semanales(rowid, id, libro_mes_id, diezmo_1, ofrenda_1, especial_1, diezmo_2, ofrenda_2, especial_2, diezmo_3, ofrenda_3, especial_3, ' + 
-					'diezmo_4, ofrenda_4, especial_4, diezmo_5, ofrenda_5, especial_5, diaconos_1, diaconos_2, diaconos_3, diaconos_4, diaconos_5, total_diezmos, total_ofrendas, total_especiales, por_total) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [lib.id, lib.id, lib.libro_mes_id, lib.diezmo_1, lib.ofrenda_1, lib.especial_1, lib.diezmo_2, lib.ofrenda_2, lib.especial_2, lib.diezmo_3, lib.ofrenda_3, lib.especial_3, 
-					lib.diezmo_4, lib.ofrenda_4, lib.especial_4, lib.diezmo_5, lib.ofrenda_5, lib.especial_5, lib.diaconos_1, lib.diaconos_2, lib.diaconos_3, lib.diaconos_4, lib.diaconos_5, lib.total_diezmos, lib.total_ofrendas, lib.total_especiales, lib.por_total]);
-					
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-			
-
-			for (var i = 0; i < recomendaciones.length; i++) {
-
-				consulta 	= 'INSERT INTO recomendaciones (rowid, id, auditoria_id, recomendacion, justificacion, superada, fecha, modificado) VALUES(?, ?, ?, ?, ?, ?, 0)';
-				prome 		= ConexionServ.query(consulta, [recomendaciones[i].id, recomendaciones[i].id, recomendaciones[i].auditoria_id, recomendaciones[i].recomendacion, recomendaciones[i].justificacion, recomendaciones[i].superada, recomendaciones[i].fecha]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			
-			for (var i = 0; i < preguntas.length; i++) {
-				rec 		= preguntas[i];
-				consulta 	= 'INSERT INTO preguntas (rowid, id, definition, tipo, option1, option2, option3, option4) VALUES(?,?,?,?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.definition, rec.tipo, rec.option1, rec.option2, rec.option3, rec.option4]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			for (var i = 0; i < respuestas.length; i++) {
-				rec 		= respuestas[i];
-				consulta 	= 'INSERT INTO respuestas (rowid, id, pregunta_id, auditoria_id, respuestas) VALUES(?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.pregunta_id, rec.auditoria_id, rec.respuestas]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			for (var i = 0; i < dinero_efectivo.length; i++) {
-				rec 		= dinero_efectivo[i];
-				consulta 	= 'INSERT INTO dinero_efectivo (rowid, id, auditoria_id, valor, descripcion) VALUES(?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.auditoria_id, rec.valor, rec.descripcionr]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			for (var i = 0; i < destinos.length; i++) {
-				rec 		= destinos[i];
-				consulta 	= 'INSERT INTO destinos (rowid, id, iglesia_id, nombre, descripcion) VALUES(?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.iglesia_id, rec.nombre, rec.descripcion]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			for (var i = 0; i < destinos_pagos.length; i++) {
-				rec 		= destinos_pagos[i];
-				consulta 	= 'INSERT INTO destinos_pagos (rowid, id, destino_id, libro_mes_id, pago, fecha, descripcion) VALUES(?,?,?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.destino_id, rec.libro_mes_id, rec.pago, rec.fecha, rec.descripcion]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			for (var i = 0; i < gastos_mes.length; i++) {
-				rec 		= gastos_mes[i];
-				consulta 	= 'INSERT INTO gastos_mes (rowid, id, libro_mes_id, auditoria_id, valor, descripcion) VALUES(?,?,?,?,?,?)';
-				prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.libro_mes_id, rec.auditoria_id, rec.valor, rec.descripcion]);
-				prome.then(function(result){
-					$scope.valor_insertado++;
-				}, function(tx){
-					console.log('error', tx);
-				});
-				promesas.push(prome);
-			} 
-
-			
-			Promise.all(promesas).then(function(result){
-				$scope.estado_descarga = 'insertados';
-				console.log('Todas los datos insertados', result);
-				$scope.valor_insertado = $scope.valor_maximo;
-			})
 			
 
 		}), function(){
@@ -507,6 +302,19 @@ angular.module("auditoriaApp")
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
 			// Traemos USUARIOS
+			consulta = "SELECT count(*) as cant FROM sqlite_master WHERE type='table' AND name='usuarios'";
+			
+			ConexionServ.query(consulta, []).then(function(result) {
+				cant = result[0].cant;
+				if (cant==0) {
+					AuthServ.cerrar_sesion();
+				}
+			},function(tx) {
+				console.log("Error no es posbile verificar si existe la tabla usuarios", tx);
+			});
+
+			
+			
 			consulta = "SELECT rowid, * from usuarios where modificado=1 or eliminado=1 or id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {

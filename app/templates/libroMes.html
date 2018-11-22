@@ -19,42 +19,37 @@
 
 
 <div class="row panel-auditoria-meses">
-    <div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized}">
+    <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
 					<i class="glyphicon glyphicon-info-sign"></i> 
-					AUDITORÍA {{ USER.fecha_audit }}
+					AUDITORÍA {{ auditoria.fecha_audit }}
 				</h2>
-
-                <div class="box-icon maximizar">
-                    
-                    <a href="" ng-click="widget_maximized=!widget_maximized" uib-tooltip="Maximizar" class="btn btn-close btn-round btn-default">
-						<i class="glyphicon " ng-class="{ 'glyphicon-resize-full': !widget_maximized, 'glyphicon-resize-small': widget_maximized }"></i>
-					</a>
-                    
-                </div>
             </div>
-            <div class="box-content " style="overflow: auto;">
+            <div class="box-content">
 				
 				<div class="row">
                 
-					<div class="col-sm-12">
+					<div class="col-sm-12" >
+						
+						<div style="text-align: center;">
+							<h4>Selecciona auditoria</h4>
+							<div style="background-color: #ddd; padding: 4px; width: 80%; overflow-x: auto; min-height: 50px; margin: 0 auto;">
+								<button ng-click="seleccionarAuditorias(audit)" 
+									ng-repeat="audit in auditorias" uib-tooltip="{{ audit.hora }}"
+									class="btn " ng-class="{'btn-primary': audit.rowid==auditoria.rowid, 'btn-default': audit.rowid!=auditoria.rowid }">
 
-							<h3>Selecciona auditoria</h3>
-							<button ng-click="seleccionarAuditorias(audit)" 
-								ng-repeat="audit in auditorias" 
-								class="btn " ng-class="{'btn-primary': audit.rowid==auditoria.rowid, 'btn-default': audit.rowid!=auditoria.rowid }">
-
-								{{ audit.fecha }}
-							</button>
-							
-							<hr>
+									{{ audit.fecha }}
+								</button>
+								<span ng-show="auditorias.length==0" style="font-style: italic; color: red; font-weight: bold;">No hay auditorías para esta iglesia</span>
+							</div>
+						</div>
+						
+						<hr>
 						
 					
-						<table class="table table-bordered table-condensed" style="margin-bottom: 2px;">
-
-
+						<table class="table table-bordered table-condensed" style="margin-bottom: 2px; font-size: 12pt;">
 					
 							<tr>
 								<td class="success"> <label>Distrito: </label></td>
@@ -64,22 +59,49 @@
 								<td class="info">{{ USER.iglesia_nombre }}</td>
 								
 								<td class="success"> <label>Fecha</label></td>
-								<td class="success">{{ USER.fecha_audit }}</td>
+								<td class="success">{{ USER.fecha_audit }} {{ USER.hora_audit }}</td>
 							</tr>
-						</table>
-						
-						<table class="table table-bordered table-condensed">
 							<tr>
 								<td class="success"> <label>Pastor: </label></td>
-								<td class="success" colspan="2">{{ USER.pastor_nombres }} {{ USER.pastor_apellidos }}</td>
+								<td class="success" colspan="2">{{ distrito.pastor_nombres }} {{ distrito.pastor_apellidos }}</td>
 								
-								<td class="info" style="text-align: right;"> <label>Tesorero(a): </label></td>
-								<td class="info" colspan="2">{{ USER.tesorero_nombres }} {{ USER.tesorero_apellidos }}</td>
+								<td class="info" colspan="3"> <label>Tesorero(a) distrital: </label>
+									{{ distrito.tesorero_nombres }} {{ distrito.tesorero_apellidos }}
+								</td>
 							</tr>
 						</table>
 
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 						
-						<hr>
+
+<div class="row panel-auditoria-meses" ng-if="auditoria.rowid">
+	<div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized}">
+		<div class="box-inner">
+			<div class="box-header well">
+				<h2>
+					<i class="glyphicon glyphicon-info-sign"></i> 
+					LIBROS DEL MES
+				</h2>
+
+				<div class="box-icon maximizar">
+					
+					<a href="" ng-click="widget_maximized=!widget_maximized" uib-tooltip="Maximizar" class="btn btn-close btn-round btn-default">
+						<i class="glyphicon " ng-class="{ 'glyphicon-resize-full': !widget_maximized, 'glyphicon-resize-small': widget_maximized }"></i>
+					</a>
+					
+				</div>
+			</div>
+			<div class="box-content " style="overflow: auto;">
+				
+				<div class="row">
+                
+					<div class="col-sm-12">
 						<!--
 						Recomendaciones
 						-->
@@ -191,7 +213,7 @@
 									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
 									<!-- 20% OMM -->
 									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
-									<!-- 60% -->
+									<!-- 60% + EE -->
 									<td class="no-padding-bottom align-right">{{ (lib_mes.especiales + lib_mes.ofrendas * 0.6) | currency:'':0 }}</td>
 									
 									<!-- Gastos -->
@@ -240,7 +262,7 @@
 									<td class="no-padding-bottom align-right">{{ (lib_mes.remesa_enviada - (lib_mes.diezmos + lib_mes.ofrendas * 0.4)) | currency:'':0 }}</td>
 									
 
-									<td class="no-padding" style="">
+									<td class="no-padding">
 
 										<button ng-show="false" href="" class="btn btn-primary btn-sm" ng-click="modificar_lib(lib_mes)">
 											<i class="glyphicon glyphicon-pencil"></i>
@@ -276,7 +298,7 @@
 									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
 									<!-- 20% OMM -->
 									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
-									<!-- 60% -->
+									<!-- 60% + EE -->
 									<td class="no-padding-bottom align-right">{{ sum_60_ofrendas }}</td>
 									
 									<!-- Gastos -->
@@ -375,9 +397,9 @@
 								<td>Ingresos por registrar</td>
 								<td class="align-right">
 									<input type="text" ng-model="auditoria.ingre_por_registrar" class="align-right"
-									ng-change="cambiaAuditoria('ingre_por_registrar')" 
-									ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-									ui-number-mask="0" enter-as-tab>
+										ng-change="cambiaAuditoria('ingre_por_registrar')" 
+										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+										ui-number-mask="0" enter-as-tab>
 								</td>
 							</tr>
 
@@ -451,7 +473,7 @@
 								<td>Gastos del mes por registrar</td>
 								<td class="align-right">
 									<div class="input-group">
-										<input type="text" ng-model="auditoria.gastos_mes_por_regis" class="align-right"
+										<input type="text" ng-model="auditoria.gastos_mes_por_regis" class="align-right input-totales"
 											ng-change="cambiaAuditoria('gastos_mes_por_regis')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 											ui-number-mask="0" enter-as-tab
@@ -462,13 +484,25 @@
 										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
 											popover-title="Gastos auditoria" popover-popup-delay="300"
 											popover-trigger="'mouseenter'">
-											<button class="btn btn-default btn-xs" type="button" ng-click="abrirGastosAuditoria(auditoria)">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirGastosAuditoria(auditoria)">
 												<i class="glyphicon glyphicon-pencil"></i>
-												<span class="badge" ng-show="auditoria.gastos_detalle.length>0" style="position: absolute;">
+												<span class="badge" ng-show="auditoria.gastos_detalle.length>0">
 													{{auditoria.gastos_detalle.length}}
 												</span>
 											</button>
 										</span>
+										
+										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
+											popover-title="Gastos auditoria" popover-popup-delay="300"
+											popover-trigger="'mouseenter'">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirGastosAuditoria(auditoria)">
+												<i class="glyphicon glyphicon-flag"></i>
+												<span class="badge" ng-show="auditoria.gastos_detalle.length>0">
+													{{auditoria.gastos_detalle.length}}
+												</span>
+											</button>
+										</span>
+										
 									</div>
 								</td>
 							</tr>
@@ -478,7 +512,7 @@
 								<td>Dinero efectivo</td>
 								<td class="align-right">
 									<div class="input-group">
-										<input type="text" ng-model="auditoria.dinero_efectivo" class="align-right"
+										<input type="text" ng-model="auditoria.dinero_efectivo" class="align-right input-totales"
 											ng-change="cambiaAuditoria('dinero_efectivo')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 											ui-number-mask="0" enter-as-tab
@@ -489,7 +523,7 @@
 										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/efectivoAuditoriaPopover.html'"
 											popover-title="Gastos auditoria" popover-popup-delay="300"
 											popover-trigger="'mouseenter'">
-											<button class="btn btn-default btn-xs" type="button" ng-click="abrirDineroEfectivo(auditoria)">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirDineroEfectivo(auditoria)">
 												<i class="glyphicon glyphicon-pencil"></i>
 											</button>
 										</span>

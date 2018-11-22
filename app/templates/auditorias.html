@@ -4,7 +4,7 @@
             <a ui-sref="panel">Inicio</a>
         </li>
         <li class="li-breadcrumb">
-            <a ui-sref="panel.auditorias" >Auditorias</a>
+            <a ui-sref="panel.auditorias" >Auditorías</a>
         </li>
         <li style="float: right;" class="refresh-breadcrumb">
           <a href="" ng-click="refresh()">
@@ -18,7 +18,9 @@
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-header well">
-                <h2><i class="glyphicon glyphicon-info-sign"></i> Auditorias</h2>
+                <h2><i class="glyphicon glyphicon-info-sign"></i> Auditorías de 
+                  <span style="font-style: italic; text-decoration: underline;">{{ USER.iglesia_nombre }}</span>
+                </h2>
 
                 <div class="box-icon">
                     <!--
@@ -37,7 +39,7 @@
 
                       <div class="box-header well">
                         <h2>
-                          <i class="glyphicon glyphicon-plus"></i> Nueva Auditoría
+                          <i class="glyphicon glyphicon-plus"></i> Nueva auditoría
                         </h2>
                         <div class="box-icon"></div>
                       </div>
@@ -125,7 +127,10 @@
                             Seleccionar
                           </button>
 
-                          <span ng-show="USER.auditoria_id==auditoria.rowid" style="padding-top: 5px; display: inline-block; color: #27a0e6;">Seleccionada</span>
+                          <span ng-show="USER.auditoria_id==auditoria.rowid" style="padding-top: 5px; display: inline-block; color: #27a0e6; font-weight: bold;">
+                            <i class="glyphicon glyphicon-ok"></i>
+                            Seleccionada
+                          </span>
 
                         </div>
 
@@ -144,7 +149,7 @@
 
 
                 <div ng-show="modusers">
-                    <h2>Modificar Auditoría</h2>
+                    <h3>Modificar auditoría</h3>
                     <form ng-submit="actusersauditoria(auditoria_editars)">
 
                       <table style="width: 100%;">
@@ -182,8 +187,10 @@
                         </tr>
                       
                      </table>
-                      <div>
-                        <input class="btn btn-primary  btn-block" type="submit" name="" value="Actualizar Auditoria">
+                     <br>
+                      <div class="center">
+                        <input class="btn btn-warning " type="button" ng-click="cancelar_crear_distrito()" value="Cancelar">
+                        <input class="btn btn-primary " type="submit" name="" value="Actualizar auditoría">
                       </div>
                       
                     </form>

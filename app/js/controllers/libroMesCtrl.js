@@ -73,8 +73,6 @@ angular.module("auditoriaApp")
     	}
 
 
-		$scope.traerRecos();
-
 		$timeout(function() {
 			$location.hash("caja-recomendaciones");
 			$anchorScroll();
@@ -280,10 +278,24 @@ angular.module("auditoriaApp")
 			$scope.USER 		= actualizado;
 			$scope.lib_meses 	= [];
 			
-			
-			consulta 	= 'SELECT *, rowid FROM auditorias WHERE iglesia_id=?';
+			// Traigo las auditorías de la iglesia que tengo seleccionada
+			consulta 	= 'SELECT *, rowid FROM auditorias WHERE iglesia_id=? ORDER BY fecha, hora, rowid desc';
 			ConexionServ.query(consulta, [$scope.USER.iglesia_id]).then(function(rAudi) {
 				$scope.auditorias = rAudi;
+			}, function(tx) {
+				console.log("Error no se pudo traer auditorias", tx);
+			});
+			
+			
+			consulta 	= 'SELECT d.*, d.rowid, u.nombres as pastor_nombres, u.apellidos as pastor_apellidos, u.email as pastor_email, u.celular as pastor_celular, ' + 
+					'u2.nombres as tesorero_nombres, u2.apellidos as tesorero_apellidos, u2.email as tesorero_email, u2.celular as tesorero_celular ' + 
+				'FROM distritos d ' +
+				'LEFT JOIN usuarios u ON u.rowid=d.pastor_id and u.eliminado is null  ' +
+				'LEFT JOIN usuarios u2 ON u2.rowid=d.tesorero_id and u2.eliminado is null  ' +
+				'WHERE d.rowid=?';
+
+			ConexionServ.query(consulta, [actualizado.distrito_id]).then(function(rAudi) {
+				$scope.distrito = rAudi[0];
 			}, function(tx) {
 				console.log("Error no se pudo traer auditorias", tx);
 			});
@@ -304,11 +316,10 @@ angular.module("auditoriaApp")
 				consulta 	= 'SELECT a.*, a.rowid FROM auditorias a WHERE rowid=?';
 				ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
 					if (result.length == 0) {
-						toastr.warning('No se encuentra la auditoría seleccionada.');
+						toastr.warning('No hay auditoría seleccionada.');
 						return
 					}
 					$scope.auditoria = result[0];
-
 
 			
 					
@@ -350,6 +361,29 @@ angular.module("auditoriaApp")
 	$scope.traerDatos();
 	
 	
+	$scope.recomendacionesLibMes = function (lib_mes) {
+		// Aún no
+		consulta 	= 'SELECT g.*, g.rowid FROM gastos_mes g WHERE g.libro_mes_id=?';
+		
+		ConexionServ.query(consulta, [lib_mes.rowid]).then(function(result) {
+			lib_mes.gastos_detalle = result;
+		}, function(tx) {
+			console.log("Error trayendo gastos de mes, ", lib_mes, tx);
+		});
+	}
+	
+	$scope.recomendacionesAuditoria = function (lib_mes) {
+		// Aún no
+		consulta 	= 'SELECT g.*, g.rowid FROM auditorias a WHERE g.libro_mes_id=?';
+		
+		ConexionServ.query(consulta, [lib_mes.rowid]).then(function(result) {
+			lib_mes.gastos_detalle = result;
+		}, function(tx) {
+			console.log("Error trayendo gastos de mes, ", lib_mes, tx);
+		});
+	}
+
+	
 	$scope.gastosLibMes = function (lib_mes) {
 		consulta 	= 'SELECT g.*, g.rowid FROM gastos_mes g WHERE g.libro_mes_id=?';
 		
@@ -361,27 +395,7 @@ angular.module("auditoriaApp")
 	}
 
 
-	$scope.traerRecos = function () {
-		consulta 	= 'SELECT tr.*, tr.rowid FROM recomendaciones tr WHERE tr.id=?';
-		
-		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
-
-			for (var i = result.length - 1; i >= 0; i--) {
-
-				if (result[i].superada == 0) {
-					result[i].superada = "no"
-				}else{result[i].superada = "sí"}
-				
-			}
-
-			
-			console.log(result);
 	
-			$scope.Recomendaciones = result;
-		}, function(tx) {
-			console.log("Error trayendo recomendaciones, ", trec, tx);
-		});
-	}
 
 
 
@@ -470,8 +484,8 @@ angular.module("auditoriaApp")
 		
 		$scope.sum_20_ofrendas 		= $filter('currency')( sum_ofrendas * 0.2, '$', 0);
 		$scope.sum_20_ofrendas 		= $filter('currency')( sum_ofrendas * 0.2, '$', 0);
-		sum_ofre_esp 				= sum_ofrendas + sum_especiales;
-		$scope.sum_60_ofrendas 		= $filter('currency')( sum_ofre_esp * 0.6, '$', 0);
+		sum_ofre_esp 				= (sum_ofrendas * 0.6) + sum_especiales;
+		$scope.sum_60_ofrendas 		= $filter('currency')( sum_ofre_esp, '$', 0);
 		$scope.sum_gastos 			= $filter('currency')( sum_gastos, '$', 0);
 		$scope.sum_gastos_sop 		= $filter('currency')( sum_gastos_sop, '$', 0);
 		$scope.sum_dif_gastos 		= $filter('currency')( (sum_gastos - sum_gastos_sop), '$', 0);

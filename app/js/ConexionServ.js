@@ -14,7 +14,7 @@ angular.module('auditoriaApp')
                 "presidente integer DEFAULT NULL," +
                 "pais varchar(100)  DEFAULT NULL collate nocase," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0'," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "division_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlRecomendaciones = "CREATE TABLE IF NOT EXISTS recomendaciones (id integer, " +
@@ -26,7 +26,7 @@ angular.module('auditoriaApp')
                 "tipo varchar(250)  DEFAULT NULL collate nocase, " +
                 "auditoria_id integer DEFAULT NULL," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase, " +
-                "eliminado integer  DEFAULT '0' )";
+                "eliminado varchar(100)  DEFAULT NULL collate nocase )";
                 
 
     sqlAsociaciones = "CREATE TABLE IF NOT EXISTS asociaciones (id integer," +
@@ -36,7 +36,7 @@ angular.module('auditoriaApp')
                 "zona varchar(100)  DEFAULT NULL collate nocase," +
                 "union_id integer DEFAULT NULL," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0'," +
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase," +
                 "tesorero_id integer DEFAULT NULL)"; // Tesorero del distrito
 
     sqlDistritos = "CREATE TABLE IF NOT EXISTS distritos (id integer," +
@@ -46,8 +46,8 @@ angular.module('auditoriaApp')
                 "zona varchar(100)  DEFAULT NULL collate nocase," +
                 "asociacion_id integer DEFAULT NULL," +
                 "pastor_id integer DEFAULT NULL," +
-                "modificado varchar(100)  DEFAULT 0 collate nocase," +
-                "eliminado varchar(100)  DEFAULT 0 collate nocase," +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "tesorero_id integer DEFAULT NULL)"; // Tesorero del distrito
 
    sqlIglesias = "CREATE TABLE IF NOT EXISTS iglesias (id integer," +
@@ -160,7 +160,7 @@ angular.module('auditoriaApp')
                 "total_especiales integer  DEFAULT 0 ," +  // Ofrendas especiales recogidas del mes, no por sábados
                 "por_total integer  DEFAULT 0 ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0' )" ; // 0 o 1. Si es por total, se ignoran los valores de los 5 sábados
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase )" ; // 0 o 1. Si es por total, se ignoran los valores de los 5 sábados
 
     // Obligaciones fijas que tiene la iglesia mensuales
     sqlDestinos = "CREATE TABLE IF NOT EXISTS destinos (id integer," +
@@ -168,7 +168,7 @@ angular.module('auditoriaApp')
                 "nombre varchar(250)  NOT NULL collate nocase," +
                 "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0' )";
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase )";
 
 
     // Pagos que ha hecho la iglesia en ese mes en los destinos fijos
@@ -179,7 +179,7 @@ angular.module('auditoriaApp')
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0')";
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase)";
 
     /*
     // Sumatorias de las facturas que tiene la iglesia por mes
@@ -196,7 +196,7 @@ angular.module('auditoriaApp')
                 "valor integer  NOT NULL," +
                 "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0')";
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase)";
 
     // Gastos registrados. Tiene que coincidir con los gastos que tienen soporte en soportes_mes
     sqlDinero = "CREATE TABLE IF NOT EXISTS dinero_efectivo (id integer," +
@@ -204,7 +204,7 @@ angular.module('auditoriaApp')
                 "valor integer  NOT NULL," +
                 "descripcion varchar(250)  DEFAULT NULL collate nocase ," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0')";
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase)";
 
     sqlpreguntas = "CREATE TABLE IF NOT EXISTS preguntas (id integer," +
                 "definition varchar(100)  NOT NULL collate nocase," +
@@ -215,7 +215,7 @@ angular.module('auditoriaApp')
                 "option4 varchar(100)  NOT NULL, " +
                 "auditoria_id varchar(100) NOT NULL, " +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0')";   
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase)";   
 
 
 
@@ -223,7 +223,7 @@ angular.module('auditoriaApp')
                 "pregunta_id varchar(100)  NOT NULL collate nocase," +
                 "respuestas varchar(100)  NOT NULL, " +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado integer  DEFAULT '0')";       
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase)";       
 
            
 
@@ -235,134 +235,104 @@ angular.module('auditoriaApp')
         createTables: function(){
             var defered = $q.defer();
             
-            db.transaction(function (tx) {
-
-                console.log(tx);
+            promesas = [];
+            
+            prom = this.query(sqlDistritos).then(function(){
+                console.log('Distritos Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            prom = this.query(sqlRecomendaciones).then(function(){
+                console.log('Recomendaciones Tabla creada');
+            })
+            promesas.push(prom);
+            
                 
-                tx.executeSql(sqlDistritos, [], function (tx, result) {
-                    // console.log('Distritos Tabla creada');
-                    defered.resolve('Distritos Tabla creada');
-                }, function(tx,error){
-                    console.log("Distritos Tabla No se pudo crear", error.message);
-                })
-
-                tx.executeSql( sqlRecomendaciones, [], function (tx, result) {
-                    // console.log('Distritos Tabla creada');
-                    defered.resolve('Recomendaciones Tabla creada');
-                }, function(tx,error){
-                    console.log("Recomendaciones Tabla No se pudo crear", error.message);
-                })
+            prom = this.query(sqlIglesias).then(function(){
+                console.log('Iglesias Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            prom = this.query(sqlusuarios).then(function(){
+                console.log('Usuarios Tabla creada');
+            })
+            promesas.push(prom);
+            
                 
-                tx.executeSql(sqlIglesias, [], function (tx, result) {
-                    // console.log('Iglesias Tabla creada');
-                    defered.resolve('Iglesias Tabla creada');
-                }, function(tx,error){
-                    console.log("Iglesias Tabla No se pudo crear", error.message);
-                })
-
-
-                 tx.executeSql( sqlusuarios , [], function (tx, result) {
-                    // console.log('usuarios Tabla creada');
-                    defered.resolve('usuarios Tabla creada');
-                }, function(tx,error){
-                    console.log("usuarios Tabla No se pudo crear", error.message);
-                })
-
-                tx.executeSql( sqlauditorias , [], function (tx, result) {
-                    // console.log('auditorias Tabla creada');
-                    defered.resolve('auditorias Tabla creada');
-                }, function(tx,error){
-                    console.log("auditorias Tabla No se pudo crear", error.message);
-                })
-
-
-                tx.executeSql( sqlLibMes , [], function (tx, result) {
-                    // console.log('Libros mensuales Tabla creada');
-                    defered.resolve('Libros mensuales Tabla creada');
-                }, function(tx,error){
-                    console.log("Libros mensuales Tabla No se pudo crear", error.message);
-                })
-
-                tx.executeSql( sqlLibSem , [], function (tx, result) {
-                    // console.log('Libros Semanales Tabla creada');
-                    defered.resolve('Libros Semanales Tabla creada');
-                }, function(tx,error){
-                    console.log("Libros Semanales Tabla No se pudo crear", error.message);
-                })
-
-                tx.executeSql( sqlUniones , [], function (tx, result) {
-                    // console.log('Libros mensuales Tabla creada');
-                    defered.resolve('uniones Tabla creada');
-                }, function(tx,error){
-                    console.log("uniones Tabla No se pudo crear", error.message);
-                })
-
-
-                tx.executeSql( sqlDestinos , [], function (tx, result) {
-                    console.log('Destinos Tabla creada');
-                    defered.resolve('Destinos Tabla creada');
-                }, function(tx,error){
-                    console.log("Destinos Tabla No se pudo crear", error.message);
-                })
-
-                 tx.executeSql( sqlAsociaciones , [], function (tx, result) {
-                    console.log('Asociaciones Tabla creada');
-                    defered.resolve('Asociaciones Tabla creada');
-                }, function(tx,error){
-                    console.log("Asociaciones Tabla No se pudo crear", error.message);
-                })
-
-                tx.executeSql( sqlPagosDest , [], function (tx, result) {
-                    // console.log('Pagos Destinos Tabla creada');
-                    defered.resolve('Pagos Destinos Tabla creada');
-                }, function(tx,error){
-                    console.log("Pagos Destinos Tabla No se pudo crear", error.message);
-                })
+            prom = this.query(sqlauditorias).then(function(){
+                console.log('auditorias Tabla creada');
+            })
+            promesas.push(prom);
+            
                 
-                /*
-                tx.executeSql( sqlSoportesMes , [], function (tx, result) {
-                    // console.log('Soportes Mes Tabla creada');
-                    defered.resolve('Soportes Mes Tabla creada');
-                }, function(tx,error){
-                    console.log("Soportes Mes Tabla No se pudo crear", error.message);
-                })
-                */
-
-
-               tx.executeSql( sqlGastosMes , [], function (tx, result) {
-                    // console.log('Gastos Mes Tabla creada');
-                    defered.resolve('Gastos Mes Tabla creada');
-                }, function(tx,error){
-                    console.log("Gastos Mes Tabla No se pudo crear", error.message);
-                })
-
-
-                tx.executeSql( sqlDinero , [], function (tx, result) {
-                    // console.log('Dinero_efectivo Tabla creada');
-                    defered.resolve('Dinero_efectivo Tabla creada');
-                }, function(tx,error){
-                    console.log("Dinero_efectivo Tabla No se pudo crear", error.message);
-                })
-
-                tx.executeSql( sqlpreguntas , [], function (tx, result) {
-                    // console.log('preguntas Tabla creada');
-                    defered.resolve('preguntas Tabla creada');
-                }, function(tx,error){
-                    console.log("preguntas Tabla No se pudo crear", error.message);
-                })
-
-
-                   tx.executeSql( sqlrespuestas , [], function (tx, result) {
-                    // console.log('respuestas Tabla creada');
-                    defered.resolve('respuestas Tabla creada');
-                }, function(tx,error){
-                    console.log("respuestas Tabla No se pudo crear", error.message);
-                })
-          
-          
-            });
+            prom = this.query(sqlLibMes).then(function(){
+                console.log('Libros mensuales Tabla creada');
+            })
+            promesas.push(prom);
+            
+                
+            prom = this.query(sqlLibSem).then(function(){
+                console.log('Libros Semanales Tabla creada');
+            })
+            promesas.push(prom);
+            
+                
+            prom = this.query(sqlUniones).then(function(){
+                console.log('Libros mensuales Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            prom = this.query(sqlDestinos).then(function(){
+                console.log('Destinos Tabla creada');
+            })
+            promesas.push(prom);
+            
+                
+            prom = this.query(sqlAsociaciones).then(function(){
+                console.log('Asociaciones Tabla creada');
+            })
+            promesas.push(prom);
+            
+                
+            prom = this.query(sqlPagosDest).then(function(){
+                console.log('Pagos Destinos Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            prom = this.query(sqlGastosMes).then(function(){
+                console.log('Gastos Mes Tabla creada');
+            })
+            promesas.push(prom);
+            
+                
+            prom = this.query(sqlDinero).then(function(){
+                console.log('Dinero_efectivo Tabla creada');
+            })
+            promesas.push(prom);
+            
+                
+            prom = this.query(sqlpreguntas).then(function(){
+                console.log('preguntas Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            prom = this.query(sqlrespuestas).then(function(){
+                console.log('respuestas Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            Promise.all(promesas).then(function(){
+                console.log('TABLAS CREADAS');
+                defered.resolve();
+            })
   
-        return defered.promise;
+            return defered.promise;
         
         },
         query: function(sql, datos, datos_callback){ // datos_callback para los alumnos en for, porque el i cambia

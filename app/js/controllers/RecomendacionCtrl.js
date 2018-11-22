@@ -47,10 +47,10 @@ angular.module('auditoriaApp')
 
 	$scope.verDtosrecomendacion = function(){
 
-		consulta = "SELECT rowid, * from recomendaciones WHERE eliminado !='1'";
+		consulta = "SELECT rowid, * from recomendaciones WHERE eliminado is null";
 
 		ConexionServ.query(consulta, []).then(function(result) {
-
+			console.log(result);
 			for (var i = result.length - 1; i >= 0; i--) {
 				result[i].fecha = new Date(result[i].fecha);
 				

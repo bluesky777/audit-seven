@@ -5,23 +5,6 @@ angular.module("auditoriaApp")
     
     $scope.auditoria                = auditoria;
     
-    /*
-	$scope.traerDatos = function(){
-
-		consulta 	= 'SELECT g.*, g.rowid FROM gastos_mes g WHERE g.libro_mes_id=?';
-		
-		ConexionServ.query(consulta, [libro_mes.rowid]).then(function(result) {
-            $scope.gastos           = result;
-            $scope.focusOnValorNew  = true;
-		}, function(tx) {
-			console.log("Error no es posbile traer los gastos", tx);
-		});
-
-	}
-
-	
-    $scope.traerDatos();
-    */
     
     
     $scope.getConcordancias = function(val) {

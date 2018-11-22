@@ -48,7 +48,10 @@ angular.module("auditoriaApp")
 	};
   
 	$scope.verActuaUsers = function(usuario) {
-		usuario.fecha 		= new Date(usuario.fecha);
+		if (usuario.fecha) {
+			usuario.fecha 		= new Date(usuario.fecha);
+		}
+		
 		$scope.ver_edit_usu = !$scope.ver_edit_usu;
 		$scope.user_editars = usuario;
 	};
@@ -62,14 +65,15 @@ angular.module("auditoriaApp")
 		if (!usu.username) {
 			usu.username = usu.nombres+(window.getRandomInt(999, 9999));
 		}
+		fecha_new = null;
 		if (usu.fecha) {
-			usu.fecha_new = window.fixDate(usu.fecha);
+			fecha_new = window.fixDate(usu.fecha);
 		}
 		
 	  	consulta = "INSERT INTO usuarios(nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?) ";
-	  	ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha_new, usu.tipo, usu.celular]).then(function(result) {
+	  	ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, fecha_new, usu.tipo, usu.celular]).then(function(result) {
 
-			toastr.success("Usuario creado exitosamente, presiona F5 Para recargar");
+			toastr.success("Usuario creado.");
 			$scope.ver_crear_usu 	= false;
 			$scope.creando 			= false;
 
@@ -91,9 +95,9 @@ angular.module("auditoriaApp")
 		datos 		= [];
 		
 		if (tipo == 'Auditor' || tipo == 'Admin') {
-			consulta 	= "SELECT rowid, * FROM usuarios ORDER BY rowid DESC";
+			consulta 	= "SELECT rowid, * FROM usuarios WHERE eliminado is null ORDER BY rowid DESC";
 		}else if(tipo == 'Tesorero' || tipo == 'Pastor'){
-			consulta 	= "SELECT rowid, * FROM usuarios WHERE tipo=? or tipo=? ORDER BY rowid DESC";
+			consulta 	= "SELECT rowid, * FROM usuarios WHERE eliminado is null and (tipo=? or tipo=?) ORDER BY rowid DESC";
 			datos 		= ['Tesorero', 'Pastor'];
 		}
 		
@@ -113,10 +117,15 @@ angular.module("auditoriaApp")
 	$scope.actUsers = function(usu) {
 		$scope.guardando_cambios = true;
 		
-		usu.fecha_new = window.fixDate(usu.fecha);
+		fecha_new = null;
+		if (usu.fecha) {
+			fecha_new = window.fixDate(usu.fecha);
+		}
 		
-		consulta = "UPDATE usuarios SET nombres=?, apellidos=?, sexo=?, username=?, password=?, fecha=?, tipo=?, celular=?, modificado=1 WHERE rowid=? ";
-		ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.fecha_new, usu.tipo, usu.celular, usu.rowid]).then(function(result) {
+		fecha_update = window.fixDate(new Date(), true);
+		
+		consulta = "UPDATE usuarios SET nombres=?, apellidos=?, sexo=?, username=?, password=?, fecha=?, tipo=?, celular=?, modificado=? WHERE rowid=? ";
+		ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, fecha_new, usu.tipo, usu.celular, fecha_update, usu.rowid]).then(function(result) {
 			$scope.ver_edit_usu 		= false;
 			$scope.guardando_cambios 	= false;
 			console.log("usuario Actualizado", result);
@@ -281,11 +290,12 @@ angular.module("auditoriaApp")
 	console.log('elemento', elemento);
 
 	$scope.ok = ()=>{
-
 		
-		consulta = "UPDATE usuarios SET eliminado=1 WHERE rowid=? ";
+		fecha_del = window.fixDate(new Date(), true);
+		
+		consulta = "UPDATE usuarios SET eliminado=? WHERE rowid=? ";
 
-		ConexionServ.query(consulta, [elemento.rowid]).then(function(result) {
+		ConexionServ.query(consulta, [fecha_del, elemento.rowid]).then(function(result) {
 			console.log("Usuario eliminado", elemento);
 			$modalInstance.close(elemento)
 		}, function(tx) {
