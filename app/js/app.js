@@ -130,8 +130,7 @@ angular.module('auditoriaApp', [
 			}
 		}
 	}
-})
-
+}))
 
 .constant('tipos_recomendacion', {
 	tipos: [
