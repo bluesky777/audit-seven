@@ -70,7 +70,7 @@ angular.module('auditoriaApp')
 	
 	$scope.compararDistritosYears = function(){
 		$scope.config.orientacion = 'oficio_horizontal'
-		$state.go('panel.informe.comparar_years');
+		$state.go('panel.informe.comparar_distritos_years');
 	}
 
 

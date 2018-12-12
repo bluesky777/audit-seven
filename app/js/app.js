@@ -125,8 +125,8 @@ angular.module('auditoriaApp', [
 			}
 		}else{
 			return {
-				ruta: 'http://127.0.0.1/feryz_server/public/auditorias',
-				root: 'http://127.0.0.1/feryz_server/public'
+				ruta: 'https://edilson.micolevirtual.com/feryz_server/public/auditorias',
+				root: 'https://edilson.micolevirtual.com/feryz_server/public'
 			}
 		}
 	}
@@ -152,6 +152,38 @@ angular.module('auditoriaApp', [
 		{tipo: 'Otra'}
 	]
 })
+
+
+.constant('Tiempos', {
+	meses:[
+		{num: 0, mes: 'Enero', per: '001'},
+		{num: 1, mes: 'Febrero', per: '002'},
+		{num: 3, mes: 'Marzo', per: '003'},
+		{num: 4, mes: 'Abril', per: '004'},
+		{num: 5, mes: 'Mayo', per: '005'},
+		{num: 6, mes: 'Junio', per: '006'},
+		{num: 7, mes: 'Julio', per: '007'},
+		{num: 8, mes: 'Agosto', per: '008'},
+		{num: 9, mes: 'Septiembre', per: '009'},
+		{num: 10, mes: 'Octubre', per: '010'},
+		{num: 11, mes: 'Noviembre', per: '011'},
+		{num: 12, mes: 'Diciembre', per: '012'}
+	],
+	years:[
+		{year: 2015},
+		{year: 2016},
+		{year: 2017},
+		{year: 2018},
+		{year: 2019},
+		{year: 2020},
+		{year: 2021},
+		{year: 2022},
+		{year: 2023},
+		{year: 2024},
+		{year: 2025}
+	]
+})
+
 
 
 

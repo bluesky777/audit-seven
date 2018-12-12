@@ -10,7 +10,7 @@
                     <ui-select-match placeholder="Distrito">
                         <span ng-bind="$select.selected.nombre"></span>
                     </ui-select-match>
-                    <ui-select-choices repeat="item in distritos_asoc track by $index">
+                    <ui-select-choices repeat="item in distritos_asoc | filter: $select.search track by $index">
                         <span ng-bind-html="item.nombre | highlight: $select.search"></span>
                     </ui-select-choices>
                 </ui-select>

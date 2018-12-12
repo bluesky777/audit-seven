@@ -43,6 +43,12 @@ angular.module('auditoriaApp')
 		templateUrl: 'templates/informes/compararIglesiasMesesYears.html'
 	})
 
+	.state('panel.informe.comparar_distritos_years', {
+		url: '/comparar_distritos_years',
+		controller: 'CompararDistritosYearsCtrl',
+		templateUrl: 'templates/informes/compararDistritosYears.html'
+	})
+
 
 
 })

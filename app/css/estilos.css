@@ -128,3 +128,22 @@ th .badge{
 	border: 1px #ccc solid!important;
 	position: relative;
 }
+.owen-select{
+	width: 100%; 
+	border: 1px solid #aaa; 
+	padding: 4px; 
+	height: 100px; 
+	overflow: auto;
+}
+.owen-select .opt-seleccionada{
+	background-color: #45afed;
+	color: white;
+	font-weight: bold;
+}
+.owen-select>div{
+	padding-left: 4px;
+}
+.owen-select>div:hover{
+	background-color: aqua;
+	cursor: pointer;
+}

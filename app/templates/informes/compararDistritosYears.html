@@ -1,0 +1,148 @@
+
+<div class="row">
+    
+    <div class="col-sm-12 hidden-print">
+        
+        <div class="form-group col-sm-3"> <label>Año inicial {{dato.year_inicial}}</label>
+                                        
+            <div class="owen-select">
+                <div ng-repeat="year in year_sel" ng-click="selectIniYear(year)"
+                    ng-class="{'opt-seleccionada': year.ini_seleccionado}">
+                    {{ year.year }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group col-sm-3"> <label>Año final {{dato.year_final}}</label>
+                                        
+            <div class="owen-select">
+                <div ng-repeat="year in year_sel | filter:greaterEqualThan('year', dato.year_inicial)" ng-click="selectFinYear(year)"
+                    ng-class="{'opt-seleccionada': year.fin_seleccionado}">
+                    {{ year.year }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group col-sm-3"> <label>Mes inicial {{dato.mes_inicial.mes}}</label>
+                                        
+            <div class="owen-select">
+                <div ng-repeat="mes in meses_sel" ng-click="selectIniMes(mes)"
+                    ng-class="{'opt-seleccionada': mes.ini_seleccionado}">
+                    {{ mes.mes }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group col-sm-3"> <label>Mes final {{dato.mes_final.mes}}</label>
+                                        
+            <div class="owen-select">
+                <div ng-repeat="mes in meses_sel | filter:greaterEqualThan('num', dato.mes_inicial.num)" ng-click="selectFinMes(mes)"
+                    ng-class="{'opt-seleccionada': mes.fin_seleccionado}">
+                    {{ mes.mes }}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    
+    
+    
+    <div class="col-sm-12">
+        
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="img/logo-adventista.png" alt="" style="width: 80px">
+            </div>
+                    
+            <div class="col-sm-10" style="padding: 0px;">
+                <div style="text-align: center">
+                    <h3>{{ asociacion.nombre }} - {{ dato.distrito.nombre }}</h3>
+                    <h4>Comparación de DIEZMOS</h4>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="center">No </th>
+                            <th scope="col" class="center">ID </th>
+                            <th scope="col" class="center">CÓDIGO</th>
+                            <th scope="col" class="center">DISTRITO</th>
+                            <th ng-repeat="anio in years_verdaderos" scope="col" class="center">
+                                DIEZMOS {{anio.year}}
+                            </th>
+                            <th scope="col" ng-show="years_verdaderos.length==2" class="center">VARIACIÓN</th>
+                            <th scope="col" ng-show="years_verdaderos.length==2" class="center">%</th>
+                    
+                        </tr>
+                    </thead>
+                    <tbody>  
+
+
+
+                        <tr ng-repeat="distrito in distritos_registros">
+
+                            <td>
+                                {{$index + 1}}
+                            </td>
+                            <td style="font-size: 8pt;">
+                                {{distrito.rowid}}
+                            </td>
+                            <td style="font-size: 8pt;">
+                                {{distrito.codigo}}
+                            </td>
+                            <td>
+                                {{distrito.nombre}}
+                            </td>
+                            <td ng-repeat="anio in years_verdaderos" style="text-align: right">
+                                {{anio.registros | getSumaDistrito:distrito.codigo | currency:'$':0}}
+                            </td>
+                            <td ng-show="years_verdaderos.length==2" style="text-align: right">
+                                {{ distrito.variacion | currency:'$':0 }}
+                            </td>
+                            <td ng-show="years_verdaderos.length==2" style="text-align: right">
+                                %
+                            </td>
+                            
+                            
+                        </tr>
+                        
+
+
+                    </tbody>
+                    
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td ng-repeat="anio in years_verdaderos" style="text-align: right">
+                                {{ anio.total | currency:'$':0 }}
+                            </td>
+                            <td ng-show="years_verdaderos.length==2" style="text-align: right">
+                                
+                            </td>
+                            <td ng-show="years_verdaderos.length==2" style="text-align: right">
+                                %
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+        
+    
+        
+            </div>
+        </div>
+    
+    </div>
+    
+    
+        
+</div>
+    
