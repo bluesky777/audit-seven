@@ -125,12 +125,12 @@ angular.module('auditoriaApp', [
 			}
 		}else{
 			return {
-				ruta: '127.0.0.1/feryz_server/public/auditorias',
-				root: '127.0.0.1/feryz_server/public'
+				ruta: 'http://127.0.0.1/feryz_server/public/auditorias',
+				root: 'http://127.0.0.1/feryz_server/public'
 			}
 		}
 	}
-}))
+})())
 
 .constant('tipos_recomendacion', {
 	tipos: [
