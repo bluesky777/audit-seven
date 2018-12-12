@@ -4,7 +4,7 @@ angular.module("auditoriaApp")
 	$scope.entidades 				= true;
     $scope.distrito_new 			= {};
     $scope.modentidades 			= false;
-    $scope.verCrearDistrito 		= false;
+	$scope.verCrearDistrito 		= false;
 	$scope.usuarios 				= [];
 	$scope.$parent.sidebar_active 	= false;
 	
@@ -14,20 +14,13 @@ angular.module("auditoriaApp")
 		zona: null,
 		tipo: 'IGLESIA',
 		
-		tipo_propiedad: '',
 		anombre_propiedad: '',
-		fecha_propiedad: null,
-		fecha_fin: null,
-		
-		tipo_propiedad2: '',
-		anombre_propiedad2: '',
-		fecha_propiedad2: null,
-		fecha_fin2: null,
-		
-		tipo_propiedad3: '',
-		anombre_propiedad3: '',
-		fecha_propiedad3: null,
-		fecha_fin3: null
+		anombre_propiedad_pastor: '',
+		num_matricula: '',
+		predial: '',
+		municipio: '',
+		direccion: '',
+		observaciones: ''
 	}
 	
 	$scope.tpl_distr = {
@@ -36,13 +29,30 @@ angular.module("auditoriaApp")
 		codigo: null
 	}
 	
+	
+	$scope.estados_propiedad = [
+		{estado: 'Prestada'},
+		{estado: 'Propio'},
+		{estado: 'Arriendo'}
+	];
+	$scope.tipos_documentos_prop = [
+		{tipo: 'Escritura'},
+		{tipo: 'Escritura mejora'},
+		{tipo: 'Compraventa'},
+		{tipo: 'Sin documento'},
+	];
+	// Borrar:
+	$scope.ver_creando_iglesia		= true;
+	$scope.ver_iglesias = true;
+
+	
 	$scope.iglesia_new 		= angular.copy($scope.tpl_igle);
 	$scope.distrito_new 	= angular.copy($scope.tpl_distr);
 	
 	$scope.ver_uniones 		= false;
 	$scope.ver_asociaciones = false;
 	$scope.ver_distritos 	= false;
-	$scope.ver_iglesias 	= false;
+	//$scope.ver_iglesias 	= false;
 	
 	$scope.toggleUniones = ()=>{
 		$scope.ver_uniones = !$scope.ver_uniones;
@@ -178,11 +188,11 @@ angular.module("auditoriaApp")
 
 			// Traemos IGLESIAS
 			$scope.consulta_igle =
-				"SELECT i.rowid, i.nombre, i.alias, i.distrito_id, i.zona, d.nombre as distrito_nombre, i.tesorero_id, i.secretario_id, " +
+				"SELECT i.rowid, i.nombre, i.alias, i.codigo, i.distrito_id, i.zona, d.nombre as distrito_nombre, i.tesorero_id, i.secretario_id, " +
 					"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, i.tipo, " + 
-					"i.tipo_propiedad, i.anombre_propiedad, i.fecha_propiedad, i.fecha_fin, " + 
-					"i.tipo_propiedad2, i.anombre_propiedad2, i.fecha_propiedad2, i.fecha_fin2, " + 
-					"i.tipo_propiedad3, i.anombre_propiedad3, i.fecha_propiedad3, i.fecha_fin3 " + 
+					"i.estado_propiedad, i.estado_propiedad_pastor, i.tipo_doc_propiedad, i.tipo_doc_propiedad_pastor, " + 
+					"i.anombre_propiedad, i.anombre_propiedad_pastor, i.num_matricula, i.predial, " + 
+					"i.municipio, i.direccion, i.observaciones " + 
 				"FROM iglesias i " +
 				"LEFT JOIN distritos d ON d.rowid=i.distrito_id AND d.eliminado is null " +
 				"LEFT JOIN usuarios t ON t.tipo='Tesorero' AND t.rowid=i.tesorero_id AND t.eliminado is null " + 
@@ -317,43 +327,47 @@ angular.module("auditoriaApp")
     };
 
     $scope.ActualizarIglesia = function(iglesia) {
-			$scope.guardando_iglesia = true;
-			
-			if (iglesia.fecha_propiedad) { iglesia.fecha_propiedad_new = window.fixDate(iglesia.fecha_propiedad); }
-			if (iglesia.fecha_fin) { iglesia.fecha_fin_new 		= window.fixDate(iglesia.fecha_fin); }
-			
-			if (iglesia.fecha_propiedad2) { iglesia.fecha_propiedad_new2 = window.fixDate(iglesia.fecha_propiedad2); }
-			if (iglesia.fecha_fin2) { iglesia.fecha_fin_new2 		= window.fixDate(iglesia.fecha_fin2); }
-			
-			if (iglesia.fecha_propiedad3) { iglesia.fecha_propiedad_new3 = window.fixDate(iglesia.fecha_propiedad3); }
-			if (iglesia.fecha_fin3) { iglesia.fecha_fin_new3 		= window.fixDate(iglesia.fecha_fin3); }
-			
-			
-			distrito_id = null;
-			if (iglesia.distrito) {
-				distrito_id 		= iglesia.distrito.rowid;
-			}
-			teso_id = null;
-			if (iglesia.tesorero) {
-				teso_id 		= iglesia.tesorero.rowid;
-			}
-			
-			fecha_update = window.fixDate(new Date(), true);
-			
-			consulta = "UPDATE iglesias SET nombre=?, alias=?, distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, tipo_propiedad=?, anombre_propiedad=?, fecha_propiedad=?, fecha_fin=?, " + 
-					"tipo_propiedad2=?, anombre_propiedad2=?, fecha_propiedad2=?, fecha_fin2=?, tipo_propiedad3=?, anombre_propiedad3=?, fecha_propiedad3=?, fecha_fin3=?, modificado=? " +
-				"WHERE rowid=? ";
-			ConexionServ.query(consulta, [iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.codigo, iglesia.tipo, iglesia.tipo_propiedad, iglesia.anombre_propiedad, iglesia.fecha_propiedad, iglesia.fecha_fin, 
-				iglesia.tipo_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad2, iglesia.fecha_fin2, 
-				iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, iglesia.fecha_propiedad3, iglesia.fecha_fin3, fecha_update, iglesia.rowid 
-			]).then(function(result) {
-				toastr.success("Iglesia actualizado.");
-				$scope.guardando_iglesia 		= false;
-				$scope.ver_Actualizando_iglesia = false;
-			}, function(tx) {
-				toastr.error("Iglesia no se pudo actualizar.");
-				$scope.guardando_iglesia = false;
-			});
+		$scope.guardando_iglesia = true;
+		
+		
+		estado_propiedad = null;
+		if (iglesia.estado_propiedad) { estado_propiedad = iglesia.estado_propiedad.estado; }
+		
+		estado_propiedad_pastor = null;
+		if (iglesia.estado_propiedad_pastor) { estado_propiedad_pastor = iglesia.estado_propiedad_pastor.estado; }
+		
+		tipo_doc_propiedad = null;
+		if (iglesia.tipo_doc_propiedad) { tipo_doc_propiedad = iglesia.tipo_doc_propiedad.tipo; }
+		
+		tipo_doc_propiedad_pastor = null;
+		if (iglesia.tipo_doc_propiedad_pastor) { tipo_doc_propiedad_pastor = iglesia.tipo_doc_propiedad_pastor.tipo; }
+		
+		distrito_id = null;
+		if (iglesia.distrito) {
+			distrito_id 		= iglesia.distrito.rowid;
+		}
+		
+		teso_id = null;
+		if (iglesia.tesorero) {
+			teso_id 		= iglesia.tesorero.rowid;
+		}
+		
+		fecha_update = window.fixDate(new Date(), true);
+		
+		consulta = "UPDATE iglesias SET nombre=?, alias=?, distrito_id=?, zona=?, tesorero_id=?, codigo=?, tipo=?, estado_propiedad=?, estado_propiedad_pastor=?, tipo_doc_propiedad=?, tipo_doc_propiedad_pastor=?, " + 
+				"anombre_propiedad=?, anombre_propiedad_pastor=?, num_matricula=?, predial=?, municipio=?, direccion=?, observaciones=?, modificado=? " +
+			"WHERE rowid=? ";
+		ConexionServ.query(consulta, [iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, iglesia.codigo, iglesia.tipo, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, 
+			iglesia.anombre_propiedad, iglesia.anombre_propiedad_pastor, iglesia.num_matricula, iglesia.predial, 
+			iglesia.municipio, iglesia.direccion, iglesia.observaciones, fecha_update, iglesia.rowid 
+		]).then(function(result) {
+			toastr.success("Iglesia actualizado.");
+			$scope.guardando_iglesia 		= false;
+			$scope.ver_Actualizando_iglesia = false;
+		}, function(tx) {
+			toastr.error("Iglesia no se pudo actualizar.");
+			$scope.guardando_iglesia = false;
+		});
     };
 
     $scope.Cancelar_Actualizar_Iglesia = function() {
@@ -361,7 +375,7 @@ angular.module("auditoriaApp")
     };
 
     $scope.Ver_actualizar_iglesia = function(iglesia) {
-			console.log(iglesia);
+
 			$scope.ver_Actualizando_iglesia = true;
 			$scope.iglesia_edit 			= iglesia;
 
@@ -379,18 +393,25 @@ angular.module("auditoriaApp")
 					$scope.iglesia_edit.secretario = $scope.usuarios[i];
 				}
 			}
-			if ($scope.iglesia_edit.fecha_propiedad)
-				$scope.iglesia_edit.fecha_propiedad 	= new Date($scope.iglesia_edit.fecha_propiedad);
-			if ($scope.iglesia_edit.fecha_fin)
-				$scope.iglesia_edit.fecha_fin 			= new Date($scope.iglesia_edit.fecha_fin);
-			if ($scope.iglesia_edit.fecha_propiedad2)
-				$scope.iglesia_edit.fecha_propiedad2 	= new Date($scope.iglesia_edit.fecha_propiedad2);
-			if ($scope.iglesia_edit.fecha_fin2)
-				$scope.iglesia_edit.fecha_fin2 			= new Date($scope.iglesia_edit.fecha_fin2);
-			if ($scope.iglesia_edit.fecha_propiedad3)
-				$scope.iglesia_edit.fecha_propiedad3 	= new Date($scope.iglesia_edit.fecha_propiedad3);
-			if ($scope.iglesia_edit.fecha_fin3)
-				$scope.iglesia_edit.fecha_fin3 			= new Date($scope.iglesia_edit.fecha_fin3);
+			
+			for (let i = 0; i < $scope.estados_propiedad.length; i++) {
+				if ($scope.iglesia_edit.estado_propiedad == $scope.estados_propiedad[i].estado) {
+					$scope.iglesia_edit.estado_propiedad = $scope.estados_propiedad[i];
+				}
+				if ($scope.iglesia_edit.estado_propiedad_pastor == $scope.estados_propiedad[i].estado) {
+					$scope.iglesia_edit.estado_propiedad_pastor = $scope.estados_propiedad[i];
+				}
+			}
+			
+			for (let i = 0; i < $scope.tipos_documentos_prop.length; i++) {
+				if ($scope.iglesia_edit.tipo_doc_propiedad == $scope.tipos_documentos_prop[i].tipo) {
+					$scope.iglesia_edit.tipo_doc_propiedad = $scope.tipos_documentos_prop[i];
+				}
+				if ($scope.iglesia_edit.tipo_doc_propiedad_pastor == $scope.tipos_documentos_prop[i].tipo) {
+					$scope.iglesia_edit.tipo_doc_propiedad_pastor = $scope.tipos_documentos_prop[i];
+				}
+			}
+			
 
 			$timeout(function() {
 				$location.hash("editar-iglesia");
@@ -419,43 +440,34 @@ angular.module("auditoriaApp")
 
 		$scope.guardando_iglesia = true;
 		
-		fecha_propiedad = null;
-		if (iglesia.fecha_propiedad) { fecha_propiedad = window.fixDate(iglesia.fecha_propiedad); }
+		estado_propiedad = null;
+		if (iglesia.estado_propiedad) { estado_propiedad = iglesia.estado_propiedad.estado; }
 		
-		fecha_fin = null;
-		if (iglesia.fecha_fin) { fecha_fin 		= window.fixDate(iglesia.fecha_fin); }
+		estado_propiedad_pastor = null;
+		if (iglesia.estado_propiedad_pastor) { estado_propiedad_pastor = iglesia.estado_propiedad_pastor.estado; }
 		
-		fecha_propiedad2 = null;
-		if (iglesia.fecha_propiedad2) { fecha_propiedad2 = window.fixDate(iglesia.fecha_propiedad2); }
+		tipo_doc_propiedad = null;
+		if (iglesia.tipo_doc_propiedad) { tipo_doc_propiedad = iglesia.tipo_doc_propiedad.tipo; }
 		
-		fecha_fin2 = null;
-		if (iglesia.fecha_fin2) { fecha_fin2 		= window.fixDate(iglesia.fecha_fin2); }
-		
-		fecha_propiedad3 = null;
-		if (iglesia.fecha_propiedad3) { fecha_propiedad3 = window.fixDate(iglesia.fecha_propiedad3); }
-		
-		fecha_fin3 = null;
-		if (iglesia.fecha_fin3) { fecha_fin3 		= window.fixDate(iglesia.fecha_fin3); }
+		tipo_doc_propiedad_pastor = null;
+		if (iglesia.tipo_doc_propiedad_pastor) { tipo_doc_propiedad_pastor = iglesia.tipo_doc_propiedad_pastor.tipo; }
 		
 		distrito_id = null;
 		if (iglesia.distrito) {
 			distrito_id 		= iglesia.distrito.rowid;
 		}
+		
 		teso_id = null;
 		if (iglesia.tesorero) {
 			teso_id 		= iglesia.tesorero.rowid;
 		}
 		
-		tipo_propiedad = null;
-		if (iglesia.tipo_propiedad) {
-			tipo_propiedad 		= iglesia.tipo_propiedad;
-		}
 		
 		
-		consulta = "INSERT INTO iglesias(nombre, alias, distrito_id, zona, tesorero_id, tipo_propiedad, anombre_propiedad, fecha_propiedad, fecha_fin, tipo_propiedad2, anombre_propiedad2, fecha_propiedad2, fecha_fin2, tipo_propiedad3, anombre_propiedad3, fecha_propiedad3, fecha_fin3) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		consulta = "INSERT INTO iglesias(nombre, alias, codigo, distrito_id, zona, tesorero_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, anombre_propiedad, anombre_propiedad_pastor, num_matricula, predial, municipio, direccion, observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		
 		
-		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, distrito_id, iglesia.zona, teso_id, tipo_propiedad, iglesia.anombre_propiedad, fecha_propiedad, fecha_fin, fecha_propiedad2, iglesia.anombre_propiedad2, iglesia.fecha_propiedad_new2, fecha_fin2, iglesia.tipo_propiedad3, iglesia.anombre_propiedad3, fecha_propiedad3, fecha_fin3]).then(function(result) {
+		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, iglesia.codigo, distrito_id, iglesia.zona, teso_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, iglesia.anombre_propiedad, iglesia.anombre_propiedad_pastor, iglesia.num_matricula, iglesia.predial, iglesia.municipio, iglesia.direccion, iglesia.observaciones]).then(function(result) {
 			$scope.traerDatos();
 			toastr.success("Iglesia creada exitosamente.");
 			$scope.guardando_iglesia 	= false;

@@ -1,6 +1,6 @@
 angular.module("auditoriaApp")
 
-.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll ) {
+.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll, tipos_recomendacion, hotkeys) {
 
 	$scope.$parent.sidebar_active 	= false;
 	$scope.entidades 				= true;
@@ -14,6 +14,7 @@ angular.module("auditoriaApp")
 	$scope.verCrearLibroMensual = false;
 	$scope.vercomends 			= false;
 	$scope.auditorias 			= [];
+	$scope.ocultando_primeras 	= false;
 
 	$scope.meses = [
 		{num: 0, mes: 'Enero'},
@@ -61,23 +62,40 @@ angular.module("auditoriaApp")
 		}
 	};
 	
+	if (localStorage.ocultando_primeras) {
+		if (localStorage.ocultando_primeras == 'true') {
+			$scope.ocultando_primeras 	= true;
+		}else{
+			$scope.ocultando_primeras 	= false;
+		}
+	}
+	
 	
 	
 
 
-    $scope.funcvercomend = function() {
-    	if ($scope.vercomends == true) {
-    		$scope.vercomends = false;
-    	}else{
-    		$scope.vercomends = true;
-    	}
+    $scope.ver_recomendaciones = function(valor) {
+		if (valor) {
+			$scope.vercomends = true;
+		}else{
+			if ($scope.vercomends == true) {
+				$scope.vercomends = false;
+			}else{
+				$scope.vercomends = true;
+			}
+		}
+    	
 
 
 		$timeout(function() {
 			$location.hash("caja-recomendaciones");
 			$anchorScroll();
 		}, 100);
-    };
+	};
+	
+	$scope.ver_recomendaciones_true = function(){
+		$scope.ver_recomendaciones(true);
+	}
 
 	$scope.abrirLibroSemanal = function(libro_mes) {
 
@@ -123,7 +141,6 @@ angular.module("auditoriaApp")
 	    });
 
 	    modalInstance.result.then(function (result) {
-			console.log(result);
 			for (let i = 0; i < $scope.lib_meses.length; i++) {
 				const element = $scope.lib_meses[i];
 				
@@ -140,7 +157,7 @@ angular.module("auditoriaApp")
 
 
 	
-	$scope.abrirDineroEfectivo = function(auditoria) {
+	$scope.abrirDineroEfectivo = function(libro_mes) {
 
 	    var modalInstance = $uibModal.open({
 	        templateUrl: 'templates/libros/EfectivoModal.html',
@@ -192,12 +209,73 @@ angular.module("auditoriaApp")
 
 
 
-	$scope.cambiaValor = function(libro, columna) {
+	$scope.abrirRemesas = function(libro_mes) {
 
-		consulta 	= 'UPDATE lib_mensuales SET ' + columna + '=?, modificado=1 WHERE rowid=?';
+	    var modalInstance = $uibModal.open({
+			templateUrl: 'templates/libros/remesasModal.html',
+			size: 'lg',
+	        resolve: {
+		        auditoria: function () {
+		        	return $scope.auditoria;
+				},
+				libro_mes: function () {
+		        	return libro_mes;
+		        }
+		    },
+	        controller: 'RemesasModalCtrl' // En LibroMesModales.js 
+	    });
+
+	    modalInstance.result.then(function (result) {
+
+	    }, function(r2){
+	    	$scope.traerDatos();
+	    });
+
+
+	}
+
+	
+	$scope.abrirRecomendacionesModal = function(campo) {
+
+	    var modalInstance = $uibModal.open({
+			templateUrl: 'templates/libros/recomendacionesCampoModal.html',
+			size: 'lg',
+	        resolve: {
+		        auditoria: function () {
+		        	return $scope.auditoria;
+				},
+				campo: function () {
+		        	return campo;
+		        }
+		    },
+	        controller: 'RecomendacionesCampoModalCtrl' // En LibroMesModales.js 
+	    });
+
+	    modalInstance.result.then(function (result) {
+			if (result.crear_recomend) {
+				$scope.ver_recomendaciones(true);
+				
+				$timeout(function(){
+					$scope.$broadcast('craer_recomendacion_campo', result.campo);
+				}, 100);
+				
+			}
+	    }, function(r2){
+	    	$scope.traerDatos();
+	    });
+
+
+	}
+
+
+
+	$scope.cambiaValor = function(libro, columna) {
+		fecha_update = window.fixDate(new Date(), true);
+		
+		consulta 	= 'UPDATE lib_mensuales SET ' + columna + '=?, modificado=? WHERE rowid=?';
 		colum 		= columna.charAt(0).toUpperCase() + columna.slice(1);
 		
-		ConexionServ.query(consulta, [libro[columna], libro.rowid]).then(function(){
+		ConexionServ.query(consulta, [libro[columna], fecha_update, libro.rowid]).then(function(){
 			toastr.success(colum + ' guardado');
 			$scope.actualizar_sumatorias();
 		}, function(){
@@ -206,6 +284,11 @@ angular.module("auditoriaApp")
 
 	}
 
+	
+	$scope.ocultarPrimeras = function(){
+		$scope.ocultando_primeras = !$scope.ocultando_primeras;
+		localStorage.ocultando_primeras = $scope.ocultando_primeras;
+	}
 
 
 	$scope.crear_libronuevo = function(libro_new) {
@@ -236,12 +319,27 @@ angular.module("auditoriaApp")
   	
 
   		year_temp 	= libro_new.year[0];
-  		mes_temp 	= libro_new.mes[0];
-
-
-		consulta 	= 'INSERT INTO lib_mensuales(year, mes, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada) VALUES(?,?,?,?,?,?,?)';
+		mes_temp 	= libro_new.mes[0];
+		periodo 	= year_temp + '/';
 		
-		datos = [year_temp, mes_temp, $scope.USER.auditoria_id,0,0,0,0];
+		for (let i = 0; i < $scope.meses.length; i++) {
+			if ($scope.meses[i].mes == libro_new.mes[0]) {
+				num_mes = $scope.meses[i].num + 1;
+				if (num_mes<10) {
+					num_mes = '00'+num_mes;
+				}else{
+					num_mes = '0'+num_mes;
+				}
+				
+				periodo = periodo + num_mes;
+			};
+			
+		}
+
+
+		consulta 	= 'INSERT INTO lib_mensuales(year, mes, periodo, auditoria_id, diezmos, ofrendas, especiales, remesa_enviada) VALUES(?,?,?,?,?,?,?,?)';
+		
+		datos = [year_temp, mes_temp, periodo, $scope.USER.auditoria_id,0,0,0,0];
 
 		ConexionServ.query(consulta, datos).then(function(result) {
 
@@ -272,7 +370,10 @@ angular.module("auditoriaApp")
 	};
 	
 	
-
+	
+	
+	// ************************************************
+	// TRAEMOS TODOS LOS DATOS
 	$scope.traerDatos = function(){
 		AuthServ.update_user_storage($scope.USER).then((actualizado)=>{
 			$scope.USER 		= actualizado;
@@ -337,6 +438,9 @@ angular.module("auditoriaApp")
 						console.log("Error no se pudo traer datos", tx);
 					});
 					
+					$scope.contarRecomendaciones();
+					
+					
 					$scope.actualizar_sumatorias();
 
 				}, function(tx) {
@@ -361,29 +465,51 @@ angular.module("auditoriaApp")
 	$scope.traerDatos();
 	
 	
-	$scope.recomendacionesLibMes = function (lib_mes) {
-		// Aún no
-		consulta 	= 'SELECT g.*, g.rowid FROM gastos_mes g WHERE g.libro_mes_id=?';
-		
-		ConexionServ.query(consulta, [lib_mes.rowid]).then(function(result) {
-			lib_mes.gastos_detalle = result;
-		}, function(tx) {
-			console.log("Error trayendo gastos de mes, ", lib_mes, tx);
-		});
-	}
 	
-	$scope.recomendacionesAuditoria = function (lib_mes) {
-		// Aún no
-		consulta 	= 'SELECT g.*, g.rowid FROM auditorias a WHERE g.libro_mes_id=?';
-		
-		ConexionServ.query(consulta, [lib_mes.rowid]).then(function(result) {
-			lib_mes.gastos_detalle = result;
+	// Parece que no sirve y lo llamé directamente 
+	$scope.$on('contar_recomendaciones', $scope.contarRecomendaciones);
+	
+	$scope.contarRecomendaciones = function () {
+
+		consulta 	= 'SELECT *, rowid FROM recomendaciones WHERE auditoria_id=?';
+		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(rRecomend) {
+			$scope.auditoria.recomendaciones = rRecomend;
+			
+			
+			for (let j = 0; j < tipos_recomendacion.tipos.length; j++) {
+				const tipo = tipos_recomendacion.tipos[j];
+				$scope.auditoria['reco_cont_'+tipo.tipo] = [];
+			}
+			
+			for (let i = 0; i < $scope.auditoria.recomendaciones.length; i++) {
+				const element = $scope.auditoria.recomendaciones[i];
+				
+				if (element.superada == 0) {
+					element.superada = "no"
+				}else{
+					element.superada = "si"
+				}
+				if (element.fecha) {
+					element.fecha = new Date(element.fecha);
+				}
+			
+				for (let j = 0; j < tipos_recomendacion.tipos.length; j++) {
+					const tipo = tipos_recomendacion.tipos[j];
+					
+					if (tipo.tipo == element.tipo) {
+						$scope.auditoria['reco_cont_'+tipo.tipo].push(element);
+					}
+					
+				}
+			}
+			
 		}, function(tx) {
-			console.log("Error trayendo gastos de mes, ", lib_mes, tx);
+			console.log("Error no se pudo traer datos", tx);
 		});
+		
 	}
 
-	
+
 	$scope.gastosLibMes = function (lib_mes) {
 		consulta 	= 'SELECT g.*, g.rowid FROM gastos_mes g WHERE g.libro_mes_id=?';
 		
@@ -391,6 +517,27 @@ angular.module("auditoriaApp")
 			lib_mes.gastos_detalle = result;
 		}, function(tx) {
 			console.log("Error trayendo gastos de mes, ", lib_mes, tx);
+		});
+		
+		consulta 	= 'SELECT sum(cantidad) as suma FROM remesas r WHERE r.periodo=? and r.org_id=? group by id';
+		
+		ConexionServ.query(consulta, [lib_mes.periodo, $scope.USER.iglesia_alias]).then(function(result) {
+			if (result.length>0) {
+				lib_mes.remesa_enviada = Math.abs(result[0].suma);
+			}else{
+				lib_mes.remesa_enviada = 0;
+			}
+			
+		}, function(tx) {
+			console.log("Error trayendo remesas reales, ", lib_mes, tx);
+		});
+		
+		consulta 	= 'SELECT * FROM remesas r WHERE r.periodo=? and r.org_id=?';
+		
+		ConexionServ.query(consulta, [lib_mes.periodo, $scope.USER.iglesia_alias]).then(function(result) {
+			lib_mes.remesas = result;
+		}, function(tx) {
+			console.log("Error trayendo remesas reales, ", lib_mes, tx);
 		});
 	}
 
@@ -404,12 +551,13 @@ angular.module("auditoriaApp")
 	  	var res = confirm("¿Seguro que desea eliminar?");
 
 		if (res == true) {
+			
+			fecha_update = window.fixDate(new Date(), true);
+			
+		 	consulta ="UPDATE lib_mensuales SET eliminado=? WHERE rowid=? ";
 
-		 	consulta ="UPDATE lib_mensuales SET eliminado=1 WHERE rowid=? ";
+			ConexionServ.query(consulta,[fecha_update, lib_mens.rowid]).then(function(result){
 
-			ConexionServ.query(consulta,[lib_mens.rowid]).then(function(result){
-
-				console.log('Libro mes eliminido', result);
 				$scope.lib_meses = $filter('filter') ($scope.lib_meses, {rowid: '!' + lib_mens.rowid})
 				toastr.success('Mes eliminado.');
 
@@ -421,11 +569,12 @@ angular.module("auditoriaApp")
 	 
 
 	$scope.cambiaAuditoria = function(columna) {
-
-		consulta 	= 'UPDATE auditorias SET ' + columna + '=?, modificado=1 WHERE rowid=?';
+		fecha_update = window.fixDate(new Date(), true);
+		
+		consulta 	= 'UPDATE auditorias SET ' + columna + '=?, modificado=? WHERE rowid=?';
 		colum 		= columna.charAt(0).toUpperCase() + columna.slice(1);
 		
-		ConexionServ.query(consulta, [$scope.auditoria[columna], $scope.auditoria.rowid]).then(function(){
+		ConexionServ.query(consulta, [$scope.auditoria[columna], fecha_update, $scope.auditoria.rowid]).then(function(){
 			toastr.success('Saldo guardado');
 			$scope.actualizar_sumatorias();
 		}, function(){
@@ -489,9 +638,10 @@ angular.module("auditoriaApp")
 		$scope.sum_gastos 			= $filter('currency')( sum_gastos, '$', 0);
 		$scope.sum_gastos_sop 		= $filter('currency')( sum_gastos_sop, '$', 0);
 		$scope.sum_dif_gastos 		= $filter('currency')( (sum_gastos - sum_gastos_sop), '$', 0);
-		$scope.sum_remesa 			= $filter('currency')( (sum_diezmos + sum_ofrendas*0.4), '$', 0);
+		$scope.sum_remesa_num 		= sum_diezmos + sum_ofrendas*0.4;
+		$scope.sum_remesa 			= $filter('currency')( $scope.sum_remesa_num, '$', 0);
 		$scope.sum_remesa_env 		= $filter('currency')( sum_remesa_env, '$', 0);
-		$scope.sum_dif_remesa 		= $filter('currency')( (sum_remesa_env-$scope.sum_remesa), '$', 0);
+		$scope.sum_dif_remesa 		= $filter('currency')( (sum_remesa_env-$scope.sum_remesa_num), '$', 0);
 		$scope.sum_disponi_perio	= $filter('currency')( (sum_ofre_esp + aud.saldo_ant), '$', 0);
 		
 		sum_total_fondos 			= sum_ofre_esp + aud.saldo_ant - sum_gastos;
@@ -509,6 +659,24 @@ angular.module("auditoriaApp")
 		$scope.total_dif 			= $filter('currency')(total_dif, '$', 0);
 		
 	}
+	
+	
+	// Accesos rápidos de teclado
+	hotkeys.bindTo($scope)
+	.add({
+		combo: 'f2',
+		description: 'Abrir recomendaciones',
+		callback: $scope.ver_recomendaciones_true
+	})
+	.add({
+		combo: 'esc',
+		description: 'Salir de recomendaciones',
+		callback: function(event, hotkey){
+			$scope.vercomends = false;
+		}
+
+	})
+
 	
 	
 	

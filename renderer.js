@@ -20,7 +20,6 @@ if (!process.env.NODE_PORT) {
 
 
 var reload = ()=>{
-	console.log('fdvdfvdfvdfvfvdf');
 	getCurrentWindow().reload()
 }
 const {getCurrentWindow, globalShortcut} = require('electron').remote;
@@ -36,6 +35,7 @@ window.addEventListener('beforeunload', ()=>{
 app.use(cors());
 app.use(bodyParser.json()); // Para recibir json desde Angular
 app.use("/images", express.static(path.join(__dirname, 'app/img')));
+app.use('/api', require('./backend/routes'));
 
 
 
@@ -48,13 +48,15 @@ app.get('/', function(req, res){
 });
 	
 
+http.listen(process.env.NODE_PORT, function(){
+	console.log('listening on *:'+process.env.NODE_PORT);
+});
 
 
 
 
 
 var User            = require(path.join(__dirname, 'app/conexion/Models/User'));
-var db              = require(path.join(__dirname, '/app/conexion/connWeb'));
 
 
 

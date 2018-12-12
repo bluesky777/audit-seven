@@ -28,7 +28,7 @@
     </div>
     <div class="progress" ng-show="estado_descarga=='insertando' || estado_descarga=='Insertados'">
         <div class="progress-bar progress-bar-striped " ng-class="{active: estado_descarga=='insertando'}" role="progressbar" aria-valuenow="{{ valor_insertado() }}" aria-valuemin="0" aria-valuemax="{{ valor_maximo() }}" style="width: {{ valor_insertado() }}%">
-            <span class="sr-only">{{ valor_insertado() }}% Complete</span>
+            <span class="sr-only">{{ valor_insertado() }}% Completado</span>
         </div>
     </div>
     
@@ -1100,7 +1100,7 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerecomendaciones()"> Recomendación</a>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerecomendaciones()"> Recomendaciones</a>
                 </h2>
                 <div class="box-icon"></div>
             </div>

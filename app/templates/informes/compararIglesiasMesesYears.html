@@ -1,0 +1,224 @@
+
+<div class="row">
+    
+    <div class="col-sm-12">
+        
+            <div class="form-group col-sm-6"> <label>Distrito</label>
+                                            
+                <ui-select ng-model="dato.distrito" style="width: 100%;" theme="bootstrap"
+                    on-select="compararDistrito(dato.distrito.rowid)">
+                    <ui-select-match placeholder="Distrito">
+                        <span ng-bind="$select.selected.nombre"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in distritos_asoc track by $index">
+                        <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+    </div>
+    
+    
+    <div class="col-sm-12">
+        
+        <div class="row">
+            <div class="col-sm-2">
+                <img src="img/logo-adventista.png" alt="" style="width: 80px">
+            </div>
+                    
+            <div class="col-sm-10" style="padding: 0px;">
+                <div style="text-align: center">
+                    <h3>{{ asociacion.nombre }} - {{ dato.distrito.nombre }}</h3>
+                    <h4>Comparación de DIEZMOS</h4>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID </th>
+                            <th scope="col">ORGID</th>
+                            <th scope="col">DISTRIT</th>
+                            <th scope="col">IGLESIA</th>
+                            <th scope="col">AÑO</th>
+                            <th scope="col">ENERO</th>
+                            <th scope="col">FEBRERO</th>
+                            <th scope="col">MARZO</th>
+                            <th scope="col">ABRIL</th>
+                            <th scope="col">MAYO</th>
+                            <th scope="col">JUNIO</th>
+                            <th scope="col">JULIO</th>
+                            <th scope="col">AGOSTO</th>
+                            <th scope="col">SEPTIEM</th>
+                            <th scope="col">OCTUBRE</th>
+                            <th scope="col">NOVIEMB</th>
+                            <th scope="col">DICIEMB</th>
+                            <th scope="col">TOTAL</th>
+                    
+                        </tr>
+                    </thead>
+                    <tbody>  
+
+
+
+                        <tr ng-repeat-start="iglesia in iglesias">
+
+                            <td rowspan="{{iglesia.anios.length}}">
+                                {{$index + 1}}
+                            </td>
+                            <td rowspan="{{iglesia.anios.length}}" style="font-size: 8pt;">
+                                {{iglesia.codigo}}
+                            </td>
+                            <td rowspan="{{iglesia.anios.length}}" style="font-size: 8pt;">
+                                {{iglesia.cod_distrito}}
+                            </td>
+                            <td rowspan="{{iglesia.anios.length}}" style="font-size: 9pt;">
+                                {{iglesia.nombre}}
+                            </td>
+                            <td>{{iglesia.anios[0].anio}}</td>
+                            <td>{{anio.remesas[years[0]+'/001'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/002'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/003'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/004'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/005'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/006'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/007'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/008'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/009'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/010'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/011'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/012'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.total | currency:'':0}}</td>
+                            
+                            
+                        </tr>
+                        <tr ng-repeat-end ng-repeat="anio in iglesia.anios.slice(1)">
+                            <td>{{anio.anio}}</td>
+                            <td>{{anio.remesas[years[1]+'/001'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/002'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/003'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/004'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/005'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/006'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/007'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/008'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/009'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/010'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/011'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/012'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.total | currency:'':0}}</td>
+                        </tr>
+
+
+
+                    </tbody>
+                </table>
+        
+    
+        
+            </div>
+        </div>
+    
+    </div>
+    
+    
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <div style="text-align: center">
+                    <h4>Comparación de DESARROLLO</h4>
+                </div>
+                
+            
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID </th>
+                            <th scope="col">ORGID</th>
+                            <th scope="col">DISTRIT</th>
+                            <th scope="col">IGLESIA</th>
+                            <th scope="col">AÑO</th>
+                            <th scope="col">ENERO</th>
+                            <th scope="col">FEBRERO</th>
+                            <th scope="col">MARZO</th>
+                            <th scope="col">ABRIL</th>
+                            <th scope="col">MAYO</th>
+                            <th scope="col">JUNIO</th>
+                            <th scope="col">JULIO</th>
+                            <th scope="col">AGOSTO</th>
+                            <th scope="col">SEPTIEM</th>
+                            <th scope="col">OCTUBRE</th>
+                            <th scope="col">NOVIEMB</th>
+                            <th scope="col">DICIEMB</th>
+                            <th scope="col">TOTAL</th>
+                    
+                        </tr>
+                    </thead>
+                    <tbody>  
+
+
+
+                        <tr ng-repeat-start="iglesia in iglesias_desarrollo">
+
+                            <td rowspan="{{iglesia.anios.length}}">
+                                {{$index + 1}}
+                            </td>
+                            <td rowspan="{{iglesia.anios.length}}" style="font-size: 8pt;">
+                                {{iglesia.codigo}}
+                            </td>
+                            <td rowspan="{{iglesia.anios.length}}" style="font-size: 8pt;">
+                                {{iglesia.cod_distrito}}
+                            </td>
+                            <td rowspan="{{iglesia.anios.length}}" style="font-size: 9pt;">
+                                {{iglesia.nombre}}
+                            </td>
+                            <td>{{iglesia.anios[0].anio}}</td>
+                            <td>{{anio.remesas[years[0]+'/001'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/002'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/003'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/004'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/005'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/006'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/007'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/008'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/009'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/010'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/011'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[0]+'/012'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.total | currency:'':0}}</td>
+                            
+                            
+                        </tr>
+                        <tr ng-repeat-end ng-repeat="anio in iglesia.anios.slice(1)">
+                            <td>{{anio.anio}}</td>
+                            <td>{{anio.remesas[years[1]+'/001'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/002'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/003'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/004'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/005'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/006'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/007'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/008'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/009'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/010'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/011'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.remesas[years[1]+'/012'].cantidad | currency:'':0}}</td>
+                            <td>{{anio.total | currency:'':0}}</td>
+                        </tr>
+
+
+
+                    </tbody>
+                </table>
+        
+    
+        
+    
+            </div>
+        </div>
+    </div>
+</div>
+    

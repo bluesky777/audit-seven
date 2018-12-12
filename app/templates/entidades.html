@@ -778,76 +778,79 @@
 											<hr>
 											
 											<div class="row">
-												<div class="col-sm-3" style="padding-right: 0px">
-													<label for="PropiedadNew1">Propiedad 1</label>
-													<input class="form-control" style="padding: 4px 6px;" id="PropiedadNew1" type="text" placeholder="Tipo de propiedad" ng-model="iglesia_new.tipo_propiedad">
+												<div class="col-sm-3 form-group" style="padding-right: 0px">
+													<label>Estado propiedad</label>
+		
+													<ui-select ng-model="iglesia_new.estado_propiedad" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Estado propiedad">
+															<span ng-bind="$select.selected.estado + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in estados_propiedad | filter: $select.search track by $index">
+															<span ng-bind-html="item.estado | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
+												</div>
+												
+												<div class="col-sm-3 form-group" style="padding-right: 0px">
+													<label uib-tooltip="Estado según el pastor">Estado propiedad (pastor)</label>
+		
+													<ui-select ng-model="iglesia_new.estado_propiedad_pastor" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Estado propiedad">
+															<span ng-bind="$select.selected.estado + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in estados_propiedad | filter: $select.search track by $index">
+															<span ng-bind-html="item.estado | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
+												</div>
+												
+												<div class="col-sm-3 form-group" style="padding-right: 0px">
+													<label>Tipo documento</label>
+		
+													<ui-select ng-model="iglesia_new.tipo_doc_propiedad" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Tipo documento">
+															<span ng-bind="$select.selected.tipo + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in tipos_documentos_prop | filter: $select.search track by $index">
+															<span ng-bind-html="item.tipo | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
+												</div>
+												
+												
+												<div class="col-sm-3 form-group">
+													<label uib-tooltip="Tipo documento según el pastor">Tipo documento (pastor)</label>
+		
+													<ui-select ng-model="iglesia_new.tipo_doc_propiedad_pastor" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Tipo documento">
+															<span ng-bind="$select.selected.tipo + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in tipos_documentos_prop | filter: $select.search track by $index">
+															<span ng-bind-html="item.tipo | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
 												</div>
 
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
+												<div class="col-sm-6" style="padding-right: 0px;">
 													<label for="a_nombre_new1">A nombre de</label>
 													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_new1" type="text" placeholder="A nombre de" ng-model="iglesia_new.anombre_propiedad">
 												</div>
 												
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="fecha_prop_new_1">Fecha</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_prop_new_1" type="date" placeholder="Fecha" ng-model="iglesia_new.fecha_propiedad">
+
+												<div class="col-sm-6" style="padding-right: 0px;">
+													<label uib-tooltip="A nombre de quién según el pastor" for="a_nombre_new_pastor">A nombre de (pastor)</label>
+													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_new_pastor" type="text" placeholder="A nombre de" ng-model="iglesia_new.anombre_propiedad_pastor">
 												</div>
 												
-												<div class="col-sm-3" style="padding-right: 4px; padding-left: 2px;">
-													<label for="fecha_fin_new_1">Fecha fin</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_fin_new_1" type="date" placeholder="Fecha fin" ng-model="iglesia_new.fecha_fin">
-												</div>
 											</div>
 
 
 											<hr>
 											
-											<div class="row">
-												<div class="col-sm-3" style="padding-right: 0px">
-													<label for="PropiedadNew2">Propiedad 2</label>
-													<input class="form-control" style="padding: 4px 6px;" id="PropiedadNew2" type="text" placeholder="Tipo de propiedad" ng-model="iglesia_new.tipo_propiedad2">
-												</div>
-
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="a_nombre_new2">A nombre de</label>
-													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_new2" type="text" placeholder="A nombre de" ng-model="iglesia_new.anombre_propiedad2">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="fecha_prop_new_2">Fecha</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_prop_new_2" type="date" placeholder="Fecha" ng-model="iglesia_new.fecha_propiedad2">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 4px; padding-left: 2px;">
-													<label for="fecha_fin_new_2">Fecha fin</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_fin_new_2" type="date" placeholder="Fecha fin" ng-model="iglesia_new.fecha_fin2">
-												</div>
-											</div>
-
-
-											<hr>
-											
-											<div class="row">
-												<div class="col-sm-3" style="padding-right: 0px">
-													<label for="PropiedadNew3">Propiedad 3</label>
-													<input class="form-control" style="padding: 4px 6px;" id="PropiedadNew3" type="text" placeholder="Tipo de propiedad" ng-model="iglesia_new.tipo_propiedad3">
-												</div>
-
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="a_nombre_new3">A nombre de</label>
-													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_new3" type="text" placeholder="A nombre de" ng-model="iglesia_new.anombre_propiedad3">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="fecha_prop_new_3">Fecha</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_prop_new_3" type="date" placeholder="Fecha" ng-model="iglesia_new.fecha_propiedad3">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 4px; padding-left: 2px;">
-													<label for="fecha_fin_new_3">Fecha fin</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_fin_new_3" type="date" placeholder="Fecha fin" ng-model="iglesia_new.fecha_fin3">
-												</div>
-											</div>
 
 
 
@@ -966,76 +969,76 @@
 												
 											<hr>
 											
-											<div class="row">
-												<div class="col-sm-3" style="padding-right: 0px">
-													<label for="PropiedadEdit1">Propiedad 1</label>
-													<input class="form-control" style="padding: 4px 6px;" id="PropiedadEdit1" type="text" placeholder="Tipo de propiedad" ng-model="iglesia_edit.tipo_propiedad">
-												</div>
-
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="a_nombre_edit1">A nombre de</label>
-													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_edit1" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="fecha_prop_edit_1">Fecha</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_prop_edit_1" type="date" placeholder="Fecha" ng-model="iglesia_edit.fecha_propiedad">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 4px; padding-left: 2px;">
-													<label for="fecha_fin_edit_1">Fecha fin</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_fin_edit_1" type="date" placeholder="Fecha fin" ng-model="iglesia_edit.fecha_fin">
-												</div>
-											</div>
-
-
-											<hr>
 											
 											<div class="row">
-												<div class="col-sm-3" style="padding-right: 0px">
-													<label for="PropiedadEdit2">Propiedad 2</label>
-													<input class="form-control" style="padding: 4px 6px;" id="PropiedadEdit2" type="text" placeholder="Tipo de propiedad" ng-model="iglesia_edit.tipo_propiedad2">
-												</div>
-
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="a_nombre_edit2">A nombre de</label>
-													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_edit2" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad2">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="fecha_prop_edit_2">Fecha</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_prop_edit_2" type="date" placeholder="Fecha" ng-model="iglesia_edit.fecha_propiedad2">
-												</div>
-												
-												<div class="col-sm-3" style="padding-right: 4px; padding-left: 2px;">
-													<label for="fecha_fin_edit_2">Fecha fin</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_fin_edit_2" type="date" placeholder="Fecha fin" ng-model="iglesia_edit.fecha_fin2">
-												</div>
-											</div>
-
-
-											<hr>
-											
-											<div class="row">
-												<div class="col-sm-3" style="padding-right: 0px">
-													<label for="PropiedadEdit3">Propiedad 3</label>
-													<input class="form-control" style="padding: 4px 6px;" id="PropiedadEdit3" type="text" placeholder="Tipo de propiedad" ng-model="iglesia_edit.tipo_propiedad3">
-												</div>
-
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="a_nombre_edit3">A nombre de</label>
-													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_edit3" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad3">
+												<div class="col-sm-3 form-group" style="padding-right: 0px">
+													<label>Estado propiedad</label>
+		
+													<ui-select ng-model="iglesia_edit.estado_propiedad" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Estado propiedad">
+															<span ng-bind="$select.selected.estado + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in estados_propiedad | filter: $select.search track by $index">
+															<span ng-bind-html="item.estado | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
 												</div>
 												
-												<div class="col-sm-3" style="padding-right: 0px; padding-left: 2px;">
-													<label for="fecha_prop_edit_3">Fecha</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_prop_edit_3" type="date" placeholder="Fecha" ng-model="iglesia_edit.fecha_propiedad3">
+												<div class="col-sm-3 form-group" style="padding-right: 0px">
+													<label uib-tooltip="Estado según el pastor">Estado propiedad (pastor)</label>
+		
+													<ui-select ng-model="iglesia_edit.estado_propiedad_pastor" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Estado propiedad">
+															<span ng-bind="$select.selected.estado + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in estados_propiedad | filter: $select.search track by $index">
+															<span ng-bind-html="item.estado | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
 												</div>
 												
-												<div class="col-sm-3" style="padding-right: 4px; padding-left: 2px;">
-													<label for="fecha_fin_edit_3">Fecha fin</label>
-													<input class="form-control" style="padding: 4px 6px;" id="fecha_fin_edit_3" type="date" placeholder="Fecha fin" ng-model="iglesia_edit.fecha_fin3">
+												<div class="col-sm-3 form-group" style="padding-right: 0px">
+													<label>Tipo documento</label>
+		
+													<ui-select ng-model="iglesia_edit.tipo_doc_propiedad" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Tipo documento">
+															<span ng-bind="$select.selected.tipo + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in tipos_documentos_prop | filter: $select.search track by $index">
+															<span ng-bind-html="item.tipo | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
 												</div>
+												
+												
+												<div class="col-sm-3 form-group">
+													<label uib-tooltip="Tipo documento según el pastor">Tipo documento (pastor)</label>
+		
+													<ui-select ng-model="iglesia_edit.tipo_doc_propiedad_pastor" style="width: 100%;" theme="bootstrap">
+														<ui-select-match placeholder="Tipo documento">
+															<span ng-bind="$select.selected.tipo + ' ' + $select.selected.apellidos"></span>
+														</ui-select-match>
+														<ui-select-choices repeat="item in tipos_documentos_prop | filter: $select.search track by $index">
+															<span ng-bind-html="item.tipo | highlight: $select.search"></span>
+														</ui-select-choices>
+													</ui-select>
+		
+												</div>
+
+												<div class="col-sm-6" style="padding-right: 0px;">
+													<label for="a_nombre_new1">A nombre de</label>
+													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_new1" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad">
+												</div>
+												
+
+												<div class="col-sm-6" style="padding-right: 0px;">
+													<label uib-tooltip="A nombre de quién según el pastor" for="a_nombre_new_pastor">A nombre de (pastor)</label>
+													<input class="form-control" style="padding: 4px 6px;" id="a_nombre_new_pastor" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad_pastor">
+												</div>
+												
 											</div>
 
 

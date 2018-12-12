@@ -59,8 +59,13 @@ angular.module("auditoriaApp")
 				$scope.USER.auditoria_id 	= auditoria_id;
 				
 				AuthServ.update_user_storage($scope.USER).then(function(usuario){
-					const {ipcRenderer} = require('electron');
-					ipcRenderer.send('refrescar-app');
+					try {
+						const {ipcRenderer} = require('electron');
+						ipcRenderer.send('refrescar-app');
+					} catch(e) {
+						console.error("electron no encontrado");
+						location.reload();
+					}
 					
 					$uibModalInstance.close(usuario);
 				});

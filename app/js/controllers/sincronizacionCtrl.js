@@ -152,6 +152,8 @@ angular.module("auditoriaApp")
     			uniones: 			$scope.uniones,
     			usuarios: 			$scope.usuarios,
     			lib_mensuales: 		$scope.lib_mensuales,
+    			lib_semanales: 		$scope.lib_semanales,
+    			gastos_mes: 		$scope.gastos_mes,
     			preguntas: 			$scope.preguntas,
     			respuestas: 		$scope.respuestas,
     			recomendaciones: 	$scope.recomendaciones
@@ -168,6 +170,8 @@ angular.module("auditoriaApp")
             SincronizarServ.usuarios(r.usuarios);
             SincronizarServ.auditorias(r.auditorias);
             SincronizarServ.lib_mensuales(r.lib_mensuales);
+            SincronizarServ.lib_semanales(r.lib_semanales);
+            SincronizarServ.gastos_meses(r.gastos_mes);
             SincronizarServ.preguntas(r.preguntas);
             SincronizarServ.respuestas(r.respuestas);
             SincronizarServ.recomendaciones(r.recomendaciones);
@@ -249,6 +253,10 @@ angular.module("auditoriaApp")
 			promesas.push(prom);
 			prom = ConexionServ.query('DROP TABLE gastos_mes').then(function(result){
 				console.log('Eliminado gastos_mes');
+			})
+			promesas.push(prom);
+			prom = ConexionServ.query('DROP TABLE remesas').then(function(result){
+				console.log('Eliminado remesas');
 			})
 			promesas.push(prom);
 			
@@ -339,7 +347,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos DISTRITOS
-			consulta = "SELECT d.rowid, d.* from distritos d WHERE d.modificado=1 or eliminado=1 or id is null " ;
+			consulta = "SELECT d.rowid, d.* from distritos d WHERE d.modificado is not null or eliminado is not null or id is null " ;
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.distritos = result;
@@ -348,7 +356,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos Uniones
-			consulta = "SELECT rowid, * from uniones un WHERE un.modificado=1 or eliminado=1 or id is null";
+			consulta = "SELECT rowid, * from uniones un WHERE un.modificado is not null or eliminado is not null or id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.uniones = result;
@@ -357,7 +365,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos Asociaciones
-			consulta = "SELECT aso.rowid, aso.*  from asociaciones aso WHERE aso.modificado=1 or eliminado=1 or id is null ";
+			consulta = "SELECT aso.rowid, aso.*  from asociaciones aso WHERE aso.modificado is not null or eliminado is not null or id is null ";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.asociaciones = result;
@@ -366,7 +374,7 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos Auditoria
-			consulta = "SELECT rowid, * from auditorias where auditorias.modificado=1 or auditorias.eliminado=1 or auditorias.id is null";
+			consulta = "SELECT rowid, * from auditorias WHERE auditorias.modificado is not null or auditorias.eliminado is not null or auditorias.id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.auditorias = result;
@@ -375,7 +383,7 @@ angular.module("auditoriaApp")
 			});
 
 
-			consulta = "SELECT rowid, * from lib_mensuales libm where libm.modificado=1 or libm.eliminado=1 or libm.id is null";
+			consulta = "SELECT rowid, * from lib_mensuales libm WHERE libm.modificado is not null or libm.eliminado is not null or libm.id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.lib_mensuales = result;
@@ -383,7 +391,16 @@ angular.module("auditoriaApp")
 				console.log("Error no es posbile traer libromes", tx);
 			});
 
-			consulta = "SELECT rowid, * from preguntas preg where preg.modificado=1 or preg.eliminado=1 or preg.id is null";
+			
+			consulta = "SELECT rowid, * from lib_semanales WHERE modificado is not null OR eliminado is not null OR id is null";
+
+			ConexionServ.query(consulta, []).then(function(result) {
+				$scope.lib_semanales = result;
+			},function(tx) {
+				console.log("Error no es posbile traer libro semanales", tx);
+			});
+
+			consulta = "SELECT rowid, * from preguntas preg WHERE preg.modificado is not null OR preg.eliminado is not null OR preg.id is null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.preguntas = result;
@@ -391,7 +408,7 @@ angular.module("auditoriaApp")
 				console.log("Error no es posbile traer preguntas", tx);
 			});
 
-			consulta = "SELECT rowid, * from respuestas res where res.modificado=1 or res.eliminado=1 or res.id is null ";
+			consulta = "SELECT rowid, * from respuestas res WHERE res.modificado is not null or res.eliminado is not null or res.id is null ";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.respuestas = result;
@@ -399,21 +416,21 @@ angular.module("auditoriaApp")
 				console.log("Error no es posbile traer respuestas", tx);
 			});
 
-			consulta = "SELECT rowid, * from recomendaciones rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			consulta = "SELECT rowid, * from recomendaciones rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.recomendaciones = result;
 			},function(tx) {
 				console.log("Error no es posbile traer recomendaciones", tx);
 			});
 
-			consulta = "SELECT rowid, * from destinos rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			consulta = "SELECT rowid, * from destinos rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.destinos = result;
 			},function(tx) {
 				console.log("Error no es posbile traer recomendaciones", tx);
 			});
 			
-			consulta = "SELECT rowid, * from dinero_efectivo rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			consulta = "SELECT rowid, * from dinero_efectivo rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.dinero_efectivo = result;
 			},function(tx) {
@@ -421,7 +438,7 @@ angular.module("auditoriaApp")
 			});
 
 
-			consulta = "SELECT rowid, * from destinos_pagos rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			consulta = "SELECT rowid, * from destinos_pagos rec WHERE id is null OR rec.modificado is not null OR rec.eliminado is not null OR rec.id is null ";
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.destinos_pagos = result;
 			},function(tx) {
@@ -429,14 +446,14 @@ angular.module("auditoriaApp")
 			});
 			
 			
-			consulta = "SELECT rowid, * from gastos_mes rec where id is null or rec.modificado=1 or rec.eliminado=1 or rec.id is null ";
+			consulta = "SELECT rowid, * from gastos_mes WHERE id is null OR modificado is not null OR eliminado is not null OR id is null ";
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.gastos_mes = result;
 			},function(tx) {
 				console.log("Error no es posbile traer recomendaciones", tx);
 			});
 			/*
-			consulta = "SELECT rowid, * from respuestas where res.modificado=1 or res.elimiado=1";
+			consulta = "SELECT rowid, * from respuestas where res.modificado is not null or res.elimiado is not null";
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.respuestas = result;

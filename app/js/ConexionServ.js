@@ -23,6 +23,7 @@ angular.module('auditoriaApp')
                 "justificacion text  DEFAULT NULL collate nocase, " +
                 "superada integer(1) DEFAULT '0', " +
                 "fecha varchar(100)  DEFAULT NULL collate nocase, " +
+                "fecha_respuesta varchar(100)  DEFAULT NULL collate nocase, " +
                 "tipo varchar(250)  DEFAULT NULL collate nocase, " +
                 "auditoria_id integer DEFAULT NULL," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase, " +
@@ -58,20 +59,17 @@ angular.module('auditoriaApp')
                 "tipo varchar(100)  DEFAULT 'IGLESIA' collate nocase," + // IGLESIA O GRUPO
                 "zona varchar(100)  DEFAULT NULL collate nocase," +
                 
-                "tipo_propiedad varchar(255)  DEFAULT NULL collate nocase," +
+                "estado_propiedad varchar(255)  DEFAULT NULL collate nocase," +
+                "estado_propiedad_pastor varchar(255)  DEFAULT NULL collate nocase," +
+                "tipo_doc_propiedad varchar(255)  DEFAULT NULL collate nocase," +
+                "tipo_doc_propiedad_pastor varchar(255)  DEFAULT NULL collate nocase," +
                 "anombre_propiedad varchar(255)  DEFAULT NULL collate nocase," +
-                "fecha_propiedad varchar(100)  DEFAULT NULL collate nocase," +
-                "fecha_fin varchar(100)  DEFAULT NULL collate nocase," +
-                
-                "tipo_propiedad2 varchar(255)  DEFAULT NULL collate nocase," +
-                "anombre_propiedad2 varchar(255)  DEFAULT NULL collate nocase," +
-                "fecha_propiedad2 varchar(100)  DEFAULT NULL collate nocase," +
-                "fecha_fin2 varchar(100)  DEFAULT NULL collate nocase," +
-                
-                "tipo_propiedad3 varchar(255)  DEFAULT NULL collate nocase," +
-                "anombre_propiedad3 varchar(255)  DEFAULT NULL collate nocase," +
-                "fecha_propiedad3 varchar(100)  DEFAULT NULL collate nocase," +
-                "fecha_fin3 varchar(100)  DEFAULT NULL collate nocase," +
+                "anombre_propiedad_pastor varchar(255)  DEFAULT NULL collate nocase," +
+                "num_matricula varchar(255)  DEFAULT NULL collate nocase," +
+                "predial varchar(255)  DEFAULT NULL collate nocase," +
+                "municipio varchar(255)  DEFAULT NULL collate nocase," +
+                "direccion varchar(255)  DEFAULT NULL collate nocase," +
+                "observaciones varchar(255)  DEFAULT NULL collate nocase," +
 
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
                 "eliminado varchar(100)  DEFAULT NULL collate nocase," +
@@ -88,6 +86,8 @@ angular.module('auditoriaApp')
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "tipo varchar(100)  NOT NULL," + // Auditor, Pastor, Tesorero
                 "is_active integer(1)  DEFAULT '1'," +
+                "union_id integer DEFAULT NULL," +
+                "asociacion_id integer DEFAULT NULL," +
                 "distrito_id integer DEFAULT NULL," +
                 "iglesia_id integer DEFAULT NULL," +
                 "auditoria_id integer DEFAULT NULL," +
@@ -118,6 +118,7 @@ angular.module('auditoriaApp')
     sqlLibMes = "CREATE TABLE IF NOT EXISTS lib_mensuales (id integer," +
                 "year integer  NOT NULL," +
                 "mes varchar(100)  NOT NULL collate nocase," +
+                "periodo varchar(10)  NOT NULL collate nocase," + // 2018/009
                 "orden integer  DEFAULT NULL," +
                 "auditoria_id integer  NOT NULL," +
                 "diezmos integer  DEFAULT 0 ," +
@@ -227,6 +228,33 @@ angular.module('auditoriaApp')
 
            
 
+    sqlremesas = "CREATE TABLE IF NOT EXISTS remesas (id integer," +
+                "asociacion_id integer DEFAULT NULL," +
+                "num_diario integer DEFAULT NULL," +
+                "linea integer DEFAULT NULL," +
+                "tipo_diario varchar(100)  DEFAULT NULL collate nocase," +
+                "num_secuencia varchar(100)  DEFAULT NULL collate nocase," +
+                "periodo varchar(100)  NOT NULL collate nocase," +
+                "fecha varchar(100)  DEFAULT NULL collate nocase," +
+                "referencia varchar(100)  DEFAULT NULL collate nocase, " +
+                "cod_cuenta integer DEFAULT NULL," +
+                "nombre_cuenta varchar(100)  DEFAULT NULL collate nocase, " +
+                "descripcion_transaccion varchar(100)  DEFAULT NULL collate nocase, " +
+                "cantidad integer DEFAULT NULL," +
+                "iva integer DEFAULT NULL," +
+                "moneda varchar(100)  DEFAULT NULL collate nocase, " +
+                "recurso varchar(100)  DEFAULT NULL collate nocase, " +
+                "funcion varchar(100)  DEFAULT NULL collate nocase, " +
+                "restr varchar(100)  DEFAULT NULL collate nocase, " +
+                "org_id varchar(100)  DEFAULT NULL collate nocase, " +
+                "empleados integer DEFAULT NULL," +
+                "concepto varchar(100)  DEFAULT NULL collate nocase, " +
+                "modificado varchar(100)  DEFAULT NULL collate nocase," +
+                "created_at varchar(100)  DEFAULT NULL collate nocase," +
+                "eliminado  varchar(100)  DEFAULT NULL collate nocase)";       
+
+           
+
 
 
                 
@@ -323,6 +351,12 @@ angular.module('auditoriaApp')
             
             prom = this.query(sqlrespuestas).then(function(){
                 console.log('respuestas Tabla creada');
+            })
+            promesas.push(prom);
+            
+            
+            prom = this.query(sqlremesas).then(function(){
+                console.log('Remesas Tabla creada');
             })
             promesas.push(prom);
             

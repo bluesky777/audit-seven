@@ -6,10 +6,10 @@
   "scripts": {
     "start": "electron .",
     "pack": "build --dir",
-    "build": "build --mac --win",
+    "build": "build --mac --win --x64 --ia32",
     "build-mac": "build --mac",
-    "dist": "build -p always",
-    "never": "build -p never",
+    "dist": "build -p always --x64 --ia32",
+    "never": "build -p never --x64 --ia32",
     "publish": "build --mac --win -p always",
     "postinstall": "install-app-deps"
   },

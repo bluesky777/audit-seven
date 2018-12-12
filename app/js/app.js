@@ -16,7 +16,9 @@ angular.module('auditoriaApp', [
 	'ui.grid.expandable',
 	'ui.grid.moveColumns',
 	'toastr',
-	'ui.utils.masks'
+	'ui.utils.masks',
+	'ngFileUpload',
+	'cfp.hotkeys'
 ])
 
 .config(function($stateProvider, $urlRouterProvider, uiSelectConfig, toastrConfig){
@@ -82,17 +84,6 @@ angular.module('auditoriaApp', [
 		templateUrl: 'templates/respuestas.html'
 	})
 
-	.state('panel.informe', {
-		url: '/informe',
-		controller: 'informectrl',
-		templateUrl: 'templates/informes.html'
-	})
-
-	.state('panel.informe.uniones', {
-		url: '/uniones',
-		controller: 'informesUnionesCtrl',
-		templateUrl: 'templates/informes/todas-uniones.html'
-	})
 
 	.state('panel.sincronizacion', {
 		url: '/sincronizacion',
@@ -105,29 +96,6 @@ angular.module('auditoriaApp', [
 		controller: 'recomendacionesCtrl',
 		templateUrl: 'templates/recomendaciones.html'
 	})
-
-
-
-	.state('panel.informe.asociaciones', {
-		url: '/Asociaciones',
-		controller: 'informesAsociacionesCtrl',
-		templateUrl: 'templates/informes/todas-asociaciones.html'
-	})
-
-
-
-	.state('panel.informe.distritos', {
-		url: '/Distritos',
-		controller: 'informesDistritosCtrl',
-		templateUrl: 'templates/informes/todos-distritos.html'
-	})
-
-	.state('panel.informe.iglesias', {
-		url: '/Iglesias',
-		controller: 'informesiglesiasCtrl',
-		templateUrl: 'templates/informes/todos-iglesias.html'
-	})
-
 
 
 	.state('panel.libromes', {
@@ -143,8 +111,31 @@ angular.module('auditoriaApp', [
 
 
 .constant('rutaServidor', {
-    //ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias'
-    ruta: 'http://192.168.100.31/feryz_server/public/auditorias'
+	//ruta: 'http://edilson.micolevirtual.com/feryz_server/public/auditorias',
+    //root: 'http://edilson.micolevirtual.com/feryz_server/public'
+    ruta: 'http://192.168.100.31/feryz_server/public/auditorias',
+    root: 'http://192.168.100.31/feryz_server/public'
+})
+
+.constant('tipos_recomendacion', {
+	tipos: [
+		{tipo: 'Diezmo'},
+		{tipo: 'Ofrenda'},
+		{tipo: 'Especial'},
+		{tipo: 'Total diezmo-ofren-espe'},
+		{tipo: 'Gastos'},
+		{tipo: 'Gastos soportados'},
+		{tipo: 'Diferencia gastos'},
+		{tipo: 'Remesa'},
+		{tipo: 'Remesa enviada'},
+		{tipo: 'Ajuste de auditoría por enviar'},
+		{tipo: 'Saldo de banco'},
+		{tipo: 'Consig. en fondos confiados'},
+		{tipo: 'Gastos del mes por registrar'},
+		{tipo: 'Dinero efectivo'},
+		{tipo: 'Cuentas por cobrar'},
+		{tipo: 'Otra'}
+	]
 })
 
 

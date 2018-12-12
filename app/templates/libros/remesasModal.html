@@ -1,0 +1,81 @@
+
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Remesas periodo {{ libro_mes.periodo }}</h3>
+</div>
+<div class="modal-body" id="modal-body" style="overflow: auto;">
+
+    <table style="margin: 0 auto; font-size: 9pt" class="table table-condensed">
+        <thead>
+            <tr>
+                <th class="center bold">No</th>
+                <th class="center bold">Num Diario</th>
+                <th class="center bold">Num Secuencia</th>
+                <th class="center bold">Periodo</th>
+                <th class="center bold">Fecha</th>
+                <th class="center bold">Referencia</th>
+                <th class="center bold">Cod Cuenta</th>
+                <th class="center bold">Nombre de Cuenta</th>
+                <th class="center bold">Descripción Transacción</th>
+                <th class="center bold">Cantidad</th>
+                <th class="center bold">IVA</th>
+                <th class="center bold">Concepto</th>
+            </tr>
+        </thead>
+
+        <tr ng-repeat="remesa in libro_mes.remesas">
+            <td class="no-padding bold align-right">
+                {{ $index + 1 }}
+            </td>
+            <td class="padding4">
+                {{ remesa.num_diario }}
+                <!--
+                <input type="text" ng-model="remesa.valor" class="valor-sm"
+                    ng-change="cambiaValor(remesa, 'valor')"  enter-as-tab
+                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 300, 'blur': 0} }"
+                    ui-number-mask="0">
+                -->
+            </td>
+            <td class="padding4">
+                {{ remesa.num_secuencia }}                
+            </td>
+            <td class="padding4">
+                {{ remesa.periodo }}                
+            </td>
+            <td class="padding4">
+                {{ remesa.fecha }}                
+            </td>
+            <td class="padding4" style="font-size: 8pt">
+                {{ remesa.referencia }}                
+            </td>
+            <td class="padding4">
+                {{ remesa.cod_cuenta }}                
+            </td>
+            <td class="padding4">
+                {{ remesa.nombre_cuenta }}                
+            </td>
+            <td class="padding4" style="font-size: 8pt">
+                {{ remesa.descripcion_transaccion }}                
+            </td>
+            
+            <td class="padding4" style="font-weight: bold">
+                {{ remesa.cantidad | currency:'':0 }}
+            </td>
+            <td class="padding4">
+                {{ remesa.iva }}
+            </td>
+            <td class="padding4">
+                {{ remesa.concepto }}
+            </td>
+            
+        </tr>
+
+    
+                
+                
+    </table>
+
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Cerrar</button>
+</div>

@@ -12,7 +12,8 @@ angular.module('auditoriaApp')
 	
 	
 	consulta = 'SELECT i.*, i.rowid, d.nombre as nombre_distrito, d.alias as alias_distrito ' +
-		'FROM iglesias i INNER JOIN distritos d ON d.rowid=i.distrito_id';
+		'FROM iglesias i ' +
+		'INNER JOIN distritos d ON d.rowid=i.distrito_id and d.eliminado is null and i.eliminado is null;';
 		
 	ConexionServ.query(consulta, []).then(function(result){
 		$scope.iglesias = result;
@@ -93,8 +94,13 @@ angular.module('auditoriaApp')
 					$scope.USER.iglesia_audit_id 	= audit.iglesia.rowid;
 					
 					AuthServ.update_user_storage($scope.USER).then(function(usuario){
-						const {ipcRenderer} = require('electron');
-						ipcRenderer.send('refrescar-app');
+						try {
+							const {ipcRenderer} = require('electron');
+							ipcRenderer.send('refrescar-app');
+						} catch(e) {
+							console.error("electron no encontrado");
+							location.reload();
+						}
 					});
 					
 				});
@@ -115,12 +121,18 @@ angular.module('auditoriaApp')
 	} 
 
 	$scope.verMostrarAuditoriasTabla = function(){
-		consulta = 'SELECT a.*, a.rowid, i.nombre, i.alias from auditorias a ' +
-			'INNER JOIN iglesias i ON a.iglesia_id = i.rowid and a.iglesia_id=? ';
-
-		ConexionServ.query(consulta, [$scope.USER.iglesia_id]).then(function(result){
+		consulta = 'SELECT a.*, a.rowid, i.nombre, i.alias FROM auditorias a ' +
+			'INNER JOIN iglesias i ON a.iglesia_id = i.rowid and a.iglesia_id=? and a.eliminado is null and i.eliminado is null';
+		
+		
+		ConexionServ.query(consulta, [ $scope.USER.iglesia_id ]).then(function(result){
 			if(result.length == 0){
-				toastr.warning('Debes seleccionar una iglesia.');
+				if ($scope.USER.iglesia_id) {
+					toastr.warning('Esta iglesia aún no tiene auditorías.');
+				}else{
+					toastr.warning('Debes seleccionar una iglesia.');
+				}
+				
 				return;
 			}
 			$scope.auditorias = result;

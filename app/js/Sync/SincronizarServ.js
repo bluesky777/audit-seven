@@ -26,7 +26,7 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando uniones', tx);
+                console.log('Error actualizando uniones', tx);
             });
         
         }, function(tx){
@@ -57,7 +57,7 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando asociaciones', tx);
+                console.log('Error actualizando asociaciones', tx);
             });
         
         }, function(tx){
@@ -91,7 +91,7 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando distritos', tx);
+                console.log('Error actualizando distritos', tx);
             });
         
         }, function(tx){
@@ -113,8 +113,9 @@ result = {
                 
                 for (var i = 0; i < iglesias.length; i++) {
 
-                    consulta = 'INSERT INTO iglesias (rowid, id, nombre, alias, codigo, distrito_id, tipo, zona, fecha_propiedad, fecha_fin) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-                    ConexionServ.query(consulta, [iglesias[i].id, iglesias[i].id, iglesias[i].nombre, iglesias[i].alias, iglesias[i].codigo, iglesias[i].distrito_id, iglesias[i].tipo, iglesias[i].zona, iglesias[i].fecha_propiedad, iglesias[i].fecha_fin]).then(function(result){
+                    consulta = 'INSERT INTO iglesias(rowid, id, nombre, alias, codigo, distrito_id, zona, tesorero_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, anombre_propiedad, anombre_propiedad_pastor, num_matricula, predial, municipio, direccion, observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+                    ConexionServ.query(consulta, [iglesias[i].id, iglesias[i].id, iglesias[i].nombre, iglesias[i].alias, iglesias[i].codigo, iglesias[i].distrito_id, iglesias[i].zona, iglesias[i].tesorero_id, iglesias[i].estado_propiedad, iglesias[i].estado_propiedad_pastor, 
+                        iglesias[i].tipo_doc_propiedad, iglesias[i].tipo_doc_propiedad_pastor, iglesias[i].anombre_propiedad, iglesias[i].anombre_propiedad_pastor, iglesias[i].num_matricula, iglesias[i].predial, iglesias[i].municipio, iglesias[i].direccion, iglesias[i].observaciones]).then(function(result){
                         console.log('se cargo iglesias', result);
                     
                     }, function(tx){
@@ -123,7 +124,7 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando iglesias', tx);
+                console.log('Error actualizando iglesias', tx);
             });
         
         }, function(tx){
@@ -145,8 +146,8 @@ result = {
                 
                 for (var i = 0; i < usuarios.length; i++) {
 
-                    consulta = 'INSERT INTO usuarios (rowid, id, nombres, apellidos, email, tipo, sexo, username, password) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)'
-                    ConexionServ.query(consulta, [usuarios[i].id, usuarios[i].id, usuarios[i].nombres, usuarios[i].apellidos, usuarios[i].email, usuarios[i].tipo, usuarios[i].sexo, usuarios[i].username, usuarios[i].password]).then(function(result){
+                    consulta = 'INSERT INTO usuarios (rowid, id, nombres, apellidos, email, tipo, sexo, union_id, asociacion_id, username, password) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
+                    ConexionServ.query(consulta, [usuarios[i].id, usuarios[i].id, usuarios[i].nombres, usuarios[i].apellidos, usuarios[i].email, usuarios[i].tipo, usuarios[i].sexo, usuarios[i].union_id, usuarios[i].asociacion_id, usuarios[i].username, usuarios[i].password]).then(function(result){
                         console.log('se cargo usuarios', result);
                     
                     }, function(tx){
@@ -155,7 +156,7 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando usuarios', tx);
+                console.log('Error actualizando usuarios', tx);
             });
         
         }, function(tx){
@@ -188,7 +189,7 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando auditorias', tx);
+                console.log('Error actualizando auditorias', tx);
             });
         
         }, function(tx){
@@ -210,17 +211,17 @@ result = {
                 
                 for (var i = 0; i < lib_mensuales.length; i++) {
 
-                    consulta = 'INSERT INTO lib_mensuales (rowid, id, year, mes, orden, auditoria_id) VALUES(?, ?, ?, ?, ?, ?)'
-                    ConexionServ.query(consulta, [lib_mensuales[i].id, lib_mensuales[i].id, lib_mensuales[i].year, lib_mensuales[i].mes, lib_mensuales[i].orden, lib_mensuales[i].auditoria_id]).then(function(result){
+                    consulta = 'INSERT INTO lib_mensuales (rowid, id, year, mes, periodo, orden, auditoria_id, diezmos, ofrendas, especiales, gastos, gastos_soportados, remesa_enviada) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)'
+                    ConexionServ.query(consulta, [lib_mensuales[i].id, lib_mensuales[i].id, lib_mensuales[i].year, lib_mensuales[i].mes, lib_mensuales[i].periodo, lib_mensuales[i].orden, lib_mensuales[i].auditoria_id,
+                        lib_mensuales[i].diezmos, lib_mensuales[i].ofrendas, lib_mensuales[i].especiales, lib_mensuales[i].gastos, lib_mensuales[i].gastos_soportados, lib_mensuales[i].remesa_enviada ]).then(function(result){
                         console.log('se cargo lib_mensuales', result);
-                    
                     }, function(tx){
                         console.log('error', tx);
                     });
                 }
             
             }, function(tx){
-                console.log('Error eliminando lib_mensuales', tx);
+                console.log('Error actualizando lib_mensuales', tx);
             });
         
         }, function(tx){
@@ -231,7 +232,7 @@ result = {
     
     },
     
-    lib_semanales: function(lib_mensuales){
+    lib_semanales: function(lib_semanales){
         var defered = $q.defer();
 
         consulta = 'DELETE FROM lib_semanales WHERE id is NULL or eliminado is NOT NULL ';
@@ -251,11 +252,42 @@ result = {
                 }
             
             }, function(tx){
-                console.log('Error eliminando lib_mensuales', tx);
+                console.log('Error actualizando lib_mensuales', tx);
             });
         
         }, function(tx){
             console.log('Error eliminando lib_mensuales', tx);
+        });
+
+        return defered.promise;
+    
+    },
+    
+    gastos_meses: function(gastos){
+        var defered = $q.defer();
+
+        consulta = 'DELETE FROM gastos_mes WHERE id is NULL or eliminado is NOT NULL ';
+        ConexionServ.query(consulta).then(function(result){
+
+            consulta = 'UPDATE gastos_mes SET modificado=NULL, eliminado=NULL';
+            ConexionServ.query(consulta).then(function(result){
+                
+                for (var i = 0; i < gastos.length; i++) {
+                    el = gastos[i];
+                    consulta = 'INSERT INTO gastos_mes (rowid, id, libro_mes_id, auditoria_id, valor, descripcion) VALUES(?,?,?,?,?,?)'
+                    ConexionServ.query(consulta, [ el.id, el.id, el.libro_mes_id, el.auditoria_id, el.valor, el.descripcion ]).then(function(result){
+                        console.log('se cargo gastos_mes', result);
+                    }, function(tx){
+                        console.log('error', tx);
+                    });
+                }
+            
+            }, function(tx){
+                console.log('Error actualizando gastos_mes', tx);
+            });
+        
+        }, function(tx){
+            console.log('Error eliminando gastos_mes', tx);
         });
 
         return defered.promise;
@@ -337,13 +369,13 @@ result = {
         consulta = 'DELETE FROM recomendaciones WHERE id is NULL or eliminado is NOT NULL ';
         ConexionServ.query(consulta).then(function(result){
 
-            consulta = 'UPDATE recomendaciones SET modificado=0, eliminado=0';
+            consulta = 'UPDATE recomendaciones SET modificado=null, eliminado=null';
             ConexionServ.query(consulta).then(function(result){
                 console.log(recomendas);
                 for (var i = 0; i < recomendas.length; i++) {
 
-                    consulta = 'INSERT INTO recomendaciones (rowid, id, recomendacion, justificacion, superada, fecha) VALUES(?, ?, ?, ?, ?, ?)'
-                    ConexionServ.query(consulta, [recomendas[i].id, recomendas[i].id,  recomendas[i].recomendacion, recomendas[i].justificacion, recomendas[i].superada, recomendas[i].fecha  ]).then(function(result){
+                    consulta = 'INSERT INTO recomendaciones (rowid, id, hallazgo, recomendacion, auditoria_id, justificacion, superada, fecha, fecha_respuesta, tipo) VALUES(?,?,?,?,?,?,?,?,?,?)'
+                    ConexionServ.query(consulta, [recomendas[i].id, recomendas[i].id, recomendas[i].hallazgo, recomendas[i].recomendacion, recomendas[i].auditoria_id, recomendas[i].justificacion, recomendas[i].superada, recomendas[i].fecha, recomendas[i].fecha_respuesta, recomendas[i].tipo  ]).then(function(result){
                         console.log('se cargo recomendaciones', result);
                     
                     }, function(tx){

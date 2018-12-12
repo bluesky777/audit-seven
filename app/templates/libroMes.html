@@ -34,13 +34,13 @@
 					<div class="col-sm-12" >
 						
 						<div style="text-align: center;">
-							<h4>Selecciona auditoria</h4>
+							<h4>Selecciona auditoría</h4>
 							<div style="background-color: #ddd; padding: 4px; width: 80%; overflow-x: auto; min-height: 50px; margin: 0 auto;">
 								<button ng-click="seleccionarAuditorias(audit)" 
-									ng-repeat="audit in auditorias" uib-tooltip="{{ audit.hora }}"
+									ng-repeat="audit in auditorias" uib-tooltip="{{ audit.fecha }}"
 									class="btn " ng-class="{'btn-primary': audit.rowid==auditoria.rowid, 'btn-default': audit.rowid!=auditoria.rowid }">
 
-									{{ audit.fecha }}
+									{{ audit.fecha.substring(0, 4) }}
 								</button>
 								<span ng-show="auditorias.length==0" style="font-style: italic; color: red; font-weight: bold;">No hay auditorías para esta iglesia</span>
 							</div>
@@ -59,7 +59,7 @@
 								<td class="info">{{ USER.iglesia_nombre }}</td>
 								
 								<td class="success"> <label>Fecha</label></td>
-								<td class="success">{{ USER.fecha_audit }} {{ USER.hora_audit }}</td>
+								<td class="success">{{ USER.fecha_audit }}</td>
 							</tr>
 							<tr>
 								<td class="success"> <label>Pastor: </label></td>
@@ -106,9 +106,9 @@
 						Recomendaciones
 						-->
 						<div style="margin-bottom: 20px;" id="caja-recomendaciones">
-							<a href="" ng-show="!vercomends" ng-click="funcvercomend()">Ver recomendaciones</a>
-							<a href="" ng-show="vercomends" ng-click="funcvercomend()">Ocultar recomendaciones</a>
-							<div ng-if="vercomends">
+							<a href="" ng-show="!vercomends" ng-click="ver_recomendaciones()">Ver recomendaciones</a>
+							<a href="" ng-show="vercomends" ng-click="ver_recomendaciones()">Ocultar recomendaciones</a>
+							<div ng-show="vercomends">
 								<recomendaciones-dir></recomendaciones-dir>
 							</div>
 						</div>
@@ -139,44 +139,117 @@
 
 						</div>
 
-
-											
-						<table class="table tabla-mes table-striped table-hover table-condensed">
+						
+						<button ng-click="ocultarPrimeras()" style="margin-top: 20px" class="btn btn-default">
+							<span ng-show="ocultando_primeras">
+								<i class="glyphicon glyphicon-eye-open"></i>
+								<span>Mostrar</span> 
+							</span>  
+							<span ng-show="!ocultando_primeras">
+								<i class="glyphicon glyphicon-eye-close"></i>
+								<span>Ocultar</span>
+							</span>  
+							columnas
+						</button>
+								
+						
+						<!-- 
+						************************************************************
+						********************     TABLA MESES    ********************
+						************************************************************
+						-->
+						<table class="table tabla-mes table-striped table-hover table-condensed inmovible" ng-class="{'ocultando-primeras': ocultando_primeras }">
 							<thead>
 								<tr>
 									<th scope="col" class="center">ID </th>
 									<th scope="col" class="center">Año</th>
 									<th scope="col" class="center">Mes</th>
-									<th scope="col" class="center">Diezmo</th>
-									<th scope="col" class="center">Ofrenda</th>
-									<th scope="col" class="center"><span uib-tooltip="Ofrenda especial">Especial</span></th>
-									<th scope="col" class="center">Total</th>
-									<th scope="col" class="center">Diáconos</th>
-									<th scope="col" class="center">Diferencia</th>
-									<th scope="col" class="center">20% DSLLO</th>
-									<th scope="col" class="center">20% OMM</th>
-									<th scope="col" class="center" style="min-width: 60px;">60% + EE</th>
-									<th scope="col" class="center">Gastos</th>
+									<th scope="col" class="center td-primeras mano" ng-click="abrirRecomendacionesModal('Diezmo')">
+										Diezmo
+										<span class="badge" ng-show="auditoria['reco_cont_Diezmo'].length>0">
+											{{auditoria['reco_cont_Diezmo'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center td-primeras mano" ng-click="abrirRecomendacionesModal('Ofrenda')">
+										<span>Ofrenda</span>
+										<span class="badge" ng-show="auditoria['reco_cont_Ofrenda'].length>0">
+											{{auditoria['reco_cont_Ofrenda'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center td-primeras mano" ng-click="abrirRecomendacionesModal('Especial')">
+										<span uib-tooltip="Ofrenda especial">Especial</span>
+										<span class="badge" ng-show="auditoria['reco_cont_Especial'].length>0">
+											{{auditoria['reco_cont_Especial'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center td-primeras mano" ng-click="abrirRecomendacionesModal('Total diezmo-ofren-espe')"
+										uib-tooltip="Total diezmo-ofren-espe" tooltip-append-to-body="true">
+										Total
+										<span class="badge" ng-show="auditoria['reco_cont_Total diezmo-ofren-espe'].length>0">
+											{{auditoria['reco_cont_Total diezmo-ofren-espe'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center td-primeras">
+										Diáconos
+									</th>
+									<th scope="col" class="center td-primeras border-der">
+										Diferencia
+									</th>
 									<th scope="col" class="center">
-										<span uib-tooltip="Gastos con soporte">Gastos soportados</span></th>
+										20% DSLLO
+									</th>
 									<th scope="col" class="center">
-										<span uib-tooltip="Gastos - Gastos soportados">Diferencia gastos</th>
-									<th scope="col" class="center">Remesa</th>
-									<th scope="col" class="center">Remesa Enviada</th>
-									<th scope="col" class="center">Diferencia Remesa</th>
-								
+										20% OMM
+									</th>
+									<th scope="col" class="center" style="min-width: 60px;">
+										60% + EE
+									</th>
+									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Gastos')">
+										Gastos
+										<span class="badge" ng-show="auditoria['reco_cont_Gastos'].length>0">
+											{{auditoria['reco_cont_Gastos'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Gastos soportados')">
+										<span uib-tooltip="Gastos con soporte">Gastos soportados</span>
+										<span class="badge" ng-show="auditoria['reco_cont_Gastos soportados'].length>0">
+											{{auditoria['reco_cont_Gastos soportados'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Gastos soportados')">
+										<span uib-tooltip="Gastos - Gastos soportados">Diferencia gastos</span>
+										<span class="badge" ng-show="auditoria['reco_cont_Diferencia gastos'].length>0">
+											{{auditoria['reco_cont_Diferencia gastos'].length}}
+										</span>
+									</th>		
+									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Remesa')">
+										Remesa
+										<span class="badge" ng-show="auditoria['reco_cont_Remesa'].length>0">
+											{{auditoria['reco_cont_Remesa'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Remesa enviada')">
+										Remesa Enviada
+										<span class="badge" ng-show="auditoria['reco_cont_Remesa enviada'].length>0">
+											{{auditoria['reco_cont_Remesa enviada'].length}}
+										</span>
+									</th>
+									<th scope="col" class="center">
+										Diferencia Remesa
+									</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 
-								<tr ng-repeat="lib_mes in lib_meses">
+								<tr ng-repeat="lib_mes in lib_meses | orderBy:'periodo'">
 
 									<td class="no-padding-bottom">{{$index + 1}}</td>
 									<td class="no-padding-bottom">{{lib_mes.year}}</td>
-									<td style="padding: 0px">
+									<td class="border-der" style="padding: 0px">
 										<input type="button" ng-click="abrirLibroSemanal(lib_mes)" class="btn btn-info btn-sm" value="{{lib_mes.mes}}">
 									</td>
-									<td class="no-padding">
+									<td class="td-primeras no-padding">
 										<input type="text" ng-model="lib_mes.diezmos" class="valor-sm"
 											ng-change="cambiaValor(lib_mes, 'diezmos')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
@@ -185,7 +258,7 @@
 											popover-trigger="'mouseenter'"
 											ui-number-mask="0" enter-as-tab>
 									</td>
-									<td class="no-padding">
+									<td class="td-primeras no-padding">
 										<input type="text" ng-model="lib_mes.ofrendas" class="valor-sm"
 											ng-change="cambiaValor(lib_mes, 'ofrendas')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
@@ -194,7 +267,7 @@
 											popover-trigger="'mouseenter'"
 											ui-number-mask="0" enter-as-tab>
 									</td>
-									<td class="no-padding">
+									<td class="td-primeras no-padding">
 										<input type="text" ng-model="lib_mes.especiales" class="valor-sm"
 											ng-change="cambiaValor(lib_mes, 'especiales')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
@@ -204,11 +277,11 @@
 											ui-number-mask="0" enter-as-tab>
 									</td>
 									<!-- Total -->
-									<td class="no-padding-bottom align-right">{{ lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales | currency:'':0 }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales | currency:'':0 }}</td>
 									<!-- Diáconos -->
-									<td class="no-padding-bottom align-right">{{ lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5 | currency:'':0 }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5 | currency:'':0 }}</td>
 									<!-- Diferencia -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales)-(lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5) | currency:'':0 }}</td>
+									<td class="td-primeras border-der no-padding-bottom align-right">{{ (lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales)-(lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5) | currency:'':0 }}</td>
 									<!-- 20% DESARROLLO -->
 									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
 									<!-- 20% OMM -->
@@ -250,14 +323,23 @@
 									<td class="no-padding-bottom align-right">{{ (lib_mes.gastos - lib_mes.gastos_soportados) | currency:'':0 }}</td>
 										
 									<!-- Remesa -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.diezmos + lib_mes.ofrendas * 0.4) | currency:'':0 }}</td>
-									<!-- Remesa enviada -->
 									<td class="no-padding-bottom align-right">
+										{{ (lib_mes.diezmos + lib_mes.ofrendas * 0.4) | currency:'':0 }}
+									</td>
+									
+									<!-- Remesa enviada -->
+									<td class="no-padding-bottom align-right mano" 
+										ng-click="abrirRemesas(lib_mes)">
+										
+										{{ lib_mes.remesa_enviada | currency:'':0 }}
+										<!--
 										<input type="text" ng-model="lib_mes.remesa_enviada" class="valor-sm"
 											ng-change="cambiaValor(lib_mes, 'remesa_enviada')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-											ui-number-mask="0" enter-as-tab>	
+											ui-number-mask="0" enter-as-tab>
+										-->	
 									</td>
+									
 									<!-- Diferencia remesa -->
 									<td class="no-padding-bottom align-right">{{ (lib_mes.remesa_enviada - (lib_mes.diezmos + lib_mes.ofrendas * 0.4)) | currency:'':0 }}</td>
 									
@@ -284,16 +366,16 @@
 
 									<td class="no-padding-bottom"></td>
 									<td class="no-padding-bottom">Totales</td>
-									<td></td>
-									<td class="no-padding align-right">{{ sum_diezmos }}</td>
-									<td class="no-padding align-right">{{ sum_ofrendas }}</td>
-									<td class="no-padding align-right">{{ sum_especiales }}</td>
+									<td class="border-der"></td>
+									<td class="td-primeras no-padding align-right">{{ sum_diezmos }}</td>
+									<td class="td-primeras no-padding align-right">{{ sum_ofrendas }}</td>
+									<td class="td-primeras no-padding align-right">{{ sum_especiales }}</td>
 									<!-- Total -->
-									<td class="no-padding-bottom align-right">{{ sum_totales }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ sum_totales }}</td>
 									<!-- Diáconos -->
-									<td class="no-padding-bottom align-right">{{ sum_diaconos }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ sum_diaconos }}</td>
 									<!-- Diferencia -->
-									<td class="no-padding-bottom align-right">{{ sum_diferencia }}</td>
+									<td class="td-primeras border-der no-padding-bottom align-right">{{ sum_diferencia }}</td>
 									<!-- 20% DESARROLLO -->
 									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
 									<!-- 20% OMM -->
@@ -334,7 +416,11 @@
 		</div>
 	</div>
 	
-	
+	<!-- 
+	********************************************************************
+	********************     FÓRMULAS INFERIORES    ********************
+	********************************************************************
+	-->
 	<div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized_totales}">
 		<div class="box-inner">
 			<div class="box-header well">
@@ -429,12 +515,23 @@
 							</tr>
 
 							<tr>
-								<td>Ajuste de auditoria por enviar</td>
+								<td>Ajuste de auditoría por enviar</td>
 								<td class="align-right">
-									<input type="text" ng-model="auditoria.ajuste_por_enviar" class="align-right"
-										ng-change="cambiaAuditoria('ajuste_por_enviar')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
+									<div class="input-group">
+										<input type="text" ng-model="auditoria.ajuste_por_enviar" class="align-right input-totales"
+											ng-change="cambiaAuditoria('ajuste_por_enviar')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+											
+										<span class="input-group-btn">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Ajuste de auditoría por enviar')">
+												<i class="glyphicon glyphicon-flag"></i>
+												<span class="badge" ng-show="auditoria['reco_cont_Ajuste de auditoría por enviar'].length>0">
+													{{auditoria['reco_cont_Ajuste de auditoría por enviar'].length}}
+												</span>
+											</button>
+										</span>
+									</div>
 								</td>
 							</tr>
 							<tr>
@@ -453,19 +550,41 @@
 							</tr>
 								<td>Saldo de banco</td>
 								<td class="align-right">
-									<input type="text" ng-model="auditoria.saldo_banco" class="align-right"
-										ng-change="cambiaAuditoria('saldo_banco')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
+									<div class="input-group">
+										<input type="text" ng-model="auditoria.saldo_banco" class="align-right input-totales"
+											ng-change="cambiaAuditoria('saldo_banco')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+										
+											<span class="input-group-btn">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Saldo de banco')">
+												<i class="glyphicon glyphicon-flag"></i>
+												<span class="badge" ng-show="auditoria['reco_cont_Saldo de banco'].length>0">
+													{{auditoria['reco_cont_Saldo de banco'].length}}
+												</span>
+											</button>
+										</span>
+									</div>
 								</td>
 
 							<tr>
 								<td>Consig. en fondos confiados</td>
 								<td class="align-right">
-									<input type="text" ng-model="auditoria.consig_fondos_confia" class="align-right"
-										ng-change="cambiaAuditoria('consig_fondos_confia')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
+									<div class="input-group">
+										<input type="text" ng-model="auditoria.consig_fondos_confia" class="align-right input-totales"
+											ng-change="cambiaAuditoria('consig_fondos_confia')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+										
+										<span class="input-group-btn">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Consig. en fondos confiados')">
+												<i class="glyphicon glyphicon-flag"></i>
+												<span class="badge" ng-show="auditoria['reco_cont_Consig. en fondos confiados'].length>0">
+													{{auditoria['reco_cont_Consig. en fondos confiados'].length}}
+												</span>
+											</button>
+										</span>
+									</div>
 								</td>
 							</tr>
 
@@ -473,14 +592,7 @@
 								<td>Gastos del mes por registrar</td>
 								<td class="align-right">
 									<div class="input-group">
-										<input type="text" ng-model="auditoria.gastos_mes_por_regis" class="align-right input-totales"
-											ng-change="cambiaAuditoria('gastos_mes_por_regis')" 
-											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-											ui-number-mask="0" enter-as-tab
-											uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
-											popover-title="Gastos auditoria" popover-popup-delay="300"
-											popover-trigger="'mouseenter'">
-											
+										
 										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
 											popover-title="Gastos auditoria" popover-popup-delay="300"
 											popover-trigger="'mouseenter'">
@@ -492,13 +604,19 @@
 											</button>
 										</span>
 										
-										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
+										<input type="text" ng-model="auditoria.gastos_mes_por_regis" class="align-right input-totales"
+											ng-change="cambiaAuditoria('gastos_mes_por_regis')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab
+											uib-popover-template="'templates/libros/gastosAuditoriaPopover.html'"
 											popover-title="Gastos auditoria" popover-popup-delay="300"
 											popover-trigger="'mouseenter'">
-											<button class="btn btn-default btn-sm" type="button" ng-click="abrirGastosAuditoria(auditoria)">
+											
+										<span class="input-group-btn">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Gastos del mes por registrar')">
 												<i class="glyphicon glyphicon-flag"></i>
-												<span class="badge" ng-show="auditoria.gastos_detalle.length>0">
-													{{auditoria.gastos_detalle.length}}
+												<span class="badge" ng-show="auditoria['reco_cont_Gastos del mes por registrar'].length>0">
+													{{auditoria['reco_cont_Gastos del mes por registrar'].length}}
 												</span>
 											</button>
 										</span>
@@ -512,6 +630,14 @@
 								<td>Dinero efectivo</td>
 								<td class="align-right">
 									<div class="input-group">
+										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/efectivoAuditoriaPopover.html'"
+											popover-title="Gastos auditoria" popover-popup-delay="300"
+											popover-trigger="'mouseenter'">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirDineroEfectivo(auditoria)">
+												<i class="glyphicon glyphicon-pencil"></i>
+											</button>
+										</span>
+										
 										<input type="text" ng-model="auditoria.dinero_efectivo" class="align-right input-totales"
 											ng-change="cambiaAuditoria('dinero_efectivo')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
@@ -520,11 +646,12 @@
 											popover-title="Dinero efectivo" popover-popup-delay="300"
 											popover-trigger="'mouseenter'">
 											
-										<span class="input-group-btn" popover-append-to-body="true" uib-popover-template="'templates/libros/efectivoAuditoriaPopover.html'"
-											popover-title="Gastos auditoria" popover-popup-delay="300"
-											popover-trigger="'mouseenter'">
-											<button class="btn btn-default btn-sm" type="button" ng-click="abrirDineroEfectivo(auditoria)">
-												<i class="glyphicon glyphicon-pencil"></i>
+										<span class="input-group-btn">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Dinero efectivo')">
+												<i class="glyphicon glyphicon-flag"></i>
+												<span class="badge" ng-show="auditoria['reco_cont_Dinero efectivo'].length>0">
+													{{auditoria['reco_cont_Dinero efectivo'].length}}
+												</span>
 											</button>
 										</span>
 									</div>
@@ -535,10 +662,21 @@
 							<tr>
 								<td>Cuentas por cobrar</td>
 								<td class="align-right">
-									<input type="text" ng-model="auditoria.cta_por_cobrar" class="align-right"
-										ng-change="cambiaAuditoria('cta_por_cobrar')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
+									<div class="input-group">
+										<input type="text" ng-model="auditoria.cta_por_cobrar" class="align-right input-totales"
+											ng-change="cambiaAuditoria('cta_por_cobrar')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+									
+										<span class="input-group-btn">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Cuentas por cobrar')">
+												<i class="glyphicon glyphicon-flag"></i>
+												<span class="badge" ng-show="auditoria['reco_cont_Cuentas por cobrar'].length>0">
+													{{auditoria['reco_cont_Cuentas por cobrar'].length}}
+												</span>
+											</button>
+										</span>
+									</div>
 								</td>
 							</tr>
 						

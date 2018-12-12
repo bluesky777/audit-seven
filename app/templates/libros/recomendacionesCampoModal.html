@@ -1,0 +1,62 @@
+
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Recomendaciones de: {{campo}}({{recomendaciones_actuales.length}})</h3>
+</div>
+<div class="modal-body" id="modal-body">
+
+    <table style="margin: 0 auto;" class="table table-condensed table-striped">
+        <tr>
+            <td class="center bold">No</td>
+            <td class="center bold">Fecha</td>
+            <td class="center bold">Hallazgo</td>
+            <td class="center bold">Recomendación</td>
+            <td class="center bold">Justificación</td>
+            <td class="center bold">Superada</td>
+            <td></td>
+        </tr>
+
+        <tr ng-repeat="recomend in recomendaciones_actuales">
+            <td class="no-padding bold align-right">
+                {{ $index + 1 }}
+            </td>
+            <td class="padding4" style="font-size: 8pt">
+                {{recomend.fecha | date:'short'}}
+            </td>
+            <td class="padding4">
+                {{recomend.hallazgo}}
+            </td>
+            <td class="padding4">
+                {{recomend.recomendacion}}
+            </td>
+            
+            <td class="padding4">
+                {{recomend.justificacion}}
+            </td>
+        
+            <td class="padding4" style="text-align: center">
+                {{recomend.superada}}
+            </td>
+                    
+            <td class="padding4">
+                <!--
+                <button ng-click="eliminarGasto(gasto)" class="btn btn-danger btn-sm" uib-tooltip="Eliminar gasto">
+                    <i class="glyphicon glyphicon-remove"></i> Quitar
+                </button>-->
+            </td>
+            
+        </tr>
+
+
+                
+                
+    </table>
+    
+    <button ng-click="crearRecomendacion()" class="btn btn-primary btn-sm" uib-tooltip="Crear recomendación de {{ campo }}">
+        <i class="glyphicon glyphicon-plus"></i> Crear recomendación
+    </button>
+
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Cerrar</button>
+</div>

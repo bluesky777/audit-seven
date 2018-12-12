@@ -1,6 +1,6 @@
 <div class="row">
     <div class="box col-md-12">
-        <div class="box-inner">
+        <div class="box-inner" style="background-color: #d9ebfb;">
             <div class="box-header well">
                 <h2><i class="glyphicon glyphicon-info-sign"></i> Recomendaciones</h2>
 
@@ -15,7 +15,7 @@
                 
                 <div class="col-sm-12">
 
-                    <button  class="btn btn-primary" ng-click="vercrearrecomendacion()">Crear recomendación</button>
+                    <button  class="btn btn-primary" ng-click="ver_crear_recomendacion()">Crear recomendación</button>
                         
                     <div ng-show="vermostrarreco" class="panel panel-warning" style="margin-bottom: 50px">
 
@@ -72,7 +72,7 @@
 
                             <div class="center">
                                 <input class="btn btn-warning " type="button" ng-click="cancelarVerCrearReco()" value="Cancelar">
-                                <input class="btn btn-primary " type="submit" name="" value="Crear recomendacion">         
+                                <input class="btn btn-primary " type="submit" name="" value="Crear recomendación">         
                             </div>
                         </form>
                     </div>
@@ -82,16 +82,17 @@
                     
 
 
-                    <table class="table table-bordered table-condensed">
+                    <table class="table table-bordered table-condensed table-striped">
                         <thead>
                             <tr >
                                 <th scope="col">ID </th>
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Hallazgo</th>
+                                <th scope="col">Tipo</th>
                                 <th scope="col">Recomendación</th>
                                 <th scope="col">Respuesta</th>
                                 <th scope="col">superada</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col" style="width: 80px;">Editar</th>
                             
                             </tr>
                         </thead>
@@ -101,11 +102,12 @@
                             <tr ng-repeat="recomendacion in recomendaciones"  >
                             
                                 <td >{{ $index + 1 }}</td>
-                                <td >{{recomendacion.fecha | date:'short' }}</td>
+                                <td style="font-size: 8pt">{{recomendacion.fecha | date:'short' }}</td>
                                 <td>{{recomendacion.hallazgo}}</td>
+                                <td>{{recomendacion.tipo}}</td>
                                 <td>{{recomendacion.recomendacion}}</td>
                                 <td >{{recomendacion.justificacion}}</td>
-                                <td >{{recomendacion.superada}}</td>
+                                <td style="text-align: center;">{{recomendacion.superada}}</td>
                                 
                                 <td>
                                     <div class="btn-group">                        
@@ -153,6 +155,18 @@
                                             <div class="form-group col-sm-6"> <label>Hallazgo</label>
                                                 <textarea class="form-control" ng-model="act_reco.hallazgo"></textarea>
                                            </div>
+                                            
+                                            <div class="form-group col-sm-6"> <label>Tipo</label>
+                                                
+                                                <ui-select ng-model="act_reco.tipo" style="width: 100%;" theme="bootstrap">
+                                                    <ui-select-match placeholder="Tipo">
+                                                        <span ng-bind="$select.selected.tipo"></span>
+                                                    </ui-select-match>
+                                                    <ui-select-choices repeat="item in tipos_recomend | filter: $select.search track by $index">
+                                                        <span ng-bind-html="item.tipo | highlight: $select.search"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
                                             
                                             <div class="form-group col-sm-6"> <label>Recomendación</label>
                                                 <textarea class="form-control" ng-model="act_reco.recomendacion"></textarea>

@@ -90,5 +90,41 @@
 .btn .badge{
 	position: absolute;
     top: -4px;
-	z-index: 99999;
+	z-index: 9;
+}
+th .badge{
+	position: absolute;
+    top: -4px;
+	z-index: 9;
+	right: -4px;
+}
+.table.ocultando-primeras .td-primeras{
+	display: none;
+}
+.border-der{
+	border-right: 1px solid #ccc;
+}
+.mano{
+	cursor: pointer;
+}
+.table .mano:hover{
+	background-color: #d1e6f9;
+}
+
+@media only print{
+	.table-bordered {
+		border: 1px solid #000!important;
+	}
+	.table-bordered>thead>tr>th, 
+	.table-bordered>tbody>tr>th, 
+	.table-bordered>tfoot>tr>th, 
+	.table-bordered>thead>tr>td, 
+	.table-bordered>tbody>tr>td, 
+	.table-bordered>tfoot>tr>td{
+		border: 1px solid #000!important;
+	}
+}
+.tabla-mes thead tr th{
+	border: 1px #ccc solid!important;
+	position: relative;
 }
