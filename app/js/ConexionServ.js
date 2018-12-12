@@ -229,7 +229,7 @@ angular.module('auditoriaApp')
            
 
     sqlremesas = "CREATE TABLE IF NOT EXISTS remesas (id integer," +
-                "asociacion_id integer DEFAULT NULL," +
+                "asociacion_id integer NOT NULL," +
                 "num_diario integer DEFAULT NULL," +
                 "linea integer DEFAULT NULL," +
                 "tipo_diario varchar(100)  DEFAULT NULL collate nocase," +
@@ -237,16 +237,16 @@ angular.module('auditoriaApp')
                 "periodo varchar(100)  NOT NULL collate nocase," +
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "referencia varchar(100)  DEFAULT NULL collate nocase, " +
-                "cod_cuenta integer DEFAULT NULL," +
+                "cod_cuenta integer NOT NULL," +
                 "nombre_cuenta varchar(100)  DEFAULT NULL collate nocase, " +
                 "descripcion_transaccion varchar(100)  DEFAULT NULL collate nocase, " +
                 "cantidad integer DEFAULT NULL," +
                 "iva integer DEFAULT NULL," +
                 "moneda varchar(100)  DEFAULT NULL collate nocase, " +
                 "recurso varchar(100)  DEFAULT NULL collate nocase, " +
-                "funcion varchar(100)  DEFAULT NULL collate nocase, " +
+                "funcion varchar(100)  NOT NULL collate nocase, " +
                 "restr varchar(100)  DEFAULT NULL collate nocase, " +
-                "org_id varchar(100)  DEFAULT NULL collate nocase, " +
+                "org_id varchar(100)  NOT NULL collate nocase, " +
                 "empleados integer DEFAULT NULL," +
                 "concepto varchar(100)  DEFAULT NULL collate nocase, " +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +

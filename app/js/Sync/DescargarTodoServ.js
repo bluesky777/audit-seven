@@ -32,6 +32,7 @@ angular.module('auditoriaApp')
         destinos 			= data.destinos;
         destinos_pagos 		= data.destinos_pagos;
         gastos_mes 			= data.gastos_mes;
+        remesas 			= data.remesas;
         
         
         promesas 				    = [];
@@ -39,7 +40,7 @@ angular.module('auditoriaApp')
         funciones._valor_maximo 	= auditorias.length + iglesias.length + uniones.length + distritos.length + 
             asociaciones.length + usuarios.length + lib_mensuales.length + lib_semanales.length + 
             recomendaciones.length + preguntas.length + respuestas.length + dinero_efectivo.length + 
-            destinos.length + destinos_pagos.length + gastos_mes.length;
+            destinos.length + destinos_pagos.length + gastos_mes.length + remesas.length;
         
             
             
@@ -126,8 +127,8 @@ angular.module('auditoriaApp')
         
         for (var i = 0; i < lib_mensuales.length; i++) {
             lib 		= lib_mensuales[i];
-            consulta	= 'INSERT INTO lib_mensuales(rowid, id, year, mes, orden, auditoria_id, diezmos, ofrendas, especiales, gastos, gastos_soportados, remesa_enviada) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)';
-            prome 		= ConexionServ.query(consulta, [lib.id, lib.id, lib.year, lib.mes, lib.orden, lib.auditoria_id, lib.diezmos, lib.ofrendas, lib.especiales, lib.gastos, lib.gastos_soportados, lib.remesa_enviada]);
+            consulta	= 'INSERT INTO lib_mensuales(rowid, id, year, mes, periodo, orden, auditoria_id, diezmos, ofrendas, especiales, gastos, gastos_soportados, remesa_enviada) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)';
+            prome 		= ConexionServ.query(consulta, [lib.id, lib.id, lib.year, lib.mes, lib.periodo, lib.orden, lib.auditoria_id, lib.diezmos, lib.ofrendas, lib.especiales, lib.gastos, lib.gastos_soportados, lib.remesa_enviada]);
             prome.then(function(result){
                 funciones._valor_insertado++;
             }, function(tx){
@@ -139,7 +140,7 @@ angular.module('auditoriaApp')
         for (var i = 0; i < lib_semanales.length; i++) {
             lib 		= lib_semanales[i];
             consulta	= 'INSERT INTO lib_semanales(rowid, id, libro_mes_id, diezmo_1, ofrenda_1, especial_1, diezmo_2, ofrenda_2, especial_2, diezmo_3, ofrenda_3, especial_3, ' + 
-                'diezmo_4, ofrenda_4, especial_4, diezmo_5, ofrenda_5, especial_5, diaconos_1, diaconos_2, diaconos_3, diaconos_4, diaconos_5, total_diezmos, total_ofrendas, total_especiales, por_total) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                'diezmo_4, ofrenda_4, especial_4, diezmo_5, ofrenda_5, especial_5, diaconos_1, diaconos_2, diaconos_3, diaconos_4, diaconos_5, total_diezmos, total_ofrendas, total_especiales, por_total) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
             prome 		= ConexionServ.query(consulta, [lib.id, lib.id, lib.libro_mes_id, lib.diezmo_1, lib.ofrenda_1, lib.especial_1, lib.diezmo_2, lib.ofrenda_2, lib.especial_2, lib.diezmo_3, lib.ofrenda_3, lib.especial_3, 
                 lib.diezmo_4, lib.ofrenda_4, lib.especial_4, lib.diezmo_5, lib.ofrenda_5, lib.especial_5, lib.diaconos_1, lib.diaconos_2, lib.diaconos_3, lib.diaconos_4, lib.diaconos_5, lib.total_diezmos, lib.total_ofrendas, lib.total_especiales, lib.por_total]);
                 
@@ -154,7 +155,7 @@ angular.module('auditoriaApp')
 
         for (var i = 0; i < recomendaciones.length; i++) {
 
-            consulta 	= 'INSERT INTO recomendaciones (rowid, id, auditoria_id, recomendacion, justificacion, superada, fecha, fecha_respuesta) VALUES(?,?,?,?,?,?,?)';
+            consulta 	= 'INSERT INTO recomendaciones (rowid, id, auditoria_id, recomendacion, justificacion, superada, fecha, fecha_respuesta) VALUES(?,?,?,?,?,?,?,?)';
             prome 		= ConexionServ.query(consulta, [recomendaciones[i].id, recomendaciones[i].id, recomendaciones[i].auditoria_id, recomendaciones[i].recomendacion, recomendaciones[i].justificacion, recomendaciones[i].superada, recomendaciones[i].fecha, recomendaciones[i].fecha_respuesta]);
             prome.then(function(result){
                 funciones._valor_insertado++;
@@ -229,6 +230,28 @@ angular.module('auditoriaApp')
             rec 		= gastos_mes[i];
             consulta 	= 'INSERT INTO gastos_mes (rowid, id, libro_mes_id, auditoria_id, valor, descripcion) VALUES(?,?,?,?,?,?)';
             prome 		= ConexionServ.query(consulta, [rec.id, rec.id, rec.libro_mes_id, rec.auditoria_id, rec.valor, rec.descripcion]);
+            prome.then(function(result){
+                funciones._valor_insertado++;
+            }, function(tx){
+                console.log('error', tx);
+            });
+            promesas.push(prome);
+        } 
+
+
+        for (var i = 0; i < remesas.length; i++) {
+            $remesa 		= remesas[i];
+            $now            = window.fixDate(new Date(), true);
+            
+            concepto = null;
+            if ($remesa.concepto) {
+                concepto = $remesa.concepto;
+            }
+            consulta 	= 'INSERT INTO remesas(rowid, id, asociacion_id, num_diario, linea, tipo_diario, num_secuencia, periodo, fecha, referencia, cod_cuenta, nombre_cuenta, descripcion_transaccion, cantidad, ' + 
+                    'iva, moneda, recurso, funcion, restr, org_id, empleados, concepto, created_at) ' + 
+                'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);';
+            prome 		= ConexionServ.query(consulta, [$remesa.id, $remesa.id, $remesa.asociacion_id, $remesa.num_diario, $remesa.linea, $remesa.tipo_diario, $remesa.num_secuencia, $remesa.periodo, $remesa.fecha, $remesa.referencia, $remesa.cod_cuenta, $remesa.nombre_cuenta, $remesa.descripcion_transaccion, $remesa.cantidad, 
+                $remesa.iva, $remesa.moneda, $remesa.recurso, $remesa.funcion, $remesa.restr, $remesa.org_id, $remesa.empleados, concepto, $now]);
             prome.then(function(result){
                 funciones._valor_insertado++;
             }, function(tx){

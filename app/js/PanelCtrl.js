@@ -92,7 +92,6 @@ angular.module('auditoriaApp')
 							function insertarRemesa($remesa){
 								
 								if ($remesa.fecha) {
-									$remesa.fecha = $remesa.fecha.date.substring(0, 10);
 									$remesa.fecha = $remesa.fecha.replace(/-/g, '/');
 								}
 								
@@ -101,23 +100,19 @@ angular.module('auditoriaApp')
 									nombre_cuenta = $remesa.nombre_cuenta;
 								}
 								
-								org_id = null;
-								if ($remesa.orgid) {
-									org_id = $remesa.orgid;
-								}
 								
 								concepto = null;
 								if ($remesa.concepto) {
 									concepto = $remesa.concepto;
 								}
 								
-								consulta = 'INSERT INTO remesas(num_diario, linea, tipo_diario, num_secuencia, periodo, fecha, referencia, cod_cuenta, nombre_cuenta, descripcion_transaccion, cantidad, ' + 
-										'iva, moneda, recurso, funcion, restr, org_id, empleados, concepto, created_at, modificado) ' + 
-									'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);';
+								consulta = 'INSERT INTO remesas(rowid, id, asociacion_id, num_diario, linea, tipo_diario, num_secuencia, periodo, fecha, referencia, cod_cuenta, nombre_cuenta, descripcion_transaccion, cantidad, ' + 
+										'iva, moneda, recurso, funcion, restr, org_id, empleados, concepto, created_at) ' + 
+									'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);';
 									
 								
-								datos   = [ $remesa.num_diario, $remesa.linea, $remesa.tipo_diario, $remesa.num_secuencia, $remesa.periodo, $remesa.fecha, $remesa.referencia, $remesa.cod_cuenta, $remesa.nombre_de_cuenta, $remesa.descripcion_transaccion, $remesa.cantidad, 
-										$remesa.iva, $remesa.moneda, $remesa.recurso, $remesa.funcion, $remesa.restr, org_id, $remesa.empleados, concepto, $now, $now ];
+								datos   = [ $remesa.id, $remesa.id, $remesa.asociacion_id, $remesa.num_diario, $remesa.linea, $remesa.tipo_diario, $remesa.num_secuencia, $remesa.periodo, $remesa.fecha, $remesa.referencia, $remesa.cod_cuenta, $remesa.nombre_cuenta, $remesa.descripcion_transaccion, $remesa.cantidad, 
+										$remesa.iva, $remesa.moneda, $remesa.recurso, $remesa.funcion, $remesa.restr, $remesa.org_id, $remesa.empleados, concepto, $now ];
 								
 								prom    = ConexionServ.query(consulta, datos)
 								
