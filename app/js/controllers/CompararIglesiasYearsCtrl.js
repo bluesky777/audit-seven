@@ -1,6 +1,6 @@
 angular.module('auditoriaApp')
 
-.controller('CompararDistritosYearsCtrl', function($scope, ConexionServ, toastr, Tiempos, $timeout){
+.controller('CompararIglesiasYearsCtrl', function($scope, ConexionServ, toastr, Tiempos, $timeout){
     
     $scope.dato         = {
         cod_cuenta: '611110',
@@ -22,7 +22,7 @@ angular.module('auditoriaApp')
         
         if (!evitar_carga) {
             $timeout(function(){
-                $scope.compararDistritos();
+                $scope.compararIglesias();
             })
         }
         
@@ -37,7 +37,7 @@ angular.module('auditoriaApp')
         
         if (!evitar_carga) {
             $timeout(function(){
-                $scope.compararDistritos();
+                $scope.compararIglesias();
             })
         }
     }
@@ -71,7 +71,7 @@ angular.module('auditoriaApp')
         
         if (!evitar_carga) {
             $timeout(function(){
-                $scope.compararDistritos();
+                $scope.compararIglesias();
             })
         }
     }
@@ -84,7 +84,7 @@ angular.module('auditoriaApp')
         
         if (!evitar_carga) {
             $timeout(function(){
-                $scope.compararDistritos();
+                $scope.compararIglesias();
             })
         }
        
@@ -92,9 +92,11 @@ angular.module('auditoriaApp')
     
     // Cuando seleccione el tipo de cuenta - Diezmo, Desarrollo
     $scope.cambiaCodCuenta = function(cod_cuenta){
-        $timeout(function(){
-            $scope.compararDistritos();
-        });
+        if (!evitar_carga) {
+            $timeout(function(){
+                $scope.compararIglesias();
+            });
+        }
     }
     
     // Selecciono los meses por defecto - Enero y el actual
@@ -110,6 +112,21 @@ angular.module('auditoriaApp')
         
     }
     
+    $scope.distritoSeleccionado = function(distrito_id){
+        
+        // Traemos las iglesias del distrito seleccionado
+        consulta = "SELECT i.rowid, i.* FROM iglesias i " +
+            "WHERE i.distrito_id=? and i.eliminado is null";       
+
+        ConexionServ.query(consulta, [distrito_id]).then(function(result) {
+            $scope.iglesias_registros = result;
+            $scope.compararIglesias();
+        }, function(tx) {
+            toastr.warning("Parece que no tienes iglesia seleccionada", tx);
+        });
+    }
+    
+    
     
     // Traemos los distritos de la asociación actual
     consulta = "SELECT d.rowid, d.* FROM distritos d " +
@@ -117,9 +134,12 @@ angular.module('auditoriaApp')
 
     ConexionServ.query(consulta, [$scope.USER.asociacion_id]).then(function(result) {
         $scope.distritos_registros = result;
+        $scope.dato.distrito = $scope.distritos_registros[0];
+        $scope.distritoSeleccionado($scope.distritos_registros[0].rowid);
     }, function(tx) {
         toastr.warning("Parece que no tienes iglesia seleccionada", tx);
     });
+    
     
     // Traemos la asociación actual
     consulta = "SELECT a.rowid, a.* FROM asociaciones a " +
@@ -136,13 +156,12 @@ angular.module('auditoriaApp')
     
     
     
-    
-    $scope.compararDistritos = function(){
+    $scope.compararIglesias = function(){
         
-        $scope.consulta_suma = "SELECT r.*, r.rowid, abs(sum(r.cantidad)) suma, d.nombre FROM remesas r " +
-            "INNER JOIN distritos d ON d.codigo=r.funcion " + 
+        $scope.consulta_suma = "SELECT r.*, r.rowid, abs(sum(r.cantidad)) suma, i.nombre FROM remesas r " +
+            "INNER JOIN iglesias i ON i.codigo=r.org_id and i.eliminado is null and i.distrito_id=? " + 
             "WHERE r.cod_cuenta=? AND r.asociacion_id=? AND CAST( replace(r.periodo, '/', '') as integer)>=? AND CAST( replace(r.periodo, '/', '') as integer)<=? " +
-            "group by r.funcion";
+            "group by r.org_id";
             
         promesas = [];
         
@@ -150,7 +169,7 @@ angular.module('auditoriaApp')
             per_ini = ''+$scope.years_verdaderos[i].year+$scope.dato.mes_inicial.per;
             per_fin = ''+$scope.years_verdaderos[i].year+$scope.dato.mes_final.per;
 
-            prom = ConexionServ.query($scope.consulta_suma, [$scope.dato.cod_cuenta, $scope.USER.asociacion_id, per_ini, per_fin]).then(function(result) {
+            prom = ConexionServ.query($scope.consulta_suma, [$scope.dato.distrito.rowid, $scope.dato.cod_cuenta, $scope.USER.asociacion_id, per_ini, per_fin]).then(function(result) {
                 $scope.years_verdaderos[i].registros    = result;
                 $scope.years_verdaderos[i].total        = 0;
                 
@@ -178,25 +197,25 @@ angular.module('auditoriaApp')
         
         Promise.all(promesas).then(function(){
             $timeout(function(){
-                $scope.getVariacionDistrito();
+                $scope.getVariacionIglesia();
             })
             
         })
 
     }
     
-    $scope.compararDistritos();
     
-    $scope.getVariacionDistrito = function(){
+    
+    $scope.getVariacionIglesia = function(){
         if ($scope.years_verdaderos.length!=2) {
             return 0;
         }
         
         
-        for (let k = 0; k < $scope.distritos_registros.length; k++) {
-            const distrito = $scope.distritos_registros[k];
-            distrito.variacion      = 0;
-            distrito.porcentaje     = 0;
+        for (let k = 0; k < $scope.iglesias_registros.length; k++) {
+            const iglesia = $scope.iglesias_registros[k];
+            iglesia.variacion      = 0;
+            iglesia.porcentaje     = 0;
 
             for (let j = 0; j < $scope.years_verdaderos.length; j++) {
                 const anio = $scope.years_verdaderos[j];
@@ -204,9 +223,9 @@ angular.module('auditoriaApp')
                 for (let i = 0; i < anio.registros.length; i++) {
                     const registro = anio.registros[i];
                     
-                    if (registro.funcion == distrito.codigo) {
-                        distrito.variacion      = distrito.variacion - registro.suma;
-                        distrito.porcentaje  = distrito.variacion / registro.suma * 100;
+                    if (registro.org_id == iglesia.codigo) {
+                        iglesia.variacion   = iglesia.variacion - registro.suma;
+                        iglesia.porcentaje  = iglesia.variacion / registro.suma * 100;
                     }
                 }
             }

@@ -1,7 +1,23 @@
 
 <div class="row">
     
-    <div class="col-sm-12 hidden-print">
+    <div class="col-sm-12">
+    
+            <div class="form-group col-sm-6"> <label>Distrito</label>
+                                            
+                <ui-select ng-model="dato.distrito" style="width: 100%;" theme="bootstrap"
+                    on-select="distritoSeleccionado(dato.distrito.rowid)">
+                    <ui-select-match placeholder="Distrito">
+                        <span ng-bind="$select.selected.nombre"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in distritos_registros | filter: $select.search track by $index">
+                        <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+    </div>
+    
+    <div class="col-sm-12 hidden-print" ng-show="dato.distrito">
         
         <div class="form-group col-sm-3"> <label>Año inicial {{dato.year_inicial}}</label>
                                         
@@ -65,16 +81,16 @@
     
     
     
-    <div class="col-sm-12">
+    <div class="col-sm-12" ng-show="dato.distrito">
         
         <div class="row">
             <div class="col-xs-2">
                 <img src="img/logo-adventista.png" alt="" style="width: 80px">
             </div>
                     
-            <div class="col-xs-8" style="padding: 0px;">
+            <div class="col-xs-10" style="padding: 0px;">
                 <div style="text-align: center">
-                    <h3>{{ asociacion.nombre }}</h3>
+                    <h3>{{ asociacion.nombre }} - {{ dato.distrito.nombre }}</h3>
                     <h4>Comparación de 
                         <span ng-show="dato.cod_cuenta=='611110'"> DIEZMOS</span>
                         <span ng-show="dato.cod_cuenta=='634110'"> DESARROLLO</span>
@@ -105,28 +121,28 @@
 
 
 
-                        <tr ng-repeat="distrito in distritos_registros | orderBy:dato.ordenar_col">
+                        <tr ng-repeat="iglesia in iglesias_registros | orderBy:dato.ordenar_col">
 
                             <td>
                                 {{$index + 1}}
                             </td>
                             <td style="font-size: 8pt;">
-                                {{distrito.rowid}}
+                                {{iglesia.rowid}}
                             </td>
                             <td style="font-size: 8pt;">
-                                {{distrito.codigo}}
+                                {{iglesia.codigo}}
                             </td>
                             <td>
-                                {{distrito.nombre}}
+                                {{iglesia.nombre}}
                             </td>
                             <td ng-repeat="anio in years_verdaderos" style="text-align: right">
-                                {{anio.registros | getSumaDistrito:distrito.codigo | currency:'$':0}}
+                                {{anio.registros | getSumaIglesia:iglesia.codigo | currency:'$':0}}
                             </td>
                             <td ng-show="years_verdaderos.length==2" style="text-align: right">
-                                {{ distrito.variacion | currency:'$':0 }}
+                                {{ iglesia.variacion | currency:'$':0 }}
                             </td>
                             <td ng-show="years_verdaderos.length==2" style="text-align: right">
-                                {{ distrito.porcentaje }}%
+                                {{ iglesia.porcentaje }}%
                             </td>
                             
                             

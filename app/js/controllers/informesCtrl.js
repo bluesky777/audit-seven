@@ -72,6 +72,11 @@ angular.module('auditoriaApp')
 		$scope.config.orientacion = 'oficio_horizontal'
 		$state.go('panel.informe.comparar_distritos_years');
 	}
+	
+	$scope.compararIglesiasYears = function(){
+		$scope.config.orientacion = 'oficio_horizontal'
+		$state.go('panel.informe.comparar_iglesias_years');
+	}
 
 
 	
