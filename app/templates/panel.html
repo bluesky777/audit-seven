@@ -60,11 +60,24 @@
                     </a>
                 </li>
                 
+                
                 <li class="hidden-xs">
                     <form class="navbar-search pull-left">
                         <input placeholder="Buscar" class="search-query form-control col-md-10" name="query"
                                type="text">
                     </form>
+                </li>
+                
+                <li class="hidden-xs" ng-if="false">
+                    <button class="btn" ng-class="{'btn-danger': modo_offline, 'btn-default': !modo_offline}"
+                        ng-click="cambiarOffline()" style="margin-left: 10px; margin-top: 7px;">
+                        <span ng-show="modo_offline">
+                            <i class="glyphicon glyphicon-warning-sign"></i>
+                            Offline</span>
+                        <span ng-show="!modo_offline">
+                            <i class="glyphicon glyphicon-signal"></i>
+                            Online</span>
+                    </button>
                 </li>
             </ul>
 

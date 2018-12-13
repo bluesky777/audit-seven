@@ -2,7 +2,10 @@ angular.module('auditoriaApp')
 
 .controller('CompararDistritosYearsCtrl', function($scope, ConexionServ, toastr, Tiempos, $timeout){
     
-    $scope.dato         = {};
+    $scope.dato         = {
+        cod_cuenta: '611110',
+        ordenar_col: 'nombre'
+    };
     $scope.meses_sel    = Tiempos.meses;
     $scope.year_sel     = Tiempos.years;
     
@@ -87,6 +90,13 @@ angular.module('auditoriaApp')
        
     }
     
+    // Cuando seleccione el tipo de cuenta - Diezmo, Desarrollo
+    $scope.cambiaCodCuenta = function(cod_cuenta){
+        $timeout(function(){
+            $scope.compararDistritos();
+        });
+    }
+    
     // Selecciono los meses por defecto - Enero y el actual
     mes_hoy = new Date().getMonth();
     
@@ -125,18 +135,13 @@ angular.module('auditoriaApp')
     
     
     
-    /*
-    consulta = 'UPDATE remesas SET empleados=substr(periodo, 1, 4) || substr(periodo, 6, 3) WHERE asociacion_id=?';
-    ConexionServ.query(consulta, [$scope.USER.asociacion_id]).then(function(result) {
-        console.log('campo especial actualizado con periodo');
-    });*/
     
     
     $scope.compararDistritos = function(){
         
         $scope.consulta_suma = "SELECT r.*, r.rowid, abs(sum(r.cantidad)) suma, d.nombre FROM remesas r " +
             "INNER JOIN distritos d ON d.codigo=r.funcion " + 
-            "WHERE r.cod_cuenta='611110' AND r.asociacion_id=? AND CAST( replace(r.periodo, '/', '') as integer)>=? AND CAST( replace(r.periodo, '/', '') as integer)<=? " +
+            "WHERE r.cod_cuenta=? AND r.asociacion_id=? AND CAST( replace(r.periodo, '/', '') as integer)>=? AND CAST( replace(r.periodo, '/', '') as integer)<=? " +
             "group by r.funcion";
             
         promesas = [];
@@ -145,7 +150,7 @@ angular.module('auditoriaApp')
             per_ini = ''+$scope.years_verdaderos[i].year+$scope.dato.mes_inicial.per;
             per_fin = ''+$scope.years_verdaderos[i].year+$scope.dato.mes_final.per;
 
-            prom = ConexionServ.query($scope.consulta_suma, [$scope.USER.asociacion_id, per_ini, per_fin]).then(function(result) {
+            prom = ConexionServ.query($scope.consulta_suma, [$scope.dato.cod_cuenta, $scope.USER.asociacion_id, per_ini, per_fin]).then(function(result) {
                 $scope.years_verdaderos[i].registros    = result;
                 $scope.years_verdaderos[i].total        = 0;
                 
@@ -208,7 +213,11 @@ angular.module('auditoriaApp')
             }
         }
         
-        
+        variacion_total = 0;
+        for (let j = 0; j < $scope.years_verdaderos.length; j++) {
+            variacion_total = variacion_total - $scope.years_verdaderos[j].total;
+        }
+        $scope.variacion_total = variacion_total;
         
         return resp;
         

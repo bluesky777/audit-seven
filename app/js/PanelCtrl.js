@@ -6,6 +6,13 @@ angular.module('auditoriaApp')
 	$scope.sidebar_active           = false;
 	$scope.version                  = 'X.Y.Z';
 	$scope.sidebar_active 	        = false;
+	$scope.modo_offline 	        = false;
+	
+	if (localStorage.modo_offline) {
+		if (localStorage.modo_offline == 'true') {
+			$scope.modo_offline = true;
+		}
+	}
 	
 	//ConexionServ.createTables()
 	
@@ -43,6 +50,12 @@ angular.module('auditoriaApp')
     
 
 		
+	
+	$scope.cambiarOffline = function () {
+		$scope.modo_offline 		= !$scope.modo_offline;
+		localStorage.modo_offline 	= $scope.modo_offline;
+		toastr.warning('Aún no funciona.');
+	}
 	
 	
 	
