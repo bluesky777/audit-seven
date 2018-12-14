@@ -2,6 +2,7 @@ angular.module('auditoriaApp', [
 	'ngSanitize', 
 	'ngTouch',
 	'ngAnimate',
+	'ngSanitize',
 	'ui.router', 
 	'ui.bootstrap',
 	'ui.select',
@@ -18,7 +19,9 @@ angular.module('auditoriaApp', [
 	'toastr',
 	'ui.utils.masks',
 	'ngFileUpload',
-	'cfp.hotkeys'
+	'cfp.hotkeys',
+	'angular-loading-bar',
+	'pascalprecht.translate'
 ])
 
 .config(function($stateProvider, $urlRouterProvider, uiSelectConfig, toastrConfig){
@@ -134,6 +137,12 @@ angular.module('auditoriaApp', [
 
 .constant('tipos_recomendacion', {
 	tipos: [
+		{tipo: 'Libro registro semanal'},
+		{tipo: 'Libro tesorería mensual'},
+		{tipo: 'Libro de envío de remesas'},
+		{tipo: 'Libro de fondos locales'},
+		{tipo: 'Libro de iglesia'},
+		{tipo: 'Asuntos generales'},
 		{tipo: 'Diezmo'},
 		{tipo: 'Ofrenda'},
 		{tipo: 'Especial'},

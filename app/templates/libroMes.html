@@ -1,8 +1,8 @@
 <!-- content starts -->
-<div>
+<div class="hidden-print">
 	<ul class="breadcrumb">
 		<li class="li-breadcrumb">
-			<a ui-sref="panel">Inicio</a>
+			<a ui-sref="panel">{{ 'INICIO_MENU' | translate }}</a>
 		</li>
 		<li class="li-breadcrumb">
 			<a ui-sref="panel.libromes">Libro Mes</a>
@@ -10,7 +10,7 @@
 		<li style="float: right;" class="refresh-breadcrumb">
 			<a href="" ng-click="refresh()">
 				<i class="glyphicon glyphicon-refresh"></i>
-				Actualizar</a>
+				{{ 'REFRESH' | translate }}</a>
 		</li>
 	</ul>
 </div>
@@ -18,7 +18,7 @@
 
 
 
-<div class="row panel-auditoria-meses">
+<div class="row panel-auditoria-meses hidden-print">
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-header well">
@@ -80,7 +80,7 @@
 </div>
 						
 
-<div class="row panel-auditoria-meses" ng-if="auditoria.rowid">
+<div class="row panel-auditoria-meses hidden-print" ng-if="auditoria.rowid">
 	<div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized}">
 		<div class="box-inner">
 			<div class="box-header well">
@@ -346,10 +346,6 @@
 
 									<td class="no-padding">
 
-										<button ng-show="false" href="" class="btn btn-primary btn-sm" ng-click="modificar_lib(lib_mes)">
-											<i class="glyphicon glyphicon-pencil"></i>
-										</button>
-
 										<button href="" class="btn btn-danger btn-xs" ng-click="EliminarLibroMensul(lib_mes)" uib-tooltip="Eliminar mes">
 											<i class="glyphicon glyphicon-remove"></i>
 										</button>
@@ -416,6 +412,8 @@
 		</div>
 	</div>
 	
+	
+	
 	<!-- 
 	********************************************************************
 	********************     FÓRMULAS INFERIORES    ********************
@@ -471,6 +469,56 @@
 							</tr>
 
 						</table>
+					
+					</div>
+					
+					<div class="col-sm-6">
+						
+						<table class="table table-striped table-bordered table-condensed">
+							<thead>
+								<tr>
+									<th colspan="2" class="center">PROMEDIOS</th>
+									<th class="center">Porcentajes</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>DIEZMOS</td>
+									<td>{{ sum_diezmos }}</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>OF. GLOBAL</td>
+									<td>{{ sum_ofrendas }}</td>
+									<td>{{ porce_ofrendas }}%</td>
+								</tr>
+
+								<tr>
+									<td>ENT. ESP.</td>
+									<td>{{ sum_especiales }}</td>
+									<td>{{ porce_especial }}%</td>
+								</tr>
+
+								<tr>
+									<td>Gastos</td>
+									<td>{{ sum_gastos_sop }}</td>
+									<td>{{ porce_gastos }}%</td>
+								</tr>
+
+
+
+							</tbody>
+							
+						</table>
+
+
+					</div>
+				</div>
+					
+				
+				<div class="row">
+			
+					<div class="col-sm-6">
 
 						<table  class="table table-bordered table-condensed">
 
@@ -539,9 +587,12 @@
 								<td class="info align-right">{{ total_fondos }}</td>
 							</tr>
 							
-						</table >							
-
-						
+						</table>							
+					
+					</div>
+					
+					
+					<div class="col-sm-6">
 
 						<table class="table table-bordered table-condensed">
 							<tr>
@@ -693,55 +744,6 @@
 
 					</div>
 					
-					<div class="col-sm-6">
-						
-							<table class="table table-striped table-bordered table-condensed">
-								<thead>
-									<tr>
-										<th colspan="2" class="center">PROMEDIOS</th>
-										<th colspan="2" class="center">PORCENTAJES</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>DIEZMOS</td>
-										<td>098709709</td>
-										<td>0</td>
-										<td>0</td>
-									</tr>
-									<tr>
-										<td>OF. GLOBAL</td>
-										<td>098709709</td>
-										<td>60%</td>
-										<td>0</td>
-									</tr>
-
-									<tr>
-										<td>ENT. ESP.</td>
-										<td>098709709 </td>
-										<td>500</td>
-										<td>60</td>
-									</tr>
-
-									<tr>
-										<td>Gastos</td>
-										<td>5004</td>
-										<td>6789</td>
-										<td>4000</td>
-									</tr>
-
-
-
-								</tbody>
-								
-							</table>
-
-
-
-	
-	
-						</div>
-
 
 
 				</div>
@@ -749,11 +751,14 @@
 		</div>
 	</div>
 	
+	
+	
+	
 </div>
 
 
 
-
+<reporte-auditoria-dir></reporte-auditoria-dir>
 	
 
 

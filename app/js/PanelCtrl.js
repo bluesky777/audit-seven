@@ -1,12 +1,14 @@
 angular.module('auditoriaApp')
 
-.controller('PanelCtrl', function($scope, ConexionServ, $timeout, $uibModal, USER, AuthServ, Upload, rutaServidor, toastr){
+.controller('PanelCtrl', function($scope, ConexionServ, $timeout, $uibModal, USER, AuthServ, Upload, rutaServidor, toastr, $http, $translate){
 	
 	$scope.USER                     = USER;
 	$scope.sidebar_active           = false;
-	$scope.version                  = 'X.Y.Z';
+	$scope.version                  = '0.0.7';
 	$scope.sidebar_active 	        = false;
 	$scope.modo_offline 	        = false;
+	$scope.tema 					= USER.tema;
+	$scope.idioma 					= USER.idioma;
 	
 	if (localStorage.modo_offline) {
 		if (localStorage.modo_offline == 'true') {
@@ -14,7 +16,11 @@ angular.module('auditoriaApp')
 		}
 	}
 	
-	//ConexionServ.createTables()
+	if (USER.idioma) {
+		$translate.use(USER.idioma);
+	}
+	
+
 	
 	try {
 		const {ipcRenderer} = require('electron');
@@ -55,6 +61,60 @@ angular.module('auditoriaApp')
 		$scope.modo_offline 		= !$scope.modo_offline;
 		localStorage.modo_offline 	= $scope.modo_offline;
 		toastr.warning('Aún no funciona.');
+	}	
+	
+	$scope.cambiarTema = function (themeName) {
+		if ($scope.tema == 'classic') {
+			$('#bs-css').attr('href', 'bower_components/bootstrap/dist/css/bootstrap.min.css');
+		} else {
+			if ($scope.tema) {
+				$('#bs-css').attr('href', 'css/bootstrap-' + $scope.tema + '.min.css');
+			}else{
+				$('#bs-css').attr('href', 'css/bootstrap-cerulean.min.css');
+			}
+			
+		}
+		
+		$http.put(rutaServidor.root + '/au_usuario/cambiar-tema', { tema: themeName, user_id: $scope.USER.id }).then(function(){
+			$scope.USER.tema 		= themeName;
+			$scope.tema 			= $scope.USER.tema;
+			
+			
+			ConexionServ.query('UPDATE usuarios SET tema=? WHERE rowid=?', [themeName, $scope.USER.rowid]).then(function(result) {
+				AuthServ.update_user_storage($scope.USER);
+			}, function(){
+				toastr.warning('Se requiere internet');
+			});
+
+		})
+	}
+
+	if ($scope.tema == 'classic') {
+		$('#bs-css').attr('href', 'bower_components/bootstrap/dist/css/bootstrap.min.css');
+	} else {
+		if ($scope.tema) {
+			$('#bs-css').attr('href', 'css/bootstrap-' + $scope.tema + '.min.css');
+		}else{
+			$('#bs-css').attr('href', 'css/bootstrap-cerulean.min.css');
+		}
+		
+	}
+	
+	
+	$scope.cambiarIdioma = function (idioma) {
+		$translate.use(idioma);
+		
+		$http.put(rutaServidor.root + '/au_usuario/cambiar-idioma', { idioma: idioma, user_id: $scope.USER.rowid }).then(function(){
+			$scope.USER.idioma 		= idioma;
+			$scope.idioma 			= $scope.USER.idioma;
+			console.log('UPDATE usuarios SET idioma=? WHERE rowid=?', [idioma, $scope.USER.rowid]);
+			ConexionServ.query('UPDATE usuarios SET idioma=? WHERE rowid=?', [idioma, $scope.USER.rowid]).then(function(result) {
+				AuthServ.update_user_storage($scope.USER);
+			}, function(){
+				toastr.warning('Se requiere internet');
+			});
+			
+		})
 	}
 	
 	

@@ -1,0 +1,384 @@
+<div class="box col-md-12 hidden-print" ng-class="{'widget-maximized': widget_maximized_reporte}">
+    <div class="box-inner">
+        <div class="box-header well">
+            <h2>
+                <i class="glyphicon glyphicon-print"></i> 
+                Reporte
+            </h2>
+
+            <div class="box-icon maximizar">
+                
+                <a href="" ng-click="widget_maximized_reporte=!widget_maximized_reporte" uib-tooltip="Maximizar" class="btn btn-close btn-round btn-default">
+                    <i class="glyphicon " ng-class="{ 'glyphicon-resize-full': !widget_maximized_reporte, 'glyphicon-resize-small': widget_maximized_reporte }"></i>
+                </a>
+                
+            </div>
+        </div>
+        <div class="box-content " style="overflow: auto;">
+            
+            <div class="row">
+            
+                <div class="col-sm-11">
+                    
+                    <label>Puedes usar etiquetas html</label>
+
+					<textarea class="form-control" ng-model="dato.texto_reporte"
+                        placeholder="Escribe el del reporte..."" style="min-height: 150px;"
+                        ng-change="mensajeCambiado(dato.texto_reporte)" 
+						ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }">
+                    </textarea>
+
+                
+                </div>
+                
+                <div class="col-sm-1" style="padding-left: 0;">
+                    <button class="btn btn-default" ng-click="resetearMensajeReporte()"
+                        uib-tooltip="Resetear mensaje" tooltip-append-to-body="true" style="margin-top: 24px;">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </button>
+                </div>
+                
+                <div class="col-sm-12" style="margin-top: 10px">
+                    
+                    <button class="btn btn-default" ng-click="mostrarReporte()">
+                        <i class="glyphicon glyphicon-print"></i>
+                        <span ng-show="!mostrando_reporte">Mostrar </span>
+                        <span ng-show="mostrando_reporte">Ocultar </span>
+                         reporte
+                    </button>
+                    
+                    <br>
+                    <br>
+                </div>
+            </div>
+                
+        </div>
+    </div>
+</div>
+	
+<br>
+
+
+
+
+<div class="informes-pages altura-informe row">
+    <h5 ng-if="!mostrando_reporte" style="text-align: center">Aquí saldrá tu reporte</h5>
+    
+    <div ng-if="mostrando_reporte">
+        
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-2" style="padding-right: 0;">
+                <img src="img/logo-adventista.png" alt="" style="width: 90px">
+            </div>
+                    
+            <div class="col-xs-9" style="padding: 0px;">
+                <div style="text-align: center">
+                    <h4 style="margin-top: 4px">IGLESIA ADVENTISTA DEL SEPTIMO DIA - {{ asociacion.nombre }}</h4>
+                    <h5>SERVICIO DE AUDITORIA - {{ USER.fecha_audit }}
+                    </h5>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" style="margin: 0;">
+            <div class="col-xs-12" style="border: 1px solid #555; padding: 5px 15px; border-radius: 4px;">
+                
+                <div class="row">
+                    <div class="col-xs-6">
+                        Distrito: 
+                        <b> {{ USER.distrito_nombre }}</b>
+                    </div>
+                    <div class="col-xs-6">
+                        Iglesia: 
+                        <b> {{ USER.iglesia_nombre }}</b>
+                    </div>
+                </div>
+                         
+                <div class="row">
+                    <div class="col-xs-6">
+                        Pastor: 
+                        <b> {{ distrito.pastor_nombres }} {{ distrito.pastor_apellidos }}</b>
+                    </div>
+                    <div class="col-xs-6">
+                        Tesorero: 
+                        <b> {{ distrito.tesorero_nombres }} {{ distrito.tesorero_apellidos }}</b>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <!--<div class="col-xs-12">
+                        Fecha: 
+                        <b> {{ USER.fecha_audit }}</b>
+                    </div>
+                    -->
+                    <div class="col-xs-12">
+                        Periodo auditado: 
+                        <b> {{ mensaje_periodo }}</b>
+                    </div>
+                    
+                </div>
+                
+                       
+            </div>
+        </div>
+        
+        
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-12">
+                <div ng-bind-html="dato.texto_reporte"></div>
+            </div>
+        </div>
+    
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-xs-12" style="padding: 0 35px;">
+                
+                <table class="table table-bordered table-condensed" style="margin-bottom: 5px;">
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="align-right">
+                            {{ sum_diezmos }}</td>
+                        <td>Promedio mensual de <b>diezmos</b>  del periodo auditado.</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="height: 10px;"> </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="align-right">
+                            {{ sum_ofrendas }}</td>
+                        <td>Promedio mensual de <b>ofrenda</b> global del periodo auditado.</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="align-right">
+                            {{ sum_especiales }}</td>
+                        <td>Promedio mensual de <b>entradas especiales</b> del periodo auditado.</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="align-right">
+                            {{ sum_gastos_sop }}</td>
+                        <td>Promedio mensual de <b>gastos</b> del periodo auditado</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="height: 10px;"> </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="align-right">
+                            {{ porce_ofrendas }}%</td>
+                        <td>Porcentaje de <b>ofrenda</b> global con respecto al diezmo.</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="border-der align-right">
+                            {{ porce_especial }}%</td>
+                        <td>Porcentaje de <b>entradas especiales</b> con respecto al diezmo.</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="border-der align-right">
+                            {{ porce_gastos }}%</td>
+                        <td>Porcentaje de <b>gastos</b> con respecto a los ingresos totales (60% + Entrada Especial)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-12">
+                El cuadre de caja que presenta la iglesia (grupo) a la fecha:
+            </div>
+        </div>
+        
+        
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-bordered table-condensed">
+                    <tr>
+                        <td style="background-color: #8bc5f8;" colspan="2" class="bold">
+                            TOTAL FONDOS DE IGLESIA
+                        </td>
+                        <td style="background-color: #8bc5f8;" colspan="2" class="bold">
+                            RESPALDADOS POR:
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>
+                            Fondos Locales Iglesia
+                        </td>
+                        <td class="align-right">
+                            -559.241.870
+                        </td>
+                        <td>
+                            Saldo de Banco
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Ingreso Sábados
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                        <td>
+                            Consig. En Bcos Asociación
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Ingreso Sábados
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                        <td>
+                            Consig. En Bcos Asociación
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Ajuste de Auditoria Por Enviar
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                        <td>
+                            Dinero Efectivo
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td>
+                            Cuentas por Cobrar
+                        </td>
+                        <td class="align-right">
+                            0
+                        </td>
+                    </tr>
+                        
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="bold">
+                            GRAN TOTAL
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold align-right">
+                            -559.241.870
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold">
+                            GRAN TOTAL
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold align-right">
+                            0
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="2">
+                            
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold">
+                            DIFERENCIA (-FALTANTE)
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold align-right">
+                            559.241.870
+                        </td>
+                    </tr>
+                        
+                    
+                </table>
+            </div>
+        </div>
+                
+
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-bordered table-condensed" style="margin-bottom: 5px;">
+                    <tr>
+                        <td style="background-color: #8bc5f8;" class="bold center">
+                            CONCEPTO
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold center">
+                            OBSERVACIÓN
+                        </td>
+                        <td style="background-color: #8bc5f8; width: 20px;" class="bold center">
+                            OK
+                        </td>
+                        <td style="background-color: #8bc5f8;" class="bold center">
+                            RECOMENDACIÓN
+                        </td>
+                    </tr>
+                    
+                    <tr ng-repeat-start="tipo in tipos_recom">
+                        <td rowspan="{{tipo.recomendaciones.length}}" class="center" style="width: 120px;">
+                            {{ tipo.tipo }}
+                        </td>
+                        <td>
+                            {{ tipo.recomendaciones[0].hallazgo }}
+                        </td>
+                        <td class="center">
+                            {{ tipo.recomendaciones[0].superada }}
+                        </td>
+                        <td>
+                            {{ tipo.recomendaciones[0].recomendacion }}
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end ng-repeat="recom in tipo.recomendaciones.slice(1)">
+                        <td>
+                            {{ recom.hallazgo }}
+                        </td>
+                        <td class="center">
+                            {{ recom.superada }}
+                        </td>
+                        <td>
+                            {{ recom.recomendacion }}
+                        </td>
+                    </tr>
+                                       
+                </table>
+            </div>				
+        </div>
+        
+        
+        <div class="row">
+            <div class="col-xs-12">
+                
+                <div style="font-size: 8pt">
+                    Por favor archive en una carpeta este informe de auditoria. Se requiere para hacer la próxima revisión.
+                </div>
+                
+                <div style="padding-top: 4px;">
+                    Agradecemos el interés que prestaron al servicio  de  auditoria.   Deseamos  que nuestro Eterno Dios les dirija y les
+                    ayude en esta gran responsabilidad.
+                </div>
+                            
+            </div>				
+        </div>		
+    
+        <div class="row">
+            <div class="col-xs-12" style="padding-top: 20px; padding-left: 30px;">
+                <div style="font-size: 13pt; font-weight: bold;">
+                    {{ usuario_auditor.nombres }} {{ usuario_auditor.apellidos }}
+                </div>
+                <div style="font-size: 10pt">
+                    AUDITOR {{ asociacion.nombre }}
+                </div>
+            </div>				
+        </div>	
+        			
+    </div>
+</div>
+
+	
+
+

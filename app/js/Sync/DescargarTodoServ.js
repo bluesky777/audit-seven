@@ -46,8 +46,8 @@ angular.module('auditoriaApp')
             
         for (var i = 0; i < auditorias.length; i++) {
             
-            consulta 	= 'INSERT INTO auditorias (rowid, id, fecha, saldo_ant, iglesia_id) VALUES(?, ?, ?, ?, ?)';
-            prome 		= ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].saldo_ant, auditorias[i].iglesia_id]);
+            consulta 	= 'INSERT INTO auditorias (rowid, id, fecha, auditor_id, saldo_ant, iglesia_id) VALUES(?,?,?,?,?,?)';
+            prome 		= ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].auditor_id, auditorias[i].saldo_ant, auditorias[i].iglesia_id]);
             prome.then(function(result){
                 funciones._valor_insertado++;
             }, function(tx){
@@ -69,7 +69,7 @@ angular.module('auditoriaApp')
 
         for (var i = 0; i < asociaciones.length; i++) {
         
-            consulta 	= 'INSERT INTO asociaciones(rowid, id, nombre, alias, codigo, union_id) VALUES(?, ?, ?, ?, ?, ?)';
+            consulta 	= 'INSERT INTO asociaciones(rowid, id, nombre, alias, codigo, union_id) VALUES(?,?,?,?,?,?)';
             prome 		= ConexionServ.query(consulta, [asociaciones[i].id, asociaciones[i].id, asociaciones[i].nombre, asociaciones[i].alias, asociaciones[i].codigo, asociaciones[i].union_id]);
             prome.then(function(result){
                 funciones._valor_insertado++;
@@ -88,8 +88,8 @@ angular.module('auditoriaApp')
                     fecha_new   = usu.fecha;
                 }
                 console.log(usu.fecha, usu);
-                consulta 	= 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, union_id, asociacion_id, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ';
-                prome 		= ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.union_id, usu.asociacion_id, usu.username, usu.password, usu.email, fecha_new, usu.tipo, usu.celular]);
+                consulta 	= 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, tema, idioma, union_id, asociacion_id, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ';
+                prome 		= ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.tema, usu.idioma, usu.union_id, usu.asociacion_id, usu.username, usu.password, usu.email, fecha_new, usu.tipo, usu.celular]);
                 prome.then(function(result){
                     funciones._valor_insertado++;
                 }, function(tx){

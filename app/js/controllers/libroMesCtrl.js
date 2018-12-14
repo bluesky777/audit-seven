@@ -1,11 +1,20 @@
 angular.module("auditoriaApp")
 
+.directive('reporteAuditoriaDir', function(){
+	return {
+		restrict: 'E',
+		templateUrl: "templates/reporteAuditoriaDir.html"
+	}
+})
+
+
 .controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll, tipos_recomendacion, hotkeys) {
 
 	$scope.$parent.sidebar_active 	= false;
 	$scope.entidades 				= true;
 	$scope.widget_maximized 		= false;
 	$scope.widget_maximized_totales = false;
+	$scope.dato 					= {};
 	
     $scope.distrito_new 		= {};
 	$scope.modentidades 		= false;
@@ -15,6 +24,7 @@ angular.module("auditoriaApp")
 	$scope.vercomends 			= false;
 	$scope.auditorias 			= [];
 	$scope.ocultando_primeras 	= false;
+	$scope.mostrando_reporte 	= false;
 
 	$scope.meses = [
 		{num: 0, mes: 'Enero'},
@@ -70,9 +80,86 @@ angular.module("auditoriaApp")
 		}
 	}
 	
+	$timeout(function(){
+		var mensaje_periodo_original = `En cumplimiento de las funciones del departamento de auditoría de la Iglesia Adventista del Séptimo Día - ${$scope.asociacion.nombre}
+hemos practicado el procedimiento de auditoría a los movimientos de la tesoreria de la iglesia (grupo).
+<br><br>
+A continuación se presentan los datos obtenidos como resultado de la auditoria practicada  a los libros y documentos
+presentados para su revisión y son para consideración de los miembros de la junta:
+		`;
+		
+		if (localStorage.texto_reporte) {
+			$scope.dato.texto_reporte 	= localStorage.texto_reporte;
+		}else{
+			$scope.dato.texto_reporte 	= mensaje_periodo_original;
+		}
+		
+		$scope.resetearMensajeReporte = function(){
+			$scope.dato.texto_reporte 	= mensaje_periodo_original;
+			localStorage.texto_reporte 	= mensaje_periodo_original;
+		}
+	}, 500)
 	
 	
-
+	
+	$scope.mensajeCambiado = function(mensaje_edit){
+		localStorage.texto_reporte 	= mensaje_edit;
+	}
+	
+	
+	
+	$scope.mostrarReporte = function(){
+		$scope.mostrando_reporte 	= !$scope.mostrando_reporte;
+		ult 						= $scope.lib_meses.length-1;
+		$scope.mensaje_periodo 		= $scope.lib_meses[0].year + '-' + $scope.lib_meses[0].mes + ' a ' + $scope.lib_meses[ult].year + '-' + $scope.lib_meses[ult].mes
+		
+		consulta = 'SELECT distinct(r.tipo) as tipo FROM recomendaciones r WHERE r.auditoria_id=? and r.eliminado is null';
+		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(tipos_recom){
+			promesas = [];
+			
+			consulta_recomends = 'SELECT r.rowid, r.* FROM recomendaciones r ' +
+				'WHERE r.auditoria_id=? and r.tipo=? and r.eliminado is null';
+			
+			function traerRecomendaciones(i){
+				
+				prom = ConexionServ.query(consulta_recomends, [ $scope.USER.auditoria_id, tipos_recom[i].tipo ]).then(function(recomends){
+					for (let j = 0; j < recomends.length; j++) {
+						rec = recomends[j];
+						if (rec.superada) { rec.superada = 'SÍ' }else{ rec.superada = 'NO' }
+					}
+					tipos_recom[i].recomendaciones = recomends;
+					
+				});
+				promesas.push(prom);
+			}
+			
+			for (let i = 0; i < tipos_recom.length; i++) {
+				traerRecomendaciones(i, tipos_recom[i]);
+			}
+			
+			Promise.all(promesas).then(function(){
+				$scope.tipos_recom = tipos_recom;
+			})
+		}, function(){
+			toastr.error(colum + ' NO guardado');
+		});
+		
+		
+		consulta = 'SELECT u.rowid, u.nombres, u.apellidos FROM usuarios u ' +
+			'INNER JOIN auditorias a ON a.auditor_id=u.rowid ' +
+			'WHERE a.rowid=? and u.eliminado is null';
+		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(usuario_auditor){
+			$scope.usuario_auditor = usuario_auditor[0];
+		});
+		
+		
+	}
+	/*
+	// borrar
+	$timeout(function(){
+		$scope.mostrarReporte();
+	}, 1000)
+	*/
 
     $scope.ver_recomendaciones = function(valor) {
 		if (valor) {
@@ -118,6 +205,7 @@ angular.module("auditoriaApp")
 					$scope.lib_meses.slice(i, 1, element);
 				}
 			}
+			$scope.traerDatos();
 			$scope.actualizar_sumatorias();
 	    }, function(r2){
 	    	$scope.traerDatos();
@@ -148,6 +236,7 @@ angular.module("auditoriaApp")
 					$scope.lib_meses.slice(i, 1, element);
 				}
 			}
+			$scope.traerDatos();
 	    }, function(r2){
 	    	$scope.traerDatos();
 	    });
@@ -199,7 +288,7 @@ angular.module("auditoriaApp")
 	    });
 
 	    modalInstance.result.then(function (result) {
-
+			$scope.traerDatos();
 	    }, function(r2){
 	    	$scope.traerDatos();
 	    });
@@ -404,7 +493,8 @@ angular.module("auditoriaApp")
 			
 
 			consulta 	= 'SELECT m.*, m.rowid, s.*, s.rowid as lib_semanal_id FROM lib_mensuales m ' + 
-						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null and m.auditoria_id =? ';
+						'INNER JOIN lib_semanales s ON m.rowid=s.libro_mes_id and m.eliminado is null and m.auditoria_id =? '
+						'ORDER BY s.periodo';
 			ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
 				$scope.lib_meses = result;
 				
@@ -619,8 +709,11 @@ angular.module("auditoriaApp")
 			sum_remesa_env 		+= lib_mes.remesa_enviada;
 		}
 
+		$scope.sum_diezmos_num 		= sum_diezmos;
 		$scope.sum_diezmos 			= $filter('currency')(sum_diezmos, '$', 0);
+		$scope.sum_ofrendas_num 	= sum_ofrendas;
 		$scope.sum_ofrendas 		= $filter('currency')(sum_ofrendas, '$', 0);
+		$scope.sum_especiales_num 	= sum_especiales;
 		$scope.sum_especiales 		= $filter('currency')(sum_especiales, '$', 0);
 		
 		sum_totales 				= sum_diezmos + sum_ofrendas + sum_especiales;
@@ -634,8 +727,10 @@ angular.module("auditoriaApp")
 		$scope.sum_20_ofrendas 		= $filter('currency')( sum_ofrendas * 0.2, '$', 0);
 		$scope.sum_20_ofrendas 		= $filter('currency')( sum_ofrendas * 0.2, '$', 0);
 		sum_ofre_esp 				= (sum_ofrendas * 0.6) + sum_especiales;
+		$scope.sum_60_ofrendas_num	= sum_ofre_esp;
 		$scope.sum_60_ofrendas 		= $filter('currency')( sum_ofre_esp, '$', 0);
 		$scope.sum_gastos 			= $filter('currency')( sum_gastos, '$', 0);
+		$scope.sum_gastos_sop_num 	= sum_gastos_sop;
 		$scope.sum_gastos_sop 		= $filter('currency')( sum_gastos_sop, '$', 0);
 		$scope.sum_dif_gastos 		= $filter('currency')( (sum_gastos - sum_gastos_sop), '$', 0);
 		$scope.sum_remesa_num 		= sum_diezmos + sum_ofrendas*0.4;
@@ -643,6 +738,10 @@ angular.module("auditoriaApp")
 		$scope.sum_remesa_env 		= $filter('currency')( sum_remesa_env, '$', 0);
 		$scope.sum_dif_remesa 		= $filter('currency')( (sum_remesa_env-$scope.sum_remesa_num), '$', 0);
 		$scope.sum_disponi_perio	= $filter('currency')( (sum_ofre_esp + aud.saldo_ant), '$', 0);
+		
+		$scope.porce_ofrendas 		= $scope.sum_ofrendas_num / $scope.sum_diezmos_num * 100;
+		$scope.porce_especial 		= $scope.sum_especiales_num / $scope.sum_diezmos_num * 100;
+		$scope.porce_gastos 		= $scope.sum_gastos_sop_num / $scope.sum_60_ofrendas_num * 100;
 		
 		sum_total_fondos 			= sum_ofre_esp + aud.saldo_ant - sum_gastos;
 		$scope.sum_total_fondos 	= $filter('currency')(sum_total_fondos, '$', 0);

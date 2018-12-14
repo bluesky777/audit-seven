@@ -6,7 +6,7 @@
 
         <div class="navbar-inner">
             <button type="button" ng-click="sidebar_activar()" class="navbar-toggle pull-left animated flip">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only">Toggle navegación</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -21,41 +21,46 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" uib-dropdown-menu >
-                    <li><a href="#">Perfil</a></li>
+                    <li><a href="#">{{ 'PERFIL' | translate }}</a></li>
                     <li class="divider"></li>
-                    <li><a href="" ng-click="cerrar_sesion()">Cerrar sesión</a></li>
+                    <li><a href="" ng-click="cerrar_sesion()">{{ 'SALIR' | translate }}</a></li>
                 </ul>
             </div>
             <!-- user dropdown ends -->
 
             <!-- theme selector starts -->
-            <!-- 
             <div class="btn-group pull-right theme-container animated tada">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <i class="glyphicon glyphicon-tint"></i><span
-                        class="hidden-sm hidden-xs"> Cambiar tema</span>
+                        class="hidden-xs"> {{ 'IDIOMA_MENU' | translate }}</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" id="themes">
-                    <li><a data-value="classic" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Classic</a></li>
-                    <li><a data-value="cerulean" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Cerulean</a></li>
-                    <li><a data-value="cyborg" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Cyborg</a></li>
-                    <li><a data-value="simplex" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Simplex</a></li>
-                    <li><a data-value="darkly" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Darkly</a></li>
-                    <li><a data-value="lumen" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Lumen</a></li>
-                    <li><a data-value="slate" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Slate</a></li>
-                    <li><a data-value="spacelab" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> Spacelab</a></li>
-                    <li><a data-value="united" href="" ng-click="cambiarTema('')"><i class="whitespace"></i> United</a></li>
+                    <li class="dropdown-header"><i class="whitespace"></i>Idioma</li>
+                    <li><a href="" ng-click="cambiarIdioma('Español')"><i ng-class="{'glyphicon glyphicon-ok': 'Español' == idioma, 'whitespace': 'Español' != idioma}"></i> Español</a></li>
+                    <li><a href="" ng-click="cambiarIdioma('English')"><i ng-class="{'glyphicon glyphicon-ok': 'English' == idioma, 'whitespace': 'English' != idioma}"></i> English</a></li>
+                    <li><a href="" ng-click="cambiarIdioma('Francais')"><i ng-class="{'glyphicon glyphicon-ok': 'Francais' == idioma, 'whitespace': 'Francais' != idioma}"></i> Francais</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header"><i class="whitespace"></i>Tema</li>
+                    <li><a href="" ng-click="cambiarTema('classic')"><i ng-class="{'glyphicon glyphicon-ok': 'classic' == tema, 'whitespace': 'classic' != tema}"></i> Classic</a></li>
+                    <li><a href="" ng-click="cambiarTema('cerulean')"><i ng-class="{'glyphicon glyphicon-ok': 'cerulean' == tema, 'whitespace': 'cerulean' != tema}"></i> Cerulean</a></li>
+                    <li><a href="" ng-click="cambiarTema('cyborg')"><i ng-class="{'glyphicon glyphicon-ok': 'cyborg' == tema, 'whitespace': 'cyborg' != tema}"></i> Cyborg</a></li>
+                    <li><a href="" ng-click="cambiarTema('simplex')"><i ng-class="{'glyphicon glyphicon-ok': 'simplex' == tema, 'whitespace': 'simplex' != tema}"></i> Simplex</a></li>
+                    <li><a href="" ng-click="cambiarTema('darkly')"><i ng-class="{'glyphicon glyphicon-ok': 'darkly' == tema, 'whitespace': 'darkly' != tema}"></i> Darkly</a></li>
+                    <li><a href="" ng-click="cambiarTema('lumen')"><i ng-class="{'glyphicon glyphicon-ok': 'lumen' == tema, 'whitespace': 'lumen' != tema}"></i> Lumen</a></li>
+                    <li><a href="" ng-click="cambiarTema('slate')"><i ng-class="{'glyphicon glyphicon-ok': 'slate' == tema, 'whitespace': 'slate' != tema}"></i> Slate</a></li>
+                    <li><a href="" ng-click="cambiarTema('spacelab')"><i ng-class="{'glyphicon glyphicon-ok': 'spacelab' == tema, 'whitespace': 'spacelab' != tema}"></i> Spacelab</a></li>
+                    <li><a href="" ng-click="cambiarTema('united')"><i ng-class="{'glyphicon glyphicon-ok': 'united' == tema, 'whitespace': 'united' != tema}"></i> United</a></li>
                 </ul>
             </div>
-            -->
+            
             <!-- theme selector ends -->
 
-            <ul class="navbar-collapse nav navbar-nav" style="width: 500px;">
+            <ul class="navbar-collapse nav navbar-nav" style="width: 380px; padding-right: 0;">
                 
                 <li class="dropdown">
                     <a href="" data-toggle="dropdown" ng-click="seleccionarDistrito()"><i class="glyphicon glyphicon-star"></i> 
-                        <span ng-show="!USER.iglesia_id">Iglesia</span>
+                        <span ng-show="!USER.iglesia_id">{{ 'IGLESIA' | translate }}</span>
                         {{USER.iglesia_alias}} 
                     </a>
                 </li>
@@ -122,32 +127,32 @@
                         <li class="nav-header">Menú</li>
                         <li>
                             <a class="ajax-link" ui-sref="panel">
-                                <i class="glyphicon glyphicon-home"></i><span> Inicio</span>
+                                <i class="glyphicon glyphicon-home"></i><span> {{ 'INICIO_MENU' | translate }}</span>
                             </a>
                         </li>
                           
                         <li>
                             <a class="ajax-link" href="" ui-sref="panel.usuarios">
-                                <i class="glyphicon glyphicon-user"></i><span> Usuarios</span>
+                                <i class="glyphicon glyphicon-user"></i><span> {{ 'USERS_MENU' | translate }}</span>
                             </a>
                         </li>
 
                         <li>
                             <a class="ajax-link" ui-sref="panel.entidades">
-                                <i class="glyphicon glyphicon-align-justify"></i><span> Entidades</span>
+                                <i class="glyphicon glyphicon-align-justify"></i><span> {{ 'ENTIDADES_MENU' | translate }}</span>
                             </a>
                         </li>
                         
                               
                          <li>
                             <a class="ajax-link" href="" ui-sref="panel.auditorias">
-                                <i class="glyphicon glyphicon-folder-open"></i><span> Auditorias</span>
+                                <i class="glyphicon glyphicon-folder-open"></i><span> {{ 'AUDITORIAS_MENU' | translate }}</span>
                             </a>
                         </li>
 
                         <li>
                             <a class="ajax-link" href="" ui-sref="panel.libromes">
-                                <i class="glyphicon glyphicon-book"></i><span> Captura de datos</span>
+                                <i class="glyphicon glyphicon-book"></i><span> {{ 'CAPTURA_DATOS_MENU' | translate }}</span>
                             </a>
                         </li>
 
@@ -161,7 +166,7 @@
 
                         <li>
                             <a class="ajax-link" href="" ui-sref="panel.sincronizacion">
-                                <i class="glyphicon glyphicon-retweet"></i><span> Sincronización</span>
+                                <i class="glyphicon glyphicon-retweet"></i><span> {{ 'SINCRONIZACION_MENU' | translate }}</span>
                             </a>
                         </li>
 
@@ -174,21 +179,21 @@
                             
                             <div uib-accordion-group class="panel-default" is-open="status.open">
                                 <uib-accordion-heading>
-                                    Datos 
+                                    {{ 'DATOS_MENU' | translate }} 
                                     <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                                 </uib-accordion-heading>
                                 <ul class="nav nav-pills nav-stacked" style="display: block;">
                                     
                                     <li>
                                         <a class="ajax-link" href="" ui-sref="panel.preguntas" style="color: #2fa4e7;">
-                                            <i class="glyphicon glyphicon-tags"></i><span> Preguntas</span>
+                                            <i class="glyphicon glyphicon-tags"></i><span> {{ 'PREGUNTAS_MENU' | translate }}</span>
                                         </a>
                                     </li>
                                     
             
                                     <li>
                                         <a class="ajax-link" href="" ui-sref="panel.respuestas" style="color: #2fa4e7;">
-                                            <i class="glyphicon glyphicon-file"></i><span> Respuestas</span>
+                                            <i class="glyphicon glyphicon-file"></i><span> {{ 'RESPUESTAS_MENU' | translate }}</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -197,7 +202,7 @@
                         
                         <li>
                             <a class="ajax-link" href="" ui-sref="panel.informe">
-                                <i class="glyphicon glyphicon-list-alt"></i><span> Informes</span>
+                                <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'INFORMES_MENU' | translate }}</span>
                             </a>
                         </li>
                         
@@ -230,13 +235,13 @@
                 <div>
                     <ul class="breadcrumb">
                         <li class="li-breadcrumb">
-                            <a ui-sref="panel">Inicio</a>
+                            <a ui-sref="panel"></a>{{ 'INICIO_MENU' | translate }}</a>
 
                         </li>
                         <li style="float: right;" class="refresh-breadcrumb">
                             <a href="" ng-click="refresh()">
                                 <i class="glyphicon glyphicon-refresh"></i>
-                                Actualizar</a>
+                                {{ 'REFRESH' | translate }}</a>
                         </li>
                     </ul>
                 </div>

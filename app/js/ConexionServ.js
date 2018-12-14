@@ -84,7 +84,7 @@ angular.module('auditoriaApp')
                 "email varchar(200)  DEFAULT NULL collate nocase," +
                 "sexo varchar(100)  NOT NULL," +
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
-                "tipo varchar(100)  NOT NULL," + // Auditor, Pastor, Tesorero
+                "tipo varchar(100)  NOT NULL," + // Auditor, Pastor, Tesorero, Tesorero asociación, Admin
                 "is_active integer(1)  DEFAULT '1'," +
                 "union_id integer DEFAULT NULL," +
                 "asociacion_id integer DEFAULT NULL," +
@@ -92,6 +92,8 @@ angular.module('auditoriaApp')
                 "iglesia_id integer DEFAULT NULL," +
                 "auditoria_id integer DEFAULT NULL," +
                 "celular varchar(100)  NULL," +
+                "idioma varchar(100)  DEFAULT NULL collate nocase," +
+                "tema varchar(100)  DEFAULT 'cerulean' collate nocase," +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
                 "eliminado varchar(100)  DEFAULT NULL collate nocase," +
                 "username varchar(100)  NOT NULL , " +  
@@ -100,6 +102,7 @@ angular.module('auditoriaApp')
     sqlauditorias = "CREATE TABLE IF NOT EXISTS auditorias (id integer," +
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "hora varchar(100)  DEFAULT NULL collate nocase," +
+                "auditor_id integer  NOT NULL," +
                 "saldo_ant integer  DEFAULT NULL," +
                 "ingre_por_registrar integer  DEFAULT NULL," +
                 "ingre_sabados integer  DEFAULT NULL," + // Sábados que no se registran en libro mes porque no ha pasado el mes

@@ -111,7 +111,14 @@ th .badge{
 	background-color: #d1e6f9;
 }
 
+.show-on-print{
+	display: none;
+}
+
 @media only print{
+	.show-on-print{
+		display: block;
+	}
 	.table-bordered {
 		border: 1px solid #000!important;
 	}
@@ -123,7 +130,35 @@ th .badge{
 	.table-bordered>tfoot>tr>td{
 		border: 1px solid #000!important;
 	}
+	.informes-pages{
+		color: #000;
+	}
 }
+
+.page-vertical, .page-carta-horizontal, .page-oficio-horizontal{
+	background-color: white;
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 10px;
+}
+.salto-pagina{
+	page-break-after: always;
+}
+.page-vertical{
+	background-color: white;
+	width: 22cm;
+	margin-bottom: 10px;
+}
+.page-carta-horizontal{
+	background-color: white;
+	width: 31cm;
+}
+.page-oficio-horizontal{
+	background-color: white;
+	width: 36cm;
+}
+
+
 .tabla-mes thead tr th{
 	border: 1px #ccc solid!important;
 	position: relative;

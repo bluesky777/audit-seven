@@ -78,8 +78,8 @@ angular.module('auditoriaApp')
 		
 		if (audit.iglesia) {
 			
-			consulta ="INSERT INTO auditorias(fecha, hora, iglesia_id, saldo_ant) VALUES(?,?,?,?) "
-			ConexionServ.query(consulta,[fecha_fix, hora_fix, audit.iglesia.rowid, audit.saldo_ant]).then(function(resInsert){
+			consulta ="INSERT INTO auditorias(fecha, hora, auditor_id, iglesia_id, saldo_ant) VALUES(?,?,?,?,?) "
+			ConexionServ.query(consulta,[fecha_fix, hora_fix, $scope.USER.rowid, audit.iglesia.rowid, audit.saldo_ant]).then(function(resInsert){
 
 				ConexionServ.query('UPDATE usuarios SET auditoria_id=?, distrito_id=?, iglesia_id=? WHERE rowid=? ', [ resInsert.insertId, audit.iglesia.distrito_id, audit.iglesia.rowid, $scope.USER.rowid ]).then(function(result) {
 					$scope.USER.iglesia_id 			= audit.iglesia.rowid;
