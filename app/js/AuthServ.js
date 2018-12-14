@@ -139,13 +139,17 @@ angular.module('auditoriaApp')
         
         update_user_storage: function(datos){
             var defered = $q.defer();
-            ConexionServ.query(consulta_user+' u.rowid=? ', [datos.rowid]).then(function(result){
+            id = datos.rowid;
+            if (!id) {
+                id = datos.id;
+            }
+            ConexionServ.query(consulta_user+' u.rowid=? ', [id]).then(function(result){
                 if (result.length > 0) {
                     localStorage.logueado   = true
                     localStorage.USER       = JSON.stringify(result[0]);
                     defered.resolve(result[0]);
                 }else{
-                    console.log('Cero usuarios');
+                    console.log('Cero usuarios', datos);
                     defered.reject('Cero usuarios')
                 }
                 

@@ -53,14 +53,18 @@ angular.module("auditoriaApp")
 			}
 			
 			// Guardo la iglesia y última auditoría
-			ConexionServ.query('UPDATE usuarios SET distrito_id=?, iglesia_id=?, auditoria_id=? WHERE rowid=? ', [ iglesia.distrito_id, iglesia.rowid, auditoria_id, $scope.USER.rowid ]).then(function(result) {
+			id = $scope.USER.rowid;
+            if (!id) {
+                id = $scope.USER.id;
+            }
+			ConexionServ.query('UPDATE usuarios SET distrito_id=?, iglesia_id=?, auditoria_id=? WHERE rowid=? ', [ iglesia.distrito_id, iglesia.rowid, auditoria_id, id ]).then(function(result) {
 				$scope.USER.iglesia_id 		= iglesia.rowid;
 				$scope.USER.distrito_id 	= iglesia.distrito_id;
 				$scope.USER.auditoria_id 	= auditoria_id;
 				
 				AuthServ.update_user_storage($scope.USER).then(function(usuario){
 					
-					$http.put(rutaServidor.root + '/au_usuario/cambiar-iglesia', { iglesia_id: $scope.USER.iglesia_id, user_id: $scope.USER.rowid }).then(function(){
+					$http.put(rutaServidor.root + '/au_usuario/cambiar-iglesia', { iglesia_id: $scope.USER.iglesia_id, user_id: id }).then(function(){
 						try {
 							const {ipcRenderer} = require('electron');
 							ipcRenderer.send('refrescar-app');
