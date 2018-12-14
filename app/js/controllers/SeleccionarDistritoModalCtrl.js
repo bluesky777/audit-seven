@@ -1,6 +1,6 @@
 angular.module("auditoriaApp")
 
-.controller('SeleccionarDistritoModalCtrl', function ($uibModalInstance, ConexionServ, $scope, USER, AuthServ, $timeout, $filter) {
+.controller('SeleccionarDistritoModalCtrl', function ($uibModalInstance, ConexionServ, $scope, USER, AuthServ, $timeout, $filter, $http, rutaServidor) {
 	
 	$scope.USER 			= USER;
 	$scope.distritos 		= [];
@@ -59,13 +59,26 @@ angular.module("auditoriaApp")
 				$scope.USER.auditoria_id 	= auditoria_id;
 				
 				AuthServ.update_user_storage($scope.USER).then(function(usuario){
-					try {
-						const {ipcRenderer} = require('electron');
-						ipcRenderer.send('refrescar-app');
-					} catch(e) {
-						console.error("electron no encontrado");
-						location.reload();
-					}
+					
+					$http.put(rutaServidor.root + '/au_usuario/cambiar-iglesia', { iglesia_id: $scope.USER.iglesia_id, user_id: $scope.USER.rowid }).then(function(){
+						try {
+							const {ipcRenderer} = require('electron');
+							ipcRenderer.send('refrescar-app');
+						} catch(e) {
+							console.error("electron no encontrado");
+							location.reload();
+						}
+						
+					}, function(){
+						try {
+							const {ipcRenderer} = require('electron');
+							ipcRenderer.send('refrescar-app');
+						} catch(e) {
+							console.error("electron no encontrado");
+							location.reload();
+						}
+					})
+					
 					
 					$uibModalInstance.close(usuario);
 				});

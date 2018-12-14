@@ -77,7 +77,7 @@ angular.module('auditoriaApp')
 			
 		}
 		
-		$http.put(rutaServidor.root + '/au_usuario/cambiar-tema', { tema: themeName, user_id: $scope.USER.id }).then(function(){
+		$http.put(rutaServidor.root + '/au_usuario/cambiar-tema', { tema: themeName, user_id: $scope.USER.rowid }).then(function(){
 			$scope.USER.tema 		= themeName;
 			$scope.tema 			= $scope.USER.tema;
 			

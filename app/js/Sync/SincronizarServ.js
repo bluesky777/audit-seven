@@ -146,8 +146,8 @@ result = {
                 
                 for (var i = 0; i < usuarios.length; i++) {
 
-                    consulta = 'INSERT INTO usuarios (rowid, id, nombres, apellidos, email, tipo, sexo, union_id, asociacion_id, username, password) VALUES(?,?,?,?,?,?,?,?,?,?,?)'
-                    ConexionServ.query(consulta, [usuarios[i].id, usuarios[i].id, usuarios[i].nombres, usuarios[i].apellidos, usuarios[i].email, usuarios[i].tipo, usuarios[i].sexo, usuarios[i].union_id, usuarios[i].asociacion_id, usuarios[i].username, usuarios[i].password]).then(function(result){
+                    consulta = 'INSERT INTO usuarios (rowid, id, nombres, apellidos, email, tipo, sexo, union_id, asociacion_id, iglesia_id, username, password) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)'
+                    ConexionServ.query(consulta, [usuarios[i].id, usuarios[i].id, usuarios[i].nombres, usuarios[i].apellidos, usuarios[i].email, usuarios[i].tipo, usuarios[i].sexo, usuarios[i].union_id, usuarios[i].asociacion_id, usuarios[i].iglesia_id, usuarios[i].username, usuarios[i].password]).then(function(result){
                         console.log('se cargo usuarios', result);
                     
                     }, function(tx){

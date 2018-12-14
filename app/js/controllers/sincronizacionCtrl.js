@@ -293,7 +293,8 @@ angular.module("auditoriaApp")
 				toastr.info('Datos descargados.', 'Tablas creadas.');
 				
 				DescargarTodoServ.insertar_datos_descargados(result.data).then(function(result){
-					$scope.estado_descarga = 'Insertados';
+					AuthServ.update_user_storage($scope.USER);
+					$scope.estado_descarga = 'Insertados. Actualice la página.';
 					console.log('Todas los datos Insertados', result);
 				})
 			})

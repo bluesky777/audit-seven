@@ -88,8 +88,8 @@ angular.module('auditoriaApp')
                     fecha_new   = usu.fecha;
                 }
                 console.log(usu.fecha, usu);
-                consulta 	= 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, tema, idioma, union_id, asociacion_id, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ';
-                prome 		= ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.tema, usu.idioma, usu.union_id, usu.asociacion_id, usu.username, usu.password, usu.email, fecha_new, usu.tipo, usu.celular]);
+                consulta 	= 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, tema, idioma, union_id, asociacion_id, iglesia_id, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ';
+                prome 		= ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.tema, usu.idioma, usu.union_id, usu.asociacion_id, usu.iglesia_id, usu.username, usu.password, usu.email, fecha_new, usu.tipo, usu.celular]);
                 prome.then(function(result){
                     funciones._valor_insertado++;
                 }, function(tx){
