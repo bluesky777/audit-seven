@@ -18,6 +18,8 @@ angular.module('auditoriaApp')
 	
 	if (USER.idioma) {
 		$translate.use(USER.idioma);
+	}else{
+		$translate.use('Español');
 	}
 	
 
