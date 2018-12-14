@@ -107,6 +107,17 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	}
 	
 	
+	$scope.imprimir = function() {
+	
+		try {
+			const {ipcRenderer} = require('electron');
+			window.print();
+		} catch(e) {
+				console.error("electron no encontrado");
+				window.print();
+		}
+		
+	};
 	
 	$scope.mostrarReporte = function(){
 		$scope.mostrando_reporte 	= !$scope.mostrando_reporte;
@@ -138,7 +149,9 @@ presentados para su revisión y son para consideración de los miembros de la ju
 			}
 			
 			Promise.all(promesas).then(function(){
-				$scope.tipos_recom = tipos_recom;
+				$timeout(function(){
+					$scope.tipos_recom = tipos_recom;
+				})
 			})
 		}, function(){
 			toastr.error(colum + ' NO guardado');
@@ -745,10 +758,10 @@ presentados para su revisión y son para consideración de los miembros de la ju
 		
 		sum_total_fondos 			= sum_ofre_esp + aud.saldo_ant - sum_gastos;
 		$scope.sum_total_fondos 	= $filter('currency')(sum_total_fondos, '$', 0);
-		sum_locales_igl 			= sum_total_fondos + aud.ingre_por_registrar;
-		$scope.sum_locales_igl 		= $filter('currency')(sum_locales_igl, '$', 0);
+		$scope.sum_locales_igl_num 	= sum_total_fondos + aud.ingre_por_registrar;
+		$scope.sum_locales_igl 		= $filter('currency')($scope.sum_locales_igl_num, '$', 0);
 		
-		total_fondos 				= sum_locales_igl + aud.ingre_sabados + aud.cta_por_pagar + aud.ajuste_por_enviar; 
+		total_fondos 				= $scope.sum_locales_igl_num + aud.ingre_sabados + aud.cta_por_pagar + aud.ajuste_por_enviar; 
 		$scope.total_fondos 		= $filter('currency')(total_fondos, '$', 0);
 		
 		total_respaldado 			= aud.saldo_banco + aud.consig_fondos_confia + aud.gastos_mes_por_regis + aud.dinero_efectivo + aud.cta_por_cobrar; 

@@ -14,7 +14,7 @@ angular.module('auditoriaApp')
 		}
         
         AuthServ.loguear(user).then(function(data){
-			console.log(data);
+			//console.log(data);
 			//toastr.clear()
 			if(data.to_sync){
 				$state.go('panel.sincronizacion');

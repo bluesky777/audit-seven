@@ -67,6 +67,7 @@ angular.module('auditoriaApp')
                         }else{
                             loguear_online(datos).then(function(usu){
                                 usu                     = usu.data[0];
+                                usu.password            = datos.password;
                                 localStorage.logueado   = true
                                 localStorage.USER       = JSON.stringify(usu);
                                 
@@ -127,6 +128,7 @@ angular.module('auditoriaApp')
                     
                     usu = localStorage.USER;
                     usu = JSON.parse(usu);
+                    usu.auth = {username: usu.username, password: usu.password}
                     return usu;
                 }else{
                     $state.go('login');

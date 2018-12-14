@@ -5,6 +5,12 @@ angular.module('auditoriaApp')
 
 	$stateProvider
 
+	.state('panel.informe_pastor', {
+		url: '/informe',
+		controller: 'InformesPastorCtrl',
+		templateUrl: 'templates/informes_pastor.html'
+	})
+	
 	.state('panel.informe', {
 		url: '/informe',
 		controller: 'informectrl',

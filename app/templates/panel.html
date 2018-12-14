@@ -27,12 +27,28 @@
                 </ul>
             </div>
             <!-- user dropdown ends -->
+            
+            <!-- Botón Offline -->
+            <div class="btn-group pull-right theme-container animated tada">
+                <button class="btn" ng-class="{'btn-danger': modo_offline, 'btn-default': !modo_offline}"
+                    ng-click="cambiarOffline()">
+                    
+                    <span ng-show="modo_offline">
+                        <i class="glyphicon glyphicon-warning-sign"></i>
+                        <span class="hidden-xs">Offline</span>
+                    </span>
+                    <span ng-show="!modo_offline">
+                        <i class="glyphicon glyphicon-signal"></i>
+                        <span class="hidden-xs">Online</span>
+                    </span>
+                </button>
+            </div>
 
             <!-- theme selector starts -->
             <div class="btn-group pull-right theme-container animated tada">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <i class="glyphicon glyphicon-tint"></i><span
-                        class="hidden-xs"> {{ 'IDIOMA_MENU' | translate }}</span>
+                    <i class="glyphicon glyphicon-tint"></i>
+                    <span class="hidden-xs"> {{ 'IDIOMA_MENU' | translate }}</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" id="themes">
@@ -73,17 +89,6 @@
                     </form>
                 </li>
                 
-                <li class="hidden-xs" ng-if="false">
-                    <button class="btn" ng-class="{'btn-danger': modo_offline, 'btn-default': !modo_offline}"
-                        ng-click="cambiarOffline()" style="margin-left: 10px; margin-top: 7px;">
-                        <span ng-show="modo_offline">
-                            <i class="glyphicon glyphicon-warning-sign"></i>
-                            Offline</span>
-                        <span ng-show="!modo_offline">
-                            <i class="glyphicon glyphicon-signal"></i>
-                            Online</span>
-                    </button>
-                </li>
             </ul>
 
         </div>
@@ -131,26 +136,26 @@
                             </a>
                         </li>
                           
-                        <li>
+                        <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.usuarios">
                                 <i class="glyphicon glyphicon-user"></i><span> {{ 'USERS_MENU' | translate }}</span>
                             </a>
                         </li>
 
-                        <li>
+                        <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" ui-sref="panel.entidades">
                                 <i class="glyphicon glyphicon-align-justify"></i><span> {{ 'ENTIDADES_MENU' | translate }}</span>
                             </a>
                         </li>
                         
                               
-                         <li>
+                         <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.auditorias">
                                 <i class="glyphicon glyphicon-folder-open"></i><span> {{ 'AUDITORIAS_MENU' | translate }}</span>
                             </a>
                         </li>
 
-                        <li>
+                        <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.libromes">
                                 <i class="glyphicon glyphicon-book"></i><span> {{ 'CAPTURA_DATOS_MENU' | translate }}</span>
                             </a>
@@ -164,7 +169,7 @@
                         </li>
                         -->
 
-                        <li>
+                        <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.sincronizacion">
                                 <i class="glyphicon glyphicon-retweet"></i><span> {{ 'SINCRONIZACION_MENU' | translate }}</span>
                             </a>
@@ -175,7 +180,7 @@
 
 
                          
-                        <li uib-accordion close-others="true" class="accordion ">
+                        <li uib-accordion close-others="true" class="accordion " ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             
                             <div uib-accordion-group class="panel-default" is-open="status.open">
                                 <uib-accordion-heading>
@@ -200,8 +205,14 @@
                             </div>
                         </li>
                         
-                        <li>
+                        <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.informe">
+                                <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'INFORMES_MENU' | translate }}</span>
+                            </a>
+                        </li>
+                        
+                        <li ng-if="::USER.tipo=='Pastor' || USER.tipo=='Tesorero'">
+                            <a class="ajax-link" href="" ui-sref="panel.informe_pastor">
                                 <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'INFORMES_MENU' | translate }}</span>
                             </a>
                         </li>
@@ -248,7 +259,9 @@
                 
                 
                 
-                <div ngf-drop="uploadFiles($files)" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-pattern="'image/*'" class="drop-box drop-box">
+                <div ngf-drop="uploadFiles($files)" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-pattern="'image/*'" class="drop-box drop-box"
+                    ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
+                    
                     <div class="row">
                         <div style="text-align: center">
                             <h2>{{ asociacion.nombre }}</h2>

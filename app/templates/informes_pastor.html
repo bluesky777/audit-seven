@@ -1,0 +1,87 @@
+<div class="row" class="hidden-print">
+	<div class="box col-md-12 hidden-print">
+		<div class="box-inner">
+			<div class="box-header well">
+				<h2>
+					<i class="glyphicon glyphicon-info-sign"></i> Informes
+				</h2>
+			
+				<div class="box-icon"></div>
+			</div>
+			
+			<div class="box-content">
+				
+				
+				<button class="btn btn-primary" ng-click="compararIglesiasMesesYears()">
+					Comparar por meses-años
+				</button>
+				<button class="btn btn-primary" ng-click="compararDistritosYears()">
+					Comparar por años
+				</button>
+              
+			  
+				<hr class="wide">
+				<h5>Orientación de la página:</h5>
+				<div class="control-group">
+					<div class="radio">
+						<label>
+						<input type="radio" ng-model="config.orientacion" value="oficio_horizontal">
+						<div class="text">Oficio Horizontal</div>
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" ng-model="config.orientacion" value="carta_horizontal">
+						<div class="text">Carta horizontal</div>
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" ng-model="config.orientacion" value="vertical">
+						<div class="text">Vertical</div>
+						</label>
+					</div>
+				</div>
+				
+			</div>
+			
+
+
+			
+		</div>	
+	</div>	
+</div>
+
+
+
+<div ui-view class="informes-pages altura-informe row">
+	<h5 style="text-align: center">Aquí saldrán tus reportes</h5>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

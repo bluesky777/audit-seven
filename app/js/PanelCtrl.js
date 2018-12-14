@@ -14,6 +14,8 @@ angular.module('auditoriaApp')
 		if (localStorage.modo_offline == 'true') {
 			$scope.modo_offline = true;
 		}
+	}else{
+		localStorage.modo_offline == $scope.modo_offline;
 	}
 	
 	if (USER.idioma) {
@@ -41,7 +43,7 @@ angular.module('auditoriaApp')
 		
 		ipcRenderer.send('dame-version');
 	} catch(e) {
-		console.error("electron no encontrado");
+		console.log("electron no encontrado");
 	}
 	
 	
@@ -126,7 +128,7 @@ angular.module('auditoriaApp')
 			const {ipcRenderer} = require('electron');
 			ipcRenderer.send('refrescar-app');
 		} catch(e) {
-			console.error("electron no encontrado");
+			console.log("electron no encontrado");
 			location.reload();
 		}
 	}

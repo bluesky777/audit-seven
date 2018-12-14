@@ -109,28 +109,20 @@
 												<tr>
 													<td style="width: 150px">Tipo de usuario</td>
 													<td>
-														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-6 col-xs-12">
+														<div style="margin-bottom: 5px;" class="form-group col-xs-12">
 															<div class="row">
-																<div class="col-lg-6 col-sm-4 col-xs-12">
-																	<div class="radio">
-																		<label>
-																			<input type="radio" name="tipo" value="Pastor" ng-model="usuario_crear.tipo"><span class="text">Pastor</span>
-																		</label>
-																	</div>
-																</div>
-																<div class="col-lg-6 col-sm-4 col-xs-12">
-																	<div class="radio">
-																		<label>
-																			<input type="radio" name="tipo" value="Tesorero" ng-model="usuario_crear.tipo"><span class="text">Tesorero</span>
-																		</label>
-																	</div>
-																</div>
-																<div class="col-lg-6 col-sm-4 col-xs-12">
-																	<div class="radio">
-																		<label>
-																			<input type="radio" name="tipo" value="Auditor" ng-model="usuario_crear.tipo"><span class="text">Auditor</span>
-																		</label>
-																	</div>
+																
+																<div class="btn-group">
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Pastor'">
+																		Pastor</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero'">
+																		Tesorero</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Auditor'"
+																		ng-if="USER.tipo=='Admin' || USER.tipo=='Tesorero asociación'">
+																		Auditor</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero asociación'"
+																		ng-if="USER.tipo=='Admin'">
+																		Tesorero asoc</label>
 																</div>
 															</div>
 														</div>
@@ -156,8 +148,8 @@
 
 											</table>
 
-											<div style="text-align: center;">
-												<input class="btn btn-default" type="button" value="Cancelar" ng-click="CancelarEdicion()">
+											<div style="text-align: center; margin-top: 15px;">
+												<input class="btn btn-default" type="button" value="Cancelar" ng-click="CancelarNuevo()">
 												<input class="btn btn-primary" type="submit" value="Guardar cambios" ng-disabled="creando">
 											</div>
 
@@ -298,7 +290,7 @@
 
 											</table>
 
-											<div style="text-align: center;">
+											<div style="text-align: center; margin-top: 15px;">
 												<input class="btn btn-default" type="button" value="Cancelar" ng-click="CancelarEdicion()">
 												<input class="btn btn-primary" type="submit" value="Guardar cambios" ng-disabled="guardando_cambios">
 											</div>

@@ -41,11 +41,15 @@
                 <div class="col-sm-12" style="margin-top: 10px">
                     
                     <button class="btn btn-default" ng-click="mostrarReporte()">
-                        <i class="glyphicon glyphicon-print"></i>
+                        <i class="glyphicon glyphicon-print" ng-show="!mostrando_reporte"></i>
                         <span ng-show="!mostrando_reporte">Mostrar </span>
                         <span ng-show="mostrando_reporte">Ocultar </span>
                          reporte
                     </button>
+                    
+                    <button ng-click="imprimir()" class="btn btn-default" ng-show="mostrando_reporte">
+                        <i class="glyphicon glyphicon-print"></i>
+                        Imprimir</button>
                     
                     <br>
                     <br>
@@ -202,13 +206,13 @@
                             Fondos Locales Iglesia
                         </td>
                         <td class="align-right">
-                            -559.241.870
+                            {{ sum_locales_igl }}
                         </td>
                         <td>
                             Saldo de Banco
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.saldo_banco | currency:'$':0 }}
                         </td>
                     </tr>
                     <tr>
@@ -216,41 +220,41 @@
                             Ingreso Sábados
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.ingre_sabados | currency:'$':0 }}
                         </td>
                         <td>
-                            Consig. En Bcos Asociación
+                            Consig. en Bcos Asociación
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.consig_fondos_confia | currency:'$':0 }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Ingreso Sábados
+                            Remesa por enviar del mes
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.cta_por_pagar | currency:'$':0 }}
                         </td>
                         <td>
-                            Consig. En Bcos Asociación
+                            Gastos del mes por registrar
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.gastos_mes_por_regis | currency:'$':0 }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Ajuste de Auditoria Por Enviar
+                            Ajuste de Auditoría por enviar
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.ajuste_por_enviar | currency:'$':0 }}
                         </td>
                         <td>
-                            Dinero Efectivo
+                            Dinero efectivo
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.dinero_efectivo | currency:'$':0 }}
                         </td>
                     </tr>
                     <tr>
@@ -261,10 +265,10 @@
                             
                         </td>
                         <td>
-                            Cuentas por Cobrar
+                            Cuentas por cobrar
                         </td>
                         <td class="align-right">
-                            0
+                            {{ auditoria.cta_por_cobrar | currency:'$':0 }}
                         </td>
                     </tr>
                         
@@ -273,13 +277,13 @@
                             GRAN TOTAL
                         </td>
                         <td style="background-color: #8bc5f8;" class="bold align-right">
-                            -559.241.870
+                            {{ auditoria.ajuste_por_enviar + auditoria.cta_por_pagar + auditoria.ingre_sabados + sum_locales_igl_num }}
                         </td>
                         <td style="background-color: #8bc5f8;" class="bold">
                             GRAN TOTAL
                         </td>
                         <td style="background-color: #8bc5f8;" class="bold align-right">
-                            0
+                            {{ auditoria.cta_por_cobrar + auditoria.dinero_efectivo + auditoria.gastos_mes_por_regis + auditoria.consig_fondos_confia + auditoria.saldo_banco }}
                         </td>
                     </tr>
                     
@@ -291,7 +295,7 @@
                             DIFERENCIA (-FALTANTE)
                         </td>
                         <td style="background-color: #8bc5f8;" class="bold align-right">
-                            559.241.870
+                            {{ (auditoria.cta_por_cobrar + auditoria.dinero_efectivo + auditoria.gastos_mes_por_regis + auditoria.consig_fondos_confia + auditoria.saldo_banco) - (auditoria.ajuste_por_enviar + auditoria.cta_por_pagar + auditoria.ingre_sabados + sum_locales_igl_num)}}
                         </td>
                     </tr>
                         
@@ -305,16 +309,16 @@
             <div class="col-xs-12">
                 <table class="table table-bordered table-condensed" style="margin-bottom: 5px;">
                     <tr>
-                        <td style="background-color: #8bc5f8;" class="bold center">
+                        <td class="bold center td-color-blue">
                             CONCEPTO
                         </td>
-                        <td style="background-color: #8bc5f8;" class="bold center">
+                        <td style="background-color: #8bc5f8;" class="bold center td-color-blue">
                             OBSERVACIÓN
                         </td>
-                        <td style="background-color: #8bc5f8; width: 20px;" class="bold center">
+                        <td style="background-color: #8bc5f8; width: 20px;" class="bold center td-color-blue">
                             OK
                         </td>
-                        <td style="background-color: #8bc5f8;" class="bold center">
+                        <td style="background-color: #8bc5f8;" class="bold center td-color-blue">
                             RECOMENDACIÓN
                         </td>
                     </tr>
@@ -366,7 +370,7 @@
         </div>		
     
         <div class="row">
-            <div class="col-xs-12" style="padding-top: 20px; padding-left: 30px;">
+            <div class="col-xs-12" style="padding-top: 60px; padding-left: 30px;">
                 <div style="font-size: 13pt; font-weight: bold;">
                     {{ usuario_auditor.nombres }} {{ usuario_auditor.apellidos }}
                 </div>

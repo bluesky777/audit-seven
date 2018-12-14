@@ -1,11 +1,19 @@
 angular.module("auditoriaApp")
 
-.controller("usuariosCtrl", function($scope, ConexionServ, $filter, toastr, uiGridConstants, uiGridEditConstants, $uibModal) {
-	  
+.controller("usuariosCtrl", function($scope, ConexionServ, $state, toastr, UsuariosFacto, $uibModal, Acentos) {
+
+	if ($scope.USER.tipo=='Pastor' || $scope.USER.tipo=='Tesorero') {
+		toastr.warning('No tienes permiso para editar usuarios.');
+		$state.go('panel');
+		return
+	}
+	
 	$scope.gridScope 				= $scope
 	$scope.gridOptions 				= {};
 	$scope.$parent.sidebar_active 	= false;
-
+	$scope.ver_crear_usu 			= false;
+	
+	
 	
 	$scope.avatar = {
 	  masculino: {
@@ -59,19 +67,7 @@ angular.module("auditoriaApp")
 	$scope.insertarUsuario = function(usu) {
 		$scope.creando = true;
 		
-		if (!usu.password) {
-			usu.password = "123";
-		}
-		if (!usu.username) {
-			usu.username = usu.nombres+(window.getRandomInt(999, 9999));
-		}
-		fecha_new = null;
-		if (usu.fecha) {
-			fecha_new = window.fixDate(usu.fecha);
-		}
-		
-	  	consulta = "INSERT INTO usuarios(nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?) ";
-	  	ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, fecha_new, usu.tipo, usu.celular]).then(function(result) {
+		UsuariosFacto.insertar(usu).then(function(result) {
 
 			toastr.success("Usuario creado.");
 			$scope.ver_crear_usu 	= false;
@@ -84,51 +80,34 @@ angular.module("auditoriaApp")
 				email: "",
 				celular: ""
 			};
-			$scope.traerUsuarios($scope.USER.tipo);
+			$scope.traerUsuarios();
 		}, function(tx) {
-		  $scope.creando 			= false;
+			$scope.creando 			= false;
 		});
+		
+	  	
 	};
 
-	$scope.traerUsuarios = function(tipo) {
-		consulta 	= '';
-		datos 		= [];
-		
-		if (tipo == 'Auditor' || tipo == 'Admin') {
-			consulta 	= "SELECT rowid, * FROM usuarios WHERE eliminado is null ORDER BY rowid DESC";
-		}else if(tipo == 'Tesorero' || tipo == 'Pastor'){
-			consulta 	= "SELECT rowid, * FROM usuarios WHERE eliminado is null and (tipo=? or tipo=?) ORDER BY rowid DESC";
-			datos 		= ['Tesorero', 'Pastor'];
-		}
-		
-		ConexionServ.query(consulta, datos).then(function(result) {
+	$scope.traerUsuarios = function() {
+		UsuariosFacto.traer($scope.USER.tipo).then(function(result){
 			$scope.usuarios 			= result;
-			$scope.gridOptions.data 	= $scope.usuarios;
-		}, function(tx) {
-			console.log("Error, no es posbile traer usuarios. ", tx, consulta, datos);
+            $scope.gridOptions.data 	= $scope.usuarios;
+		}, function(){
+			toastr.error('No se pudo descargar usuarios');
 		});
 	};
 	
 
-	$scope.traerUsuarios($scope.USER.tipo);
+	$scope.traerUsuarios();
 
 	
 
 	$scope.actUsers = function(usu) {
 		$scope.guardando_cambios = true;
 		
-		fecha_new = null;
-		if (usu.fecha) {
-			fecha_new = window.fixDate(usu.fecha);
-		}
-		
-		fecha_update = window.fixDate(new Date(), true);
-		
-		consulta = "UPDATE usuarios SET nombres=?, apellidos=?, sexo=?, username=?, password=?, fecha=?, tipo=?, celular=?, modificado=? WHERE rowid=? ";
-		ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, fecha_new, usu.tipo, usu.celular, fecha_update, usu.rowid]).then(function(result) {
+		UsuariosFacto.actualizar(usu).then(function(result) {
 			$scope.ver_edit_usu 		= false;
 			$scope.guardando_cambios 	= false;
-			console.log("usuario Actualizado", result);
 			toastr.success("Usuario actualizado correctamente");
 		}, function(tx) {
 			$scope.guardando_cambios = false;
@@ -151,7 +130,7 @@ angular.module("auditoriaApp")
 			console.log(dato, usuario, $scope.gridOptions.data);
 			$scope.gridOptions.data = $filter("filter")($scope.gridOptions.data, dato, true);
 			*/
-			$scope.traerUsuarios($scope.USER.tipo);
+			$scope.traerUsuarios();
 		})
 	};
 
@@ -187,23 +166,19 @@ angular.module("auditoriaApp")
 			{
 				field: "nombres", minWidth: 130, pinnedLeft: true,
 				filter: {
-				condition: function(searchTerm, cellValue, row) {
-					var entidad;
-					entidad = row.entity;
-					return ( entidad.nombres.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 );
-				}
+					condition: Acentos.buscarEnGrid
 				},
 				enableHiding: false,
 			},
-			{ field: "apellidos", minWidth: 110, filter: { condition: uiGridConstants.filter.CONTAINS } },
+			{ field: "apellidos", minWidth: 110, filter: { condition: Acentos.buscarEnGrid } },
 			{ name: "edicion", displayName: "Editar", width: 70, enableSorting: false, enableFiltering: false, cellTemplate: bt2, enableCellEdit: false, enableColumnMenu: true },
 			{ field: "sexo", displayName: "Sex", width: 40 },
-			{ field: "username", filter: { condition: uiGridConstants.filter.CONTAINS }, displayName: "Usuario", cellTemplate: btUsuario, editableCellTemplate: btEditUsername, minWidth: 135
+			{ field: "username", filter: { condition: Acentos.buscarEnGrid }, displayName: "Usuario", cellTemplate: btUsuario, editableCellTemplate: btEditUsername, minWidth: 135
 			},
-			{ field: "fecha", displayName: "Nacimiento", cellFilter: "date:mediumDate", type: "date", minWidth: 100 },
+			//{ field: "fecha", displayName: "Nacimiento", cellFilter: "date:mediumDate", type: "date", minWidth: 100 },
 			{ field: "celular", displayName: "Celular", minWidth: 80 },
-			{ field: "tipo", displayName: "Tipo", minWidth: 80 },
-			{ field: "email", displayName: "Email", type: "email", minWidth: 80 },
+			{ field: "tipo", displayName: "Tipo", minWidth: 100, enableCellEdit: false },
+			{ field: "email", displayName: "Email", type: "email", minWidth: 100 },
 		],
 		multiSelect: false,
 		exporterFieldCallback: function(grid, row, col, input) {
@@ -223,8 +198,8 @@ angular.module("auditoriaApp")
 						return;
 					}
 				}
-				ConexionServ.query("UPDATE usuarios SET "+colDef.field+"='"+newValue+"' WHERE rowid=?", [ rowEntity.rowid ] ).then(function(r) {
-					return toastr.success("Usuario(a) actualizado con éxito");
+				UsuariosFacto.actualizar_campo(colDef.field, newValue, rowEntity.rowid || rowEntity.id).then(function(r) {
+					return toastr.success("Usuario actualizado");
 				}, function(r2) {
 					rowEntity[colDef.field] = oldValue;
 					return toastr.error("Cambio no guardado", "Error");
@@ -262,14 +237,13 @@ angular.module("auditoriaApp")
 
 
 
-.controller('ResetPassCtrl', function($scope, $uibModalInstance, usuario, ConexionServ, toastr){
+.controller('ResetPassCtrl', function($scope, $uibModalInstance, usuario, ConexionServ, toastr, UsuariosFacto){
 	$scope.usuario 		= usuario;
 	$scope.newpassword 	= '';
 	$scope.showPassword = false;
 
 	$scope.ok = function(){
-
-		ConexionServ.query('UPDATE usuarios SET password=? WHERE rowid=?', [$scope.newpassword, usuario.rowid]).then((r)=>{
+		UsuariosFacto.actualizar_campo('password', $scope.newpassword, usuario.rowid || usuario.id).then((r)=>{
 			toastr.success('Contraseña cambiada.')
 		}, function(r2){
 			toastr.warning('No se pudo cambiar contraseña.', 'Problema')
@@ -285,17 +259,12 @@ angular.module("auditoriaApp")
 
 
 
-.controller('RemoveUsuarioCtrl', ['$scope', '$uibModalInstance', 'elemento', 'toastr', 'ConexionServ', ($scope, $modalInstance, elemento, toastr, ConexionServ)=>{
+.controller('RemoveUsuarioCtrl', ['$scope', '$uibModalInstance', 'elemento', 'UsuariosFacto', 'toastr', ($scope, $modalInstance, elemento, UsuariosFacto, toastr)=>{
 	$scope.elemento = elemento;
-	console.log('elemento', elemento);
-
+	
 	$scope.ok = ()=>{
-		
-		fecha_del = window.fixDate(new Date(), true);
-		
-		consulta = "UPDATE usuarios SET eliminado=? WHERE rowid=? ";
 
-		ConexionServ.query(consulta, [fecha_del, elemento.rowid]).then(function(result) {
+		UsuariosFacto.eliminar(elemento.rowid || elemento.id, elemento.id).then(function(result) {
 			console.log("Usuario eliminado", elemento);
 			$modalInstance.close(elemento)
 		}, function(tx) {

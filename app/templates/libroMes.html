@@ -520,7 +520,7 @@
 			
 					<div class="col-sm-6">
 
-						<table  class="table table-bordered table-condensed">
+						<table  class="table table-bordered table-condensed table-striped">
 
 							<tr>
 								<td> <label>Total fondos de iglesia</label></td>
@@ -553,7 +553,9 @@
 							</tr>
 
 							<tr>
-								<td>Cuenta por pagar</td>
+								<td uib-tooltip="Remesa por enviar del mes" tooltip-append-to-body="true">
+									Cuenta por pagar
+								</td>
 								<td class="align-right">
 									<input type="text" ng-model="auditoria.cta_por_pagar" class="align-right"
 										ng-change="cambiaAuditoria('cta_por_pagar')" 
@@ -594,10 +596,11 @@
 					
 					<div class="col-sm-6">
 
-						<table class="table table-bordered table-condensed">
+						<table class="table table-bordered table-condensed table-striped">
 							<tr>
-								<td colspan="2"><label>Respaldado por</label></td>
-
+								<td colspan="2">
+									<label style="font-weight: bold;">Respaldado por</label>
+								</td>
 							</tr>
 								<td>Saldo de banco</td>
 								<td class="align-right">
@@ -619,7 +622,7 @@
 								</td>
 
 							<tr>
-								<td>Consig. en fondos confiados</td>
+								<td>Consig. en bancos asociación</td>
 								<td class="align-right">
 									<div class="input-group">
 										<input type="text" ng-model="auditoria.consig_fondos_confia" class="align-right input-totales"
@@ -628,10 +631,10 @@
 											ui-number-mask="0" enter-as-tab>
 										
 										<span class="input-group-btn">
-											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Consig. en fondos confiados')">
+											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Consig. en bancos asociación')">
 												<i class="glyphicon glyphicon-flag"></i>
-												<span class="badge" ng-show="auditoria['reco_cont_Consig. en fondos confiados'].length>0">
-													{{auditoria['reco_cont_Consig. en fondos confiados'].length}}
+												<span class="badge" ng-show="auditoria['reco_cont_Consig. en bancos asociación'].length>0">
+													{{auditoria['reco_cont_Consig. en bancos asociación'].length}}
 												</span>
 											</button>
 										</span>

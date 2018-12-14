@@ -116,6 +116,9 @@ th .badge{
 }
 
 @media only print{
+	*{
+		background-color: 
+	}
 	.show-on-print{
 		display: block;
 	}
@@ -181,4 +184,13 @@ th .badge{
 .owen-select>div:hover{
 	background-color: aqua;
 	cursor: pointer;
+}
+.td-color-blue{
+	background-color: #8bc5f8;
+}
+@media print{
+	.td-color-blue{
+		background-color: #8bc5f8!important;
+		background: #8bc5f8!important;
+	}
 }

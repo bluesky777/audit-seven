@@ -69,7 +69,7 @@ angular.module("auditoriaApp")
 							const {ipcRenderer} = require('electron');
 							ipcRenderer.send('refrescar-app');
 						} catch(e) {
-							console.error("electron no encontrado");
+							console.log("electron no encontrado");
 							location.reload();
 						}
 						
@@ -78,7 +78,7 @@ angular.module("auditoriaApp")
 							const {ipcRenderer} = require('electron');
 							ipcRenderer.send('refrescar-app');
 						} catch(e) {
-							console.error("electron no encontrado");
+							console.log("electron no encontrado");
 							location.reload();
 						}
 					})
