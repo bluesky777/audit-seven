@@ -1,12 +1,22 @@
 angular.module("auditoriaApp")
 
-.controller("EntidadesCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal) {
+
+.directive('iglesiasDir', function(){
+	return {
+		restrict: 'E',
+		templateUrl: "templates/entidades/iglesiasDir.html"
+	}
+})
+
+.controller("EntidadesCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal, rutaServidor, $http) {
 	$scope.entidades 				= true;
     $scope.distrito_new 			= {};
+    $scope.datos 					= {};
     $scope.modentidades 			= false;
 	$scope.verCrearDistrito 		= false;
 	$scope.usuarios 				= [];
 	$scope.$parent.sidebar_active 	= false;
+	$scope.perfil 					= rutaServidor.root + '/images/perfil/';
 	
 	$scope.tpl_igle = {
 		nombre: '',
@@ -41,9 +51,7 @@ angular.module("auditoriaApp")
 		{tipo: 'Compraventa'},
 		{tipo: 'Sin documento'},
 	];
-	// Borrar:
-	$scope.ver_creando_iglesia		= true;
-	$scope.ver_iglesias = true;
+
 
 	
 	$scope.iglesia_new 		= angular.copy($scope.tpl_igle);
@@ -52,7 +60,7 @@ angular.module("auditoriaApp")
 	$scope.ver_uniones 		= false;
 	$scope.ver_asociaciones = false;
 	$scope.ver_distritos 	= false;
-	//$scope.ver_iglesias 	= false;
+	$scope.ver_iglesias 	= true;
 	
 	$scope.toggleUniones = ()=>{
 		$scope.ver_uniones = !$scope.ver_uniones;
@@ -67,7 +75,27 @@ angular.module("auditoriaApp")
 		$scope.ver_iglesias = !$scope.ver_iglesias;
 	}
 	
+	
 
+	$scope.tipoDocSeleccionado = function($item, row){
+		console.log($item, row);
+		return;
+		
+		consulta = "UPDATE usuarios SET tesorero_id=? WHERE id=?";
+
+		ConexionServ.query(consulta, [$scope.pastor_new_id,$scope.tesorero_new_id]).then(function(result) {
+			$scope.traerDatos();
+			toastr.success("Distrito creado.");
+			$scope.guardando_distrito 	= false;
+			$scope.verCrearDistrito 	= false;
+		},function(tx) {
+			toastr.error("Error creando distrito.", tx);
+			$scope.guardando_distrito 	= false;
+		});
+	}
+
+	
+	btTipoDoc = "templates/Entidades/botonSelectTesorero.html";
     btGrid1 ='<a uib-tooltip="Editar" tooltip-placement="left" tooltip-append-to-body="true" class="btn btn-default btn-xs icon-only" ng-click="grid.appScope.Ver_actualizar_iglesia(row.entity)"><i class="glyphicon glyphicon-pencil "></i></a>';
     btGrid2 ='<a uib-tooltip=" Eliminar" tooltip-placement="right" tooltip-append-to-body="true" class="btn btn-danger btn-xs icon-only" ng-click="grid.appScope.EliminarIglesia(row.entity)"><i class="glyphicon glyphicon-remove  "></i></a>';
     bt2 ='<span style="padding-left: 2px; padding-top: 4px;" class="btn-group">' + btGrid1 +btGrid2 +"</span>";
@@ -87,13 +115,13 @@ angular.module("auditoriaApp")
 				{ field: "rowid", displayName: "Id", pinnedLeft: true, width: 40, enableCellEdit: false },
         { name: "edicion", displayName: "Edición", width: 60, enableSorting: false, enableFiltering: false, cellTemplate: bt2, enableCellEdit: false, enableColumnMenu: true },
         { field: "nombre", minWidth:150 },
-        { field: "alias", minWidth: 90 },
+        //{ field: "alias", minWidth: 90 },
         { field: "codigo", minWidth: 90 },
         { field: "tipo", minWidth: 90 },
         { field: "distrito_nombre", displayName: 'Distrito', enableCellEdit: false, minWidth: 90 },
         { field: "tipo_propiedad", minWidth: 80, displayName: "Propiedad" },
         { field: "zona", minWidth: 80 },
-        { field: "tesorero_nombres", minWidth: 60 }
+        { field: "tesorero_nombres", minWidth: 120, cellTemplate: btTipoDoc, enableCellEdit: false }
       ],
       onRegisterApi: function(gridApi) {
         $scope.grid1Api = gridApi;
@@ -136,34 +164,34 @@ angular.module("auditoriaApp")
     };
 
     $scope.insertar_distrito = function(distrito) {
-			console.log(distrito);
-			$scope.guardando_distrito 	= true;
-			$scope.pastor_new_id 		= null;
-			$scope.tesorero_new_id 		= null;
+		console.log(distrito);
+		$scope.guardando_distrito 	= true;
+		$scope.pastor_new_id 		= null;
+		$scope.tesorero_new_id 		= null;
 
-			if (distrito.pastor) {
-				if (distrito.pastor.rowid) {
-					$scope.pastor_new_id = distrito.pastor.rowid;
-				}
+		if (distrito.pastor) {
+			if (distrito.pastor.rowid) {
+				$scope.pastor_new_id = distrito.pastor.rowid;
 			}
+		}
 
-			if (distrito.tesorero) {
-				if (distrito.tesorero.rowid) {
-					$scope.tesorero_new_id = distrito.tesorero.rowid;
-				}
+		if (distrito.tesorero) {
+			if (distrito.tesorero.rowid) {
+				$scope.tesorero_new_id = distrito.tesorero.rowid;
 			}
+		}
 
-			consulta = "INSERT INTO distritos(nombre, alias, codigo, zona, pastor_id, tesorero_id) VALUES(?,?,?,?,?,?)";
+		consulta = "INSERT INTO distritos(nombre, alias, codigo, zona, pastor_id, tesorero_id) VALUES(?,?,?,?,?,?)";
 
-			ConexionServ.query(consulta, [distrito.nombre,distrito.alias,distrito.codigo,distrito.zona,$scope.pastor_new_id,$scope.tesorero_new_id]).then(function(result) {
-				$scope.traerDatos();
-				toastr.success("Distrito creado.");
-				$scope.guardando_distrito 	= false;
-				$scope.verCrearDistrito 	= false;
-			},function(tx) {
-				toastr.error("Error creando distrito.", tx);
-				$scope.guardando_distrito 	= false;
-			});
+		ConexionServ.query(consulta, [distrito.nombre,distrito.alias,distrito.codigo,distrito.zona,$scope.pastor_new_id,$scope.tesorero_new_id]).then(function(result) {
+			$scope.traerDatos();
+			toastr.success("Distrito creado.");
+			$scope.guardando_distrito 	= false;
+			$scope.verCrearDistrito 	= false;
+		},function(tx) {
+			toastr.error("Error creando distrito.", tx);
+			$scope.guardando_distrito 	= false;
+		});
     };
 
     $scope.crearI = function() {
@@ -242,8 +270,20 @@ angular.module("auditoriaApp")
 			});
     };
 
-    $scope.traerDatos();
+	$scope.traerDatos();
+	
+	
+	$scope.traerImagenes = function(){
+		$http.get(rutaServidor.root+ '/au_imagenes').then(function(r){
+            $scope.imagenes = r.data;
+        }, function(r2){
+            toastr.error('No se pudo traer las imágenes');
+        });
+	}
+	$scope.traerImagenes();
+	
 
+	
     $scope.Insertentidad = function(entidad_crear) {
 			consulta = "INSERT INTO entidades(nombres, alias, pastor, celular) VALUES(?, ?, ?, ?) ";
 			ConexionServ.query(consulta, [entidad_crear.nombres,entidad_crear.alias,entidad_crear.pastor,entidad_crear.celular]).then(function(result) {
@@ -324,7 +364,63 @@ angular.module("auditoriaApp")
 
     $scope.Cancelar_Actualizar_Distrito = function() {
       	$scope.VerActualizandoDistrito = false;
-    };
+	};
+	
+	$scope.addImagen = function(imagen){
+		console.log(imagen);
+		$http.put(rutaServidor.root + '/au_imagenes/add-to-iglesia', {imagen_id: imagen.id, iglesia_id: $scope.iglesia_edit.rowid}).then(function(){
+			toastr.success('Documento asignado');
+			imagen.iglesia_id = imagen.id;
+			$timeout(function() {
+				$scope.$apply();
+			}, 0);
+		}, function(){
+			toastr.error('No se pudo asignar');
+		})
+		
+	}
+	
+	$scope.quitarImagen = function(imagen){
+		$http.put(rutaServidor.root + '/au_imagenes/quitar-iglesia', {imagen_id: imagen.id}).then(function(){
+			toastr.success('Documento desasignado');
+			imagen.iglesia_id = null;
+			$timeout(function() {
+				$scope.$apply();
+			}, 0);
+		}, function(){
+			toastr.error('No se pudo asignar');
+		})
+		
+	}
+	
+    $scope.elimninarImagen = function(imagen){
+        var modalInstance = $uibModal.open({
+            templateUrl: 'templates/removeImagen.html',
+            resolve: {
+                elemento: function () {
+                    return imagen;
+                }
+            },
+            controller: 'RemoveImagenModalCtrl' 
+        });
+
+        modalInstance.result.then(function (result) {
+            toastr.success('Eliminada');
+            $scope.traerImagenes();
+        });
+    }
+    
+	
+    $scope.cambiaDescripcion = function(imagen){
+        $http.put(rutaServidor.root + '/au_imagenes/update', imagen).then(function(r){
+            console.log(r);
+            toastr.success('Descripción guardada');
+        }, function(r2){
+            toastr.error('No se pudo guardar');
+        })
+    }
+
+    
 
     $scope.ActualizarIglesia = function(iglesia) {
 		$scope.guardando_iglesia = true;
@@ -376,47 +472,56 @@ angular.module("auditoriaApp")
 
     $scope.Ver_actualizar_iglesia = function(iglesia) {
 
-			$scope.ver_Actualizando_iglesia = true;
-			$scope.iglesia_edit 			= iglesia;
+		$scope.ver_Actualizando_iglesia = true;
+		$scope.iglesia_edit 			= iglesia;
 
-			for (var i = 0; i < $scope.distritos.length; i++) {
-				if (iglesia.distrito_id == $scope.distritos[i].rowid) {
-					$scope.iglesia_edit.distrito = $scope.distritos[i];
-				}
+		for (var i = 0; i < $scope.distritos.length; i++) {
+			if (iglesia.distrito_id == $scope.distritos[i].rowid) {
+				$scope.iglesia_edit.distrito = $scope.distritos[i];
 			}
+		}
 
-			for (var i = 0; i < $scope.usuarios.length; i++) {
-				if (iglesia.tesorero_id == $scope.usuarios[i].rowid) {
-					$scope.iglesia_edit.tesorero = $scope.usuarios[i];
-				}
-				if (iglesia.secretario_id == $scope.usuarios[i].rowid) {
-					$scope.iglesia_edit.secretario = $scope.usuarios[i];
-				}
+		for (var i = 0; i < $scope.usuarios.length; i++) {
+			if (iglesia.tesorero_id == $scope.usuarios[i].rowid) {
+				$scope.iglesia_edit.tesorero = $scope.usuarios[i];
+			}
+			if (iglesia.secretario_id == $scope.usuarios[i].rowid) {
+				$scope.iglesia_edit.secretario = $scope.usuarios[i];
+			}
+		}
+		
+		for (let i = 0; i < $scope.estados_propiedad.length; i++) {
+			if ($scope.iglesia_edit.estado_propiedad == $scope.estados_propiedad[i].estado) {
+				$scope.iglesia_edit.estado_propiedad = $scope.estados_propiedad[i];
+			}
+			if ($scope.iglesia_edit.estado_propiedad_pastor == $scope.estados_propiedad[i].estado) {
+				$scope.iglesia_edit.estado_propiedad_pastor = $scope.estados_propiedad[i];
+			}
+		}
+		
+		for (let i = 0; i < $scope.tipos_documentos_prop.length; i++) {
+			if ($scope.iglesia_edit.tipo_doc_propiedad == $scope.tipos_documentos_prop[i].tipo) {
+				$scope.iglesia_edit.tipo_doc_propiedad = $scope.tipos_documentos_prop[i];
+			}
+			if ($scope.iglesia_edit.tipo_doc_propiedad_pastor == $scope.tipos_documentos_prop[i].tipo) {
+				$scope.iglesia_edit.tipo_doc_propiedad_pastor = $scope.tipos_documentos_prop[i];
+			}
+		}
+		
+		/*
+		for (let i = 0; i < $scope.imagenes.length; i++) {
+			
+			if($scope.imagenes[i].iglesia_id == iglesia.rowid){
+				
 			}
 			
-			for (let i = 0; i < $scope.estados_propiedad.length; i++) {
-				if ($scope.iglesia_edit.estado_propiedad == $scope.estados_propiedad[i].estado) {
-					$scope.iglesia_edit.estado_propiedad = $scope.estados_propiedad[i];
-				}
-				if ($scope.iglesia_edit.estado_propiedad_pastor == $scope.estados_propiedad[i].estado) {
-					$scope.iglesia_edit.estado_propiedad_pastor = $scope.estados_propiedad[i];
-				}
-			}
-			
-			for (let i = 0; i < $scope.tipos_documentos_prop.length; i++) {
-				if ($scope.iglesia_edit.tipo_doc_propiedad == $scope.tipos_documentos_prop[i].tipo) {
-					$scope.iglesia_edit.tipo_doc_propiedad = $scope.tipos_documentos_prop[i];
-				}
-				if ($scope.iglesia_edit.tipo_doc_propiedad_pastor == $scope.tipos_documentos_prop[i].tipo) {
-					$scope.iglesia_edit.tipo_doc_propiedad_pastor = $scope.tipos_documentos_prop[i];
-				}
-			}
-			
+		}*/
+		
 
-			$timeout(function() {
-				$location.hash("editar-iglesia");
-				$anchorScroll();
-			}, 100);
+		$timeout(function() {
+			$location.hash("editar-iglesia");
+			$anchorScroll();
+		}, 100);
     };
 
     $scope.EliminarIglesia = function(iglesia) {

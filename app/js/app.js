@@ -58,7 +58,13 @@ angular.module('auditoriaApp', [
 	.state('panel.entidades', {
 		url: '/entidades',
 		controller: 'EntidadesCtrl',
-		templateUrl: 'templates/entidades.html'
+		templateUrl: 'templates/entidades/entidades.html'
+	})
+
+	.state('panel.imagenes', {
+		url: '/imagenes',
+		controller: 'ImagenesCtrl',
+		templateUrl: 'templates/imagenes.html'
 	})
 
 	.state('panel.usuarios', {
@@ -127,9 +133,11 @@ angular.module('auditoriaApp', [
 				root: localStorage.ruta + '/feryz_server/public'
 			}
 		}else{
+			// https://edilson.micolevirtual.com
+			// http://192.168.100.31
 			return {
-				ruta: 'https://edilson.micolevirtual.com/feryz_server/public/auditorias',
-				root: 'https://edilson.micolevirtual.com/feryz_server/public'
+				ruta: 'http://192.168.100.31/feryz_server/public/auditorias',
+				root: 'http://192.168.100.31/feryz_server/public'
 			}
 		}
 	}
@@ -152,6 +160,9 @@ angular.module('auditoriaApp', [
 		{tipo: 'Diferencia gastos'},
 		{tipo: 'Remesa'},
 		{tipo: 'Remesa enviada'},
+		{tipo: 'Ingresos por registrar'},
+		{tipo: 'Ingreso Sábados'},
+		{tipo: 'Cuenta por pagar'},
 		{tipo: 'Ajuste de auditoría por enviar'},
 		{tipo: 'Saldo de banco'},
 		{tipo: 'Consig. en fondos confiados'},
@@ -161,6 +172,21 @@ angular.module('auditoriaApp', [
 		{tipo: 'Otra'}
 	]
 })
+
+.constant('MESES', [
+	{num: 0, mes: 'Enero'},
+	{num: 1, mes: 'Febrero'},
+	{num: 3, mes: 'Marzo'},
+	{num: 4, mes: 'Abril'},
+	{num: 5, mes: 'Mayo'},
+	{num: 6, mes: 'Junio'},
+	{num: 7, mes: 'Julio'},
+	{num: 8, mes: 'Agosto'},
+	{num: 9, mes: 'Septiembre'},
+	{num: 10, mes: 'Octubre'},
+	{num: 11, mes: 'Noviembre'},
+	{num: 12, mes: 'Diciembre'}
+])
 
 
 .constant('Tiempos', {

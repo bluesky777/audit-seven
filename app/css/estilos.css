@@ -101,6 +101,9 @@ th .badge{
 .table.ocultando-primeras .td-primeras{
 	display: none;
 }
+.table.ocultando-egresos .td-egresos{
+	display: none;
+}
 .border-der{
 	border-right: 1px solid #ccc;
 }
@@ -193,4 +196,18 @@ th .badge{
 		background-color: #8bc5f8!important;
 		background: #8bc5f8!important;
 	}
+}
+.modalImage .image-wrapper {
+	text-align: center;
+}
+.modalImage .image-wrapper img {
+	max-width: 560px;
+	max-height: 560px;
+}
+.modalImage .image-description {
+	text-align: center;
+	margin-top: 10px;
+}
+.tr-audit-seleccionada td{
+	background-color: #5afff1;
 }

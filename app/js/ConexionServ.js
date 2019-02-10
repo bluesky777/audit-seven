@@ -103,7 +103,9 @@ angular.module('auditoriaApp')
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "hora varchar(100)  DEFAULT NULL collate nocase," +
                 "auditor_id integer  NOT NULL," +
-                "saldo_ant integer  DEFAULT NULL," +
+                "saldo_ant integer  DEFAULT 0," +
+                "saldo_ant_descripcion text  DEFAULT NULL collate nocase," +
+                "saldo_final integer  DEFAULT 0," +
                 "ingre_por_registrar integer  DEFAULT NULL," +
                 "ingre_sabados integer  DEFAULT NULL," + // Sábados que no se registran en libro mes porque no ha pasado el mes
                 "cta_por_pagar integer  DEFAULT NULL," +
@@ -113,10 +115,12 @@ angular.module('auditoriaApp')
                 "gastos_mes_por_regis integer  DEFAULT NULL," +  // Gastos de mes sin registrar en ningún libro mes
                 "dinero_efectivo integer  DEFAULT NULL," + // Dinero en efectivo
                 "cta_por_cobrar integer  DEFAULT NULL," + // Cuentas por pagar
+                "iglesia_id integer NOT NULL collate nocase," +
+                "cerrada integer NOT NULL DEFAULT 0 collate nocase," +
+                "cerrada_fecha varchar(100)  DEFAULT NULL collate nocase," +
                 
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
-                "eliminado varchar(100)  DEFAULT NULL collate nocase," +
-                "iglesia_id integer  NOT NULL )" ;
+                "eliminado varchar(100)  DEFAULT NULL collate nocase )" ;
 
     sqlLibMes = "CREATE TABLE IF NOT EXISTS lib_mensuales (id integer," +
                 "year integer  NOT NULL," +

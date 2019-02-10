@@ -1,0 +1,110 @@
+<div ngf-drop="uploadFiles($files)" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-pattern="'image/*'" class="drop-box drop-box">
+    <div>
+        <ul class="breadcrumb">
+            <li class="li-breadcrumb">
+                <a ui-sref="panel">{{ 'INICIO_MENU' | translate }}</a>
+            </li>
+            <li class="li-breadcrumb">
+                <a ui-sref="panel.respuestas" >Respuestas</a>
+            </li>
+            <li style="float: right;" class="refresh-breadcrumb">
+            <a href="" ng-click="refresh()">
+                <i class="glyphicon glyphicon-refresh"></i>
+                {{ 'REFRESH' | translate }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div ngf-select="uploadFiles($files)" ngf-multiple="true" ngf-pattern="'image/*'" ngf-accept="'image/*'" class="btn btn-success">
+        <i class="glyphicon glyphicon-cloud-upload"></i>
+        Subir imágenes
+    </div>
+    
+    
+    <div ng-repeat="file in imgFiles">
+        <div class="row">
+            <div class="ticket-user col-lg-5 col-sm-12">
+                <img ng-src="{{file.dataUrl}}" class="user-avatar">
+                <span class="user-name">{{file.name}}</span>
+                <span class="user-company">- {{(file.size / 1000000) | number:2 }}MB</span>
+            
+                <uib-progressbar value="file.porcentaje" class="progress-xlg progress-striped active">
+                    <b>{{file.porcentaje}}% Completado</b>
+                </uib-progressbar>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well">
+                    <h2><i class="glyphicon glyphicon-picture"></i> Imágenes</h2>
+
+                    <div class="box-icon">
+                        <!--
+                        <a href="#" class="btn btn-close btn-round btn-default"><i
+                                class="glyphicon glyphicon-remove"></i></a>
+                        -->
+                    </div>
+                </div>
+                
+                
+                <div class="box-content row">
+                    <div class="col-sm-12">
+
+                        <table class="table">
+                            <thead>
+                        
+                                <tr>
+                                    <th scope="col">ID </th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Creada</th>
+                                    <th scope="col"></th>
+                        
+                                </tr>
+                        
+                            </thead>
+                            
+                            <tbody>
+                                
+                                <tr ng-repeat="imagen in imagenes "  >
+                                    
+                                    <td>{{imagen.id}}</td>
+                                    <td style="padding-left: 0;" ng-click="openModalImage(imagen)">
+                                        <img ng-src="{{perfil + imagen.nombre}}" style="width: 50px">
+                                        <span style="font-size: 9pt;">
+                                            {{imagen.nombre }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <textarea ng-model="imagen.descripcion" placeholder="Descripción" 
+                                            style="height: 50px; width: 100%;" class="form-control"
+                                            ng-change="cambiaDescripcion(imagen)"
+                                            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 1000, 'blur': 0} }">
+                                        </textarea>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 9pt;">{{imagen.created_at}}</span>
+                                    </td>
+                                    
+                                    <td scope="col" class="glyphicon glyphicon-remove btn btn-danger btn-sm" href="" ng-click="elimninarImagen(imagen)" ></td>
+                                </tr>
+                            
+                            </tbody>
+                            
+                        </table>
+                        
+                    </div> 
+                </div>
+                <!-- box-content -->
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

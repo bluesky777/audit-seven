@@ -1,6 +1,6 @@
 angular.module("auditoriaApp")
 
-.controller("LibroSemanalModalCtrl", function($uibModalInstance, $scope, libro_mes, ConexionServ, toastr, $filter) {
+.controller("LibroSemanalModalCtrl", function($uibModalInstance, $scope, libro_mes, ConexionServ, toastr, auditoria) {
     $scope.libro = libro_mes;
 
 
@@ -10,7 +10,10 @@ angular.module("auditoriaApp")
 
 
     $scope.cambiaValor = function(libro, columna, colum_mes) {
-
+        if(auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
         consulta 	= 'UPDATE lib_semanales SET ' + columna + '=? WHERE rowid=?';
         colum 		= columna.charAt(0).toUpperCase() + columna.slice(1);
         
@@ -45,7 +48,10 @@ angular.module("auditoriaApp")
     
 
     $scope.cambiaDiaconos = function(libro, columna) {
-
+        if(auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
         consulta 	= 'UPDATE lib_semanales SET ' + columna + '=? WHERE rowid=?';
         
         ConexionServ.query(consulta, [libro[columna], libro.rowid]).then(function(){
@@ -66,7 +72,7 @@ angular.module("auditoriaApp")
 
 
 
-.controller("GastosMesCtrl", function($uibModalInstance, $scope, libro_mes, ConexionServ, toastr, $filter) {
+.controller("GastosMesCtrl", function($uibModalInstance, $scope, libro_mes, ConexionServ, toastr, $filter, auditoria) {
     
     $scope.libro                = libro_mes;
     
@@ -99,7 +105,10 @@ angular.module("auditoriaApp")
       
 
    	$scope.eliminarGasto = function(gasto){
-	  	
+        if(auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
 	  	var res = confirm("¿Seguro que desea eliminar -" + gasto.descripcion + "("+gasto.valor+")-?");
 
 		if (res == true) {
@@ -122,7 +131,10 @@ angular.module("auditoriaApp")
 	 
 
     $scope.agregarGasto = function(lib_mens){
-	  	
+        if(auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
         consulta ="INSERT INTO gastos_mes(libro_mes_id, valor, descripcion) VALUES(?,?,?) ";
         
         if ($scope.descrip_gasto_new == undefined || $scope.descrip_gasto_new == null) {
@@ -150,7 +162,10 @@ angular.module("auditoriaApp")
     
     
 	$scope.cambiaValor = function(gasto, columna) {
-        console.log(gasto, columna);
+        if(auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
 		consulta 	= 'UPDATE gastos_mes SET ' + columna + '=? WHERE rowid=?';
         colum 		= columna.charAt(0).toUpperCase() + columna.slice(1);
         
@@ -182,6 +197,10 @@ angular.module("auditoriaApp")
     }
     
     $scope.actualizarGastosSoportadoLibro = function(){
+        if(auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
         suma = $scope.sumatoriaGastos();
         
         consulta 	= 'UPDATE lib_mensuales SET gastos_soportados=? WHERE rowid=?';

@@ -33,80 +33,125 @@
                 
               <div class="col-sm-12">
 
-                <button  class="btn btn-primary" ng-show="!vermostrandocrarauditorias" ng-click="vercrearauditorias()">Crear</button>
+                <button  class="btn btn-primary" ng-show="!vermostrandocrarauditorias" ng-click="vercrearauditorias()">Crear auditoría</button>
                     
-                    <div ng-show="vermostrandocrarauditorias" class="panel panel-warning" style="margin-bottom: 50px">
+                <div ng-show="vermostrandocrarauditorias" class="panel panel-warning" style="margin-bottom: 50px">
 
-                      <div class="box-header well">
-                        <h2>
-                          <i class="glyphicon glyphicon-plus"></i> Nueva auditoría
-                        </h2>
-                        <div class="box-icon"></div>
+                  <div class="box-header well">
+                    <h2>
+                      <i class="glyphicon glyphicon-plus"></i> Nueva auditoría
+                    </h2>
+                    <div class="box-icon"></div>
+                  </div>
+                  
+                  <div class="box-content row">
+                    <form ng-submit="InsertEntidadAuditoria(auditoria_crear)">
+                      <div class="">
+                        
+                        <div class="form-group col-sm-6"> <label>Fecha</label>
+                          <input type="date" class="form-control"  placeholder="Fecha " ng-model="auditoria_crear.fecha">
+                        </div>
+                        
+                          
+                        <div class="form-group col-sm-6"> 
+                          <label>Saldo anterior</label>
+                          <input type="text" ng-model="auditoria_crear.saldo_ant" class="form-control" enter-as-tab ui-number-mask="0">
+                        </div>
+                          
+                      </div>
+
+                        
+                      <div class="col-sm-6">  
+                        <label>Iglesia</label>
+                        
+                        <ui-select ng-model="auditoria_crear.iglesia" style="width: 100%;" theme="bootstrap">
+                          <ui-select-match placeholder="Iglesia">
+                            <span ng-bind="$select.selected.nombres + ' ' + $select.selected.alias"></span>
+                          </ui-select-match>
+                          <ui-select-choices group-by="agruparPorDistrito" repeat="item in iglesias | filter: $select.search track by $index">
+                            <span ng-bind-html="item.alias + ' - ' + item.nombre | highlight: $select.search"></span>
+                          </ui-select-choices>
+                        </ui-select>
                       </div>
                       
-                      <form ng-submit="InsertEntidadAuditoria(auditoria_crear)">
-                        <div class="row">
-                          
-                          <div class="form-group col-sm-6"> <label>Fecha</label>
-                            <input type="date" class="form-control"  placeholder="Fecha " ng-model="auditoria_crear.fecha">
-                          </div>
-                          
-                            
-                          <div class="form-group col-sm-6"> <label>Saldo anterior</label>
-                            <input type="text" ng-model="auditoria_crear.saldo_ant" class="form-control" enter-as-tab ui-number-mask="0">
-                          </div>
-                            
-                        </div>
-
-                          
-                          <div>  
-                            <label>Iglesia</label>
-                            
-                            <ui-select ng-model="auditoria_crear.iglesia" style="width: 100%;" theme="bootstrap">
-                              <ui-select-match placeholder="Iglesia">
-                                <span ng-bind="$select.selected.nombres + ' ' + $select.selected.alias"></span>
-                              </ui-select-match>
-                              <ui-select-choices group-by="agruparPorDistrito" repeat="item in iglesias | filter: $select.search track by $index">
-                                <span ng-bind-html="item.alias + ' - ' + item.nombre | highlight: $select.search"></span>
-                              </ui-select-choices>
-                            </ui-select>
-                          </div>
+                      <div class="col-sm-6" style="margin-top: 18px; margin-bottom: 18px">  
+                        <label>Mes inicial: </label>
+                        <span>
+                          {{ auditoria_crear.periodo_mes }} ({{ auditoria_crear.mes }})
+                        </span>
+                        
+                      </div>
 
 
-                          <div class="center">
-                            <input class="btn btn-warning " type="button" ng-click="cancelar_crear_distrito()" value="Cancelar">
-                            <input class="btn btn-primary " type="submit" name="" value="Crear Auditoría">          
-                          </div>
-                      </form>
-                    </div>
+                      <div class="center">
+                        <input class="btn btn-warning " type="button" ng-click="cancelar_crear_distrito()" value="Cancelar">
+                        <input class="btn btn-primary " type="submit" name="" value="Crear Auditoría">
+                      </div>
+                    </form>
+                  </div>
+                </div>
 
 
 
                    
 
 
-                <table class="table">
+                <table class="table table-striped table-hovered">
                   <thead>
 
 
-                    <tr >
+                    <tr>
                       <th scope="col">ID </th>
                       <th scope="col">Fecha</th>
                       <th scope="col">Iglesia</th>
-                      <th scope="col">Saldo ante</th>
+                      <th scope="col">Saldo anterior</th>
+                      <th scope="col">Saldo final</th>
                       <th scope="col">Actual</th>
-
+                      <th scope="col">Estado</th>
+                      <th scope="col">Fecha cierre</th>
+                      <th scope="col"></th>
 
                     </tr>
 
 
-                    <tr ng-repeat="auditoria in auditorias"  >
+                    <tr ng-repeat="auditoria in auditorias"  ng-class="{'tr-audit-seleccionada': USER.auditoria_id==auditoria.rowid}">
                       
                       <td >{{ $index + 1 }}</td>
-                      <td >{{auditoria.fecha }}</td>
+                      <td style="font-size: 9pt">{{auditoria.fecha }}</td>
                       <td >{{auditoria.nombre + ' (' + auditoria.alias + ')' }}</td>
                      
                       <td>{{auditoria.saldo_ant | currency:'$':0}}</td>
+                      <td>{{auditoria.saldo_final | currency:'$':0}}</td>
+                      <td style="min-width: 80px;">
+                        <div class="btn-group">
+                          
+                          <button ng-show="USER.auditoria_id!=auditoria.rowid" class="btn btn-default btn-sm" ng-click="seleccionarAuditoria(auditoria)">
+                            <i class="glyphicon glyphicon-check "></i>
+                            Seleccionar
+                          </button>
+
+                          <span ng-show="USER.auditoria_id==auditoria.rowid" style="padding-top: 5px; display: inline-block; color: #27a0e6; font-weight: bold;">
+                            <i class="glyphicon glyphicon-ok"></i>
+                            <span> Actual</span>
+                          </span>
+
+                        </div>
+
+                      </td>
+                      
+                      <td>
+                        <button ng-show="auditoria.cerrada==0" class="btn btn-info btn-sm" ng-click="abrirAuditoria(auditoria)" uib-tooltip="Cerrar">
+                          Abierta
+                        </button>
+                        <button ng-show="auditoria.cerrada" class="btn btn-default btn-sm" ng-click="abrirAuditoria(auditoria)" uib-tooltip="Abrir">
+                          Cerrada
+                        </button>
+                      </td>
+                      <td>
+                        <span style="font-size: 9pt">
+                          {{ auditoria.cerrada_fecha }}
+                        </span>
+                      </td>
                       <td>
                         <div class="btn-group">                        
                           <button class="btn btn-primary btn-sm" ng-click="verActuAuditoria(auditoria)" uib-tooltip="Editar">
@@ -116,20 +161,11 @@
                           <button class="btn btn-danger btn-sm" ng-click="elimninaradutiroiar(auditoria)">
                             <i class="glyphicon glyphicon-remove "></i>
                           </button>
-                          
-                          <button ng-show="USER.auditoria_id!=auditoria.rowid" class="btn btn-default btn-sm" ng-click="seleccionarAuditoria(auditoria)">
-                            <i class="glyphicon glyphicon-check "></i>
-                            Seleccionar
-                          </button>
-
-                          <span ng-show="USER.auditoria_id==auditoria.rowid" style="padding-top: 5px; display: inline-block; color: #27a0e6; font-weight: bold;">
-                            <i class="glyphicon glyphicon-ok"></i>
-                            Seleccionada
-                          </span>
 
                         </div>
 
                       </td>
+                      
                       
                     </tr>
 

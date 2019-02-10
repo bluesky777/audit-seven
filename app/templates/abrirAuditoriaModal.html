@@ -1,0 +1,22 @@
+
+<div class="modal-header">
+    <h3 class="modal-title">¿Seguro que deseas 
+        <span ng-show="elemento.cerrada==0"> abrir</span>
+        <span ng-show="elemento.cerrada"> cerrar</span>?</h3>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12 col-xs-12">
+        <h4 ng-bind-html="elemento.id" flex="90"></h4>
+        <div flex="90">{{elemento.nombre}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button ng-click="ok()" class="btn btn-labeled btn-primary">
+        <span ng-show="elemento.cerrada"> Abrir</span>
+        <span ng-show="elemento.cerrada==0"> Cerrar</span>
+        <i class="btn-label glyphicon glyphicon-ok"></i>
+    </button>
+    <button ng-click="cancel()" class="btn btn-default">Cancelar</button>
+  </div>

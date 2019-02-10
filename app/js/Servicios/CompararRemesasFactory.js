@@ -25,8 +25,8 @@ angular.module('auditoriaApp')
                 function traerRemesas(iglesia, indice){
                     iglesia.anios = [];
                     
-                    // Año anterior:
-                    consulta = "SELECT r.rowid, r.* FROM remesas r " +
+                    // Primer Año:
+                    consulta = "SELECT r.rowid, r.*, abs(r.cantidad) as cantidad FROM remesas r " +
                         "WHERE r.org_id=? and cod_cuenta=? and r.periodo like '"+resp.years[0]+"%' order by periodo";       
 
                     prom = ConexionServ.query(consulta, [iglesia.codigo, codigo_cuenta]).then(function(remesasRes) {
@@ -81,6 +81,7 @@ angular.module('auditoriaApp')
                             total: total
                         }
                         iglesia.anios[0] = anio;
+                        console.log(anio)
                     }, function(tx) {
                         console.log("Error trayendo año", tx);
                     });
@@ -88,7 +89,7 @@ angular.module('auditoriaApp')
                     promesas.push(prom);
                     
                     
-                    // Año actual:
+                    // Último Año:
                     consulta = "SELECT r.rowid, r.*, abs(r.cantidad) as cantidad FROM remesas r " +
                         "WHERE r.org_id=? and cod_cuenta=? and r.periodo like '"+resp.years[1]+"%' order by periodo";       
 

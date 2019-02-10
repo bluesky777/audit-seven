@@ -8,7 +8,7 @@ angular.module("auditoriaApp")
 })
 
 
-.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll, tipos_recomendacion, hotkeys) {
+.controller("libroMesCtrl", function($scope, ConexionServ, $filter, $uibModal, toastr, AuthServ, $timeout, 	$location, $anchorScroll, tipos_recomendacion, hotkeys, MESES) {
 
 	$scope.$parent.sidebar_active 	= false;
 	$scope.entidades 				= true;
@@ -24,25 +24,12 @@ angular.module("auditoriaApp")
 	$scope.vercomends 			= false;
 	$scope.auditorias 			= [];
 	$scope.ocultando_primeras 	= false;
+	$scope.ocultando_egresos 	= false;
 	$scope.mostrando_reporte 	= false;
 
-	$scope.meses = [
-		{num: 0, mes: 'Enero'},
-		{num: 1, mes: 'Febrero'},
-		{num: 3, mes: 'Marzo'},
-		{num: 4, mes: 'Abril'},
-		{num: 5, mes: 'Mayo'},
-		{num: 6, mes: 'Junio'},
-		{num: 7, mes: 'Julio'},
-		{num: 8, mes: 'Agosto'},
-		{num: 9, mes: 'Septiembre'},
-		{num: 10, mes: 'Octubre'},
-		{num: 11, mes: 'Noviembre'},
-		{num: 12, mes: 'Diciembre'}
-	];
+	$scope.meses = MESES;
 
 	$scope.years = [
-		{year: 2017},
 		{year: 2018},
 		{year: 2019},
 		{year: 2020},
@@ -80,25 +67,43 @@ angular.module("auditoriaApp")
 		}
 	}
 	
-	$timeout(function(){
-		var mensaje_periodo_original = `En cumplimiento de las funciones del departamento de auditoría de la Iglesia Adventista del Séptimo Día - ${$scope.asociacion.nombre}
+	if (localStorage.ocultando_egresos) {
+		if (localStorage.ocultando_egresos == 'true') {
+			$scope.ocultando_egresos 	= true;
+		}else{
+			$scope.ocultando_egresos 	= false;
+		}
+	}
+	
+	$scope.verficarTextoReporte = function(){
+		$timeout(function(){
+			if ($scope.distrito) {
+				var mensaje_periodo_original = `En cumplimiento de las funciones del departamento de auditoría de la Iglesia Adventista del Séptimo Día - ${$scope.distrito.asociacion_nombre}
 hemos practicado el procedimiento de auditoría a los movimientos de la tesoreria de la iglesia (grupo).
 <br><br>
 A continuación se presentan los datos obtenidos como resultado de la auditoria practicada  a los libros y documentos
 presentados para su revisión y son para consideración de los miembros de la junta:
-		`;
-		
-		if (localStorage.texto_reporte) {
-			$scope.dato.texto_reporte 	= localStorage.texto_reporte;
-		}else{
-			$scope.dato.texto_reporte 	= mensaje_periodo_original;
-		}
-		
-		$scope.resetearMensajeReporte = function(){
-			$scope.dato.texto_reporte 	= mensaje_periodo_original;
-			localStorage.texto_reporte 	= mensaje_periodo_original;
-		}
-	}, 500)
+			`;
+				
+				if (localStorage.texto_reporte) {
+					$scope.dato.texto_reporte 	= localStorage.texto_reporte;
+				}else{
+					$scope.dato.texto_reporte 	= mensaje_periodo_original;
+				}
+				
+				$scope.resetearMensajeReporte = function(){
+					$scope.dato.texto_reporte 	= mensaje_periodo_original;
+					localStorage.texto_reporte 	= mensaje_periodo_original;
+				}
+			
+			}else{
+				$scope.verficarTextoReporte();
+			}
+			console.log('Texto reporte verificado');
+		}, 1000)
+	}
+	$scope.verficarTextoReporte();
+	
 	
 	
 	
@@ -122,7 +127,7 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	$scope.mostrarReporte = function(){
 		$scope.mostrando_reporte 	= !$scope.mostrando_reporte;
 		ult 						= $scope.lib_meses.length-1;
-		$scope.mensaje_periodo 		= $scope.lib_meses[0].year + '-' + $scope.lib_meses[0].mes + ' a ' + $scope.lib_meses[ult].year + '-' + $scope.lib_meses[ult].mes
+		$scope.mensaje_periodo 		= $scope.lib_meses[0].year + '-' + $scope.lib_meses[0].mes + ' a ' + $scope.lib_meses[ult].year + '-' + $scope.lib_meses[ult].mes + ' ('+ $scope.lib_meses.length +' meses auditados)';
 		
 		consulta = 'SELECT distinct(r.tipo) as tipo FROM recomendaciones r WHERE r.auditoria_id=? and r.eliminado is null';
 		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(tipos_recom){
@@ -204,6 +209,9 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	        resolve: {
 		        libro_mes: function () {
 		        	return libro_mes;
+		        },
+		        auditoria: function () {
+		        	return $scope.auditoria;
 		        }
 		    },
 	        controller: 'LibroSemanalModalCtrl' // En LibroMesModales.js 
@@ -236,6 +244,9 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	        resolve: {
 		        libro_mes: function () {
 		        	return libro_mes;
+		        },
+		        auditoria: function () {
+		        	return $scope.auditoria;
 		        }
 		    },
 	        controller: 'GastosMesCtrl' // En LibroMesModales.js 
@@ -372,6 +383,10 @@ presentados para su revisión y son para consideración de los miembros de la ju
 
 
 	$scope.cambiaValor = function(libro, columna) {
+		if($scope.auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
 		fecha_update = window.fixDate(new Date(), true);
 		
 		consulta 	= 'UPDATE lib_mensuales SET ' + columna + '=?, modificado=? WHERE rowid=?';
@@ -390,6 +405,12 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	$scope.ocultarPrimeras = function(){
 		$scope.ocultando_primeras = !$scope.ocultando_primeras;
 		localStorage.ocultando_primeras = $scope.ocultando_primeras;
+	}
+
+	
+	$scope.ocultarEgresos = function(){
+		$scope.ocultando_egresos = !$scope.ocultando_egresos;
+		localStorage.ocultando_egresos = $scope.ocultando_egresos;
 	}
 
 
@@ -482,7 +503,7 @@ presentados para su revisión y son para consideración de los miembros de la ju
 			$scope.lib_meses 	= [];
 			
 			// Traigo las auditorías de la iglesia que tengo seleccionada
-			consulta 	= 'SELECT *, rowid FROM auditorias WHERE iglesia_id=? ORDER BY fecha, hora, rowid desc';
+			consulta 	= 'SELECT *, rowid FROM auditorias WHERE iglesia_id=? and eliminado is null ORDER BY fecha, hora, rowid desc';
 			ConexionServ.query(consulta, [$scope.USER.iglesia_id]).then(function(rAudi) {
 				$scope.auditorias = rAudi;
 			}, function(tx) {
@@ -491,13 +512,15 @@ presentados para su revisión y son para consideración de los miembros de la ju
 			
 			
 			consulta 	= 'SELECT d.*, d.rowid, u.nombres as pastor_nombres, u.apellidos as pastor_apellidos, u.email as pastor_email, u.celular as pastor_celular, ' + 
-					'u2.nombres as tesorero_nombres, u2.apellidos as tesorero_apellidos, u2.email as tesorero_email, u2.celular as tesorero_celular ' + 
+					'u2.nombres as tesorero_nombres, u2.apellidos as tesorero_apellidos, u2.email as tesorero_email, u2.celular as tesorero_celular, ' + 
+					'a.nombre as asociacion_nombre ' + 
 				'FROM distritos d ' +
 				'LEFT JOIN usuarios u ON u.rowid=d.pastor_id and u.eliminado is null  ' +
 				'LEFT JOIN usuarios u2 ON u2.rowid=d.tesorero_id and u2.eliminado is null  ' +
+				'LEFT JOIN asociaciones a ON a.rowid=d.asociacion_id and a.eliminado is null  ' +
 				'WHERE d.rowid=?';
 
-			ConexionServ.query(consulta, [actualizado.distrito_id]).then(function(rAudi) {
+			ConexionServ.query(consulta, [actualizado.asociacion_id]).then(function(rAudi) {
 				$scope.distrito = rAudi[0];
 			}, function(tx) {
 				console.log("Error no se pudo traer auditorias", tx);
@@ -650,7 +673,10 @@ presentados para su revisión y son para consideración de los miembros de la ju
 
 
    	$scope.EliminarLibroMensul = function(lib_mens){
-	  	
+		if($scope.auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
 	  	var res = confirm("¿Seguro que desea eliminar?");
 
 		if (res == true) {
@@ -672,6 +698,10 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	 
 
 	$scope.cambiaAuditoria = function(columna) {
+		if($scope.auditoria.cerrada){
+			toastr.warning('Debes abrir la auditoría para hacer cambios en ella.');
+			return
+		}
 		fecha_update = window.fixDate(new Date(), true);
 		
 		consulta 	= 'UPDATE auditorias SET ' + columna + '=?, modificado=? WHERE rowid=?';
@@ -720,6 +750,15 @@ presentados para su revisión y son para consideración de los miembros de la ju
 			sum_gastos 			+= lib_mes.gastos;
 			sum_gastos_sop 		+= lib_mes.gastos_soportados;
 			sum_remesa_env 		+= lib_mes.remesa_enviada;
+			
+			
+			if (i == 0) {
+				lib_mes.saldo_mes 			= $scope.auditoria.saldo_ant;
+				lib_mes.saldo_mes_final 	= ($scope.auditoria.saldo_ant + lib_mes.especiales + (lib_mes.ofrendas * 0.6)) - lib_mes.gastos;
+			}else{
+				lib_mes.saldo_mes 			= $scope.lib_meses[i-1].saldo_mes_final;
+				lib_mes.saldo_mes_final 	= (lib_mes.saldo_mes + lib_mes.especiales + (lib_mes.ofrendas * 0.6)) - lib_mes.gastos;
+			}
 		}
 
 		$scope.sum_diezmos_num 		= sum_diezmos;

@@ -46,8 +46,8 @@ angular.module('auditoriaApp')
             
         for (var i = 0; i < auditorias.length; i++) {
             
-            consulta 	= 'INSERT INTO auditorias (rowid, id, fecha, auditor_id, saldo_ant, iglesia_id) VALUES(?,?,?,?,?,?)';
-            prome 		= ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].auditor_id, auditorias[i].saldo_ant, auditorias[i].iglesia_id]);
+            consulta 	= 'INSERT INTO auditorias (rowid, id, fecha, auditor_id, saldo_ant, saldo_final, iglesia_id, cerrada, cerrada_fecha, saldo_ant_descripcion) VALUES(?,?,?,?,?,?,?,?,?,?)';
+            prome 		= ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].auditor_id, auditorias[i].saldo_ant, auditorias[i].saldo_final, auditorias[i].iglesia_id, auditorias[i].cerrada, auditorias[i].cerrada_fecha, auditorias[i].saldo_ant_descripcion]);
             prome.then(function(result){
                 funciones._valor_insertado++;
             }, function(tx){

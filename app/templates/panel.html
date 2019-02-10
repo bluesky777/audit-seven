@@ -48,7 +48,7 @@
             <div class="btn-group pull-right theme-container animated tada">
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <i class="glyphicon glyphicon-tint"></i>
-                    <span class="hidden-xs"> {{ 'IDIOMA_MENU' | translate }}</span>
+                    <span class="hidden-sm hidden-xs"> {{ 'IDIOMA_MENU' | translate }}</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" id="themes">
@@ -188,6 +188,12 @@
                                     <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                                 </uib-accordion-heading>
                                 <ul class="nav nav-pills nav-stacked" style="display: block;">
+                                    
+                                    <li>
+                                        <a class="ajax-link" href="" ui-sref="panel.imagenes" style="color: #2fa4e7;">
+                                            <i class="glyphicon glyphicon-picture"></i><span> Imágenes</span>
+                                        </a>
+                                    </li>
                                     
                                     <li>
                                         <a class="ajax-link" href="" ui-sref="panel.preguntas" style="color: #2fa4e7;">

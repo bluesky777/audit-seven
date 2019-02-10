@@ -3,18 +3,29 @@
     
     <div class="col-sm-12">
         
-            <div class="form-group col-sm-6"> <label>Distrito</label>
+        <div class="form-group col-sm-6"> <label>Distrito</label>
                                             
-                <ui-select ng-model="dato.distrito" style="width: 100%;" theme="bootstrap"
-                    on-select="compararDistrito(dato.distrito.rowid)">
-                    <ui-select-match placeholder="Distrito">
-                        <span ng-bind="$select.selected.nombre"></span>
-                    </ui-select-match>
-                    <ui-select-choices repeat="item in distritos_asoc | filter: $select.search track by $index">
-                        <span ng-bind-html="item.nombre | highlight: $select.search"></span>
-                    </ui-select-choices>
-                </ui-select>
-            </div>
+            <ui-select ng-model="dato.distrito" style="width: 100%;" theme="bootstrap"
+                on-select="compararDistrito(dato.distrito.rowid)">
+                <ui-select-match placeholder="Distrito">
+                    <span ng-bind="$select.selected.nombre"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="item in distritos_asoc | filter: $select.search track by $index">
+                    <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        
+        <div class="col-sm-3"> 
+            <label>Primer año</label>                        
+            <input ng-change="compararDistrito(USER.distrito_id)" type="number" ng-model="yearAnt" min="2010" class="form-control">
+        </div>
+        
+        <div class="col-sm-3"> 
+            <label>Último Año</label>
+            <input ng-change="compararDistrito(USER.distrito_id)" type="number" ng-model="yearDes" min="2010" max="2050" class="form-control">    
+        </div>
+        
     </div>
     
     
@@ -79,19 +90,19 @@
                                 {{iglesia.nombre}}
                             </td>
                             <td>{{iglesia.anios[0].anio}}</td>
-                            <td>{{anio.remesas[years[0]+'/001'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/002'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/003'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/004'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/005'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/006'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/007'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/008'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/009'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/010'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/011'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.remesas[years[0]+'/012'].cantidad | currency:'':0}}</td>
-                            <td>{{anio.total | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/001'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/002'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/003'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/004'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/005'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/006'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/007'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/008'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/009'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/010'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/011'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].remesas[years[0]+'/012'].cantidad | currency:'':0}}</td>
+                            <td>{{iglesia.anios[0].total | currency:'':0}}</td>
                             
                             
                         </tr>

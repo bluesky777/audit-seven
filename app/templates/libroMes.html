@@ -41,6 +41,7 @@
 									class="btn " ng-class="{'btn-primary': audit.rowid==auditoria.rowid, 'btn-default': audit.rowid!=auditoria.rowid }">
 
 									{{ audit.fecha.substring(0, 4) }}
+									<i class="glyphicon glyphicon-ok" ng-show="audit.cerrada==1"></i>
 								</button>
 								<span ng-show="auditorias.length==0" style="font-style: italic; color: red; font-weight: bold;">No hay auditorías para esta iglesia</span>
 							</div>
@@ -116,8 +117,10 @@
 						// Recomendaciones
 						-->
 						<hr>
+						
+						<h1 ng-show="auditoria.cerrada" style="text-align: center; background-color: aquamarine; padding: 10px;">AUDITORÍA FINALIZADA</h1>
 										
-						<div>
+						<div ng-if="auditoria.cerrada==0">
 							
 							<form ng-submit="crear_libronuevo(librocreater)">
 								
@@ -140,7 +143,7 @@
 						</div>
 
 						
-						<button ng-click="ocultarPrimeras()" style="margin-top: 20px" class="btn btn-default">
+						<button ng-click="ocultarPrimeras()" style="margin-top: 20px" class="btn btn-default" ng-class="{'btn-warning': ocultando_primeras}">
 							<span ng-show="ocultando_primeras">
 								<i class="glyphicon glyphicon-eye-open"></i>
 								<span>Mostrar</span> 
@@ -149,7 +152,19 @@
 								<i class="glyphicon glyphicon-eye-close"></i>
 								<span>Ocultar</span>
 							</span>  
-							columnas
+							ingresos
+						</button>
+								
+						<button ng-click="ocultarEgresos()" style="margin-top: 20px" class="btn btn-default" ng-class="{'btn-warning': ocultando_egresos}">
+							<span ng-show="ocultando_egresos">
+								<i class="glyphicon glyphicon-eye-open"></i>
+								<span>Mostrar</span> 
+							</span>  
+							<span ng-show="!ocultando_egresos">
+								<i class="glyphicon glyphicon-eye-close"></i>
+								<span>Ocultar</span>
+							</span>  
+							egresos
 						</button>
 								
 						
@@ -158,7 +173,7 @@
 						********************     TABLA MESES    ********************
 						************************************************************
 						-->
-						<table class="table tabla-mes table-striped table-hover table-condensed inmovible" ng-class="{'ocultando-primeras': ocultando_primeras }">
+						<table class="table tabla-mes table-striped table-hover table-condensed inmovible" ng-class="{'ocultando-primeras': ocultando_primeras, 'ocultando-egresos': ocultando_egresos }" style="margin-top: 10px">
 							<thead>
 								<tr>
 									<th scope="col" class="center">ID </th>
@@ -195,46 +210,46 @@
 									<th scope="col" class="center td-primeras border-der">
 										Diferencia
 									</th>
-									<th scope="col" class="center">
+									<th scope="col" class="center td-primeras">
 										20% DSLLO
 									</th>
-									<th scope="col" class="center">
+									<th scope="col" class="center td-primeras">
 										20% OMM
 									</th>
-									<th scope="col" class="center" style="min-width: 60px;">
+									<th scope="col" class="center td-primeras" style="min-width: 60px;">
 										60% + EE
 									</th>
-									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Gastos')">
+									<th scope="col" class="center mano td-egresos" ng-click="abrirRecomendacionesModal('Gastos')">
 										Gastos
 										<span class="badge" ng-show="auditoria['reco_cont_Gastos'].length>0">
 											{{auditoria['reco_cont_Gastos'].length}}
 										</span>
 									</th>
-									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Gastos soportados')">
+									<th scope="col" class="center mano td-egresos" ng-click="abrirRecomendacionesModal('Gastos soportados')">
 										<span uib-tooltip="Gastos con soporte">Gastos soportados</span>
 										<span class="badge" ng-show="auditoria['reco_cont_Gastos soportados'].length>0">
 											{{auditoria['reco_cont_Gastos soportados'].length}}
 										</span>
 									</th>
-									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Gastos soportados')">
+									<th scope="col" class="center mano td-egresos" ng-click="abrirRecomendacionesModal('Gastos soportados')">
 										<span uib-tooltip="Gastos - Gastos soportados">Diferencia gastos</span>
 										<span class="badge" ng-show="auditoria['reco_cont_Diferencia gastos'].length>0">
 											{{auditoria['reco_cont_Diferencia gastos'].length}}
 										</span>
 									</th>		
-									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Remesa')">
+									<th scope="col" class="center mano td-egresos" ng-click="abrirRecomendacionesModal('Remesa')">
 										Remesa
 										<span class="badge" ng-show="auditoria['reco_cont_Remesa'].length>0">
 											{{auditoria['reco_cont_Remesa'].length}}
 										</span>
 									</th>
-									<th scope="col" class="center mano" ng-click="abrirRecomendacionesModal('Remesa enviada')">
+									<th scope="col" class="center mano td-egresos" ng-click="abrirRecomendacionesModal('Remesa enviada')">
 										Remesa Enviada
 										<span class="badge" ng-show="auditoria['reco_cont_Remesa enviada'].length>0">
 											{{auditoria['reco_cont_Remesa enviada'].length}}
 										</span>
 									</th>
-									<th scope="col" class="center">
+									<th scope="col" class="center td-egresos">
 										Diferencia Remesa
 									</th>
 									<th></th>
@@ -250,7 +265,7 @@
 										<input type="button" ng-click="abrirLibroSemanal(lib_mes)" class="btn btn-info btn-sm" value="{{lib_mes.mes}}">
 									</td>
 									<td class="td-primeras no-padding">
-										<input type="text" ng-model="lib_mes.diezmos" class="valor-sm"
+										<input type="text" ng-model="lib_mes.diezmos" class="valor-sm input-ingreso"
 											ng-change="cambiaValor(lib_mes, 'diezmos')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 											popover-append-to-body="false" uib-popover-template="'templates/libros/diezmosSemanalesPopover.html'"
@@ -259,7 +274,7 @@
 											ui-number-mask="0" enter-as-tab>
 									</td>
 									<td class="td-primeras no-padding">
-										<input type="text" ng-model="lib_mes.ofrendas" class="valor-sm"
+										<input type="text" ng-model="lib_mes.ofrendas" class="valor-sm input-ingreso"
 											ng-change="cambiaValor(lib_mes, 'ofrendas')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 											popover-append-to-body="false" uib-popover-template="'templates/libros/ofrendasSemanalesPopover.html'"
@@ -268,13 +283,13 @@
 											ui-number-mask="0" enter-as-tab>
 									</td>
 									<td class="td-primeras no-padding">
-										<input type="text" ng-model="lib_mes.especiales" class="valor-sm"
+										<input type="text" ng-model="lib_mes.especiales" class="valor-sm input-ingreso"
 											ng-change="cambiaValor(lib_mes, 'especiales')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 											popover-append-to-body="false" uib-popover-template="'templates/libros/especialesSemanalesPopover.html'"
 											popover-title="Ofrendas especiales semanales" popover-popup-delay="300"
 											popover-trigger="'mouseenter'"
-											ui-number-mask="0" enter-as-tab>
+											ui-number-mask="0" enter-as-tab-ingresos>
 									</td>
 									<!-- Total -->
 									<td class="td-primeras no-padding-bottom align-right">{{ lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales | currency:'':0 }}</td>
@@ -283,21 +298,21 @@
 									<!-- Diferencia -->
 									<td class="td-primeras border-der no-padding-bottom align-right">{{ (lib_mes.diezmos + lib_mes.ofrendas + lib_mes.especiales)-(lib_mes.diaconos_1 + lib_mes.diaconos_2 + lib_mes.diaconos_3 + lib_mes.diaconos_4 + lib_mes.diaconos_5) | currency:'':0 }}</td>
 									<!-- 20% DESARROLLO -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
 									<!-- 20% OMM -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ (lib_mes.ofrendas * 0.2) | currency:'':0 }}</td>
 									<!-- 60% + EE -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.especiales + lib_mes.ofrendas * 0.6) | currency:'':0 }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ (lib_mes.especiales + lib_mes.ofrendas * 0.6) | currency:'':0 }}</td>
 									
 									<!-- Gastos -->
-									<td class="no-padding-bottom align-right">
+									<td class="no-padding-bottom align-right td-egresos">
 										<input type="text" ng-model="lib_mes.gastos" class="valor-sm"
 											ng-change="cambiaValor(lib_mes, 'gastos')" 
 											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
 											ui-number-mask="0" enter-as-tab>	
 									</td>
 									<!-- Gastos soportados-->
-									<td class="no-padding-bottom align-right">
+									<td class="no-padding-bottom align-right td-egresos">
 										<div class="input-group">
 											<input type="text" ng-model="lib_mes.gastos_soportados" class="valor-sm "
 												ng-change="cambiaValor(lib_mes, 'gastos_soportados')" 
@@ -320,15 +335,15 @@
 										</div>
 									</td>
 									<!-- Diferencia gastos -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.gastos - lib_mes.gastos_soportados) | currency:'':0 }}</td>
+									<td class="no-padding-bottom align-right td-egresos">{{ (lib_mes.gastos - lib_mes.gastos_soportados) | currency:'':0 }}</td>
 										
 									<!-- Remesa -->
-									<td class="no-padding-bottom align-right">
+									<td class="no-padding-bottom align-right td-egresos">
 										{{ (lib_mes.diezmos + lib_mes.ofrendas * 0.4) | currency:'':0 }}
 									</td>
 									
 									<!-- Remesa enviada -->
-									<td class="no-padding-bottom align-right mano" 
+									<td class="no-padding-bottom align-right mano td-egresos" 
 										ng-click="abrirRemesas(lib_mes)">
 										
 										{{ lib_mes.remesa_enviada | currency:'':0 }}
@@ -341,10 +356,10 @@
 									</td>
 									
 									<!-- Diferencia remesa -->
-									<td class="no-padding-bottom align-right">{{ (lib_mes.remesa_enviada - (lib_mes.diezmos + lib_mes.ofrendas * 0.4)) | currency:'':0 }}</td>
+									<td class="no-padding-bottom align-right td-egresos">{{ (lib_mes.remesa_enviada - (lib_mes.diezmos + lib_mes.ofrendas * 0.4)) | currency:'':0 }}</td>
 									
 
-									<td class="no-padding">
+									<td class="no-padding td-egresos">
 
 										<button href="" class="btn btn-danger btn-xs" ng-click="EliminarLibroMensul(lib_mes)" uib-tooltip="Eliminar mes">
 											<i class="glyphicon glyphicon-remove"></i>
@@ -373,28 +388,28 @@
 									<!-- Diferencia -->
 									<td class="td-primeras border-der no-padding-bottom align-right">{{ sum_diferencia }}</td>
 									<!-- 20% DESARROLLO -->
-									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
 									<!-- 20% OMM -->
-									<td class="no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ sum_20_ofrendas }}</td>
 									<!-- 60% + EE -->
-									<td class="no-padding-bottom align-right">{{ sum_60_ofrendas }}</td>
+									<td class="td-primeras no-padding-bottom align-right">{{ sum_60_ofrendas }}</td>
 									
 									<!-- Gastos -->
-									<td class="no-padding-bottom align-right">{{ sum_gastos }}</td>
+									<td class="td-egresos no-padding-bottom align-right">{{ sum_gastos }}</td>
 									<!-- Gastos soportados-->
-									<td class="no-padding-bottom align-right">{{ sum_gastos_sop }}</td>
+									<td class="td-egresos no-padding-bottom align-right">{{ sum_gastos_sop }}</td>
 									<!-- Diferencia gastos -->
-									<td class="no-padding-bottom align-right">{{ sum_dif_gastos }}</td>
+									<td class="td-egresos no-padding-bottom align-right">{{ sum_dif_gastos }}</td>
 										
 									<!-- Remesa -->
-									<td class="no-padding-bottom align-right">{{ sum_remesa }}</td>
+									<td class="td-egresos no-padding-bottom align-right">{{ sum_remesa }}</td>
 									<!-- Remesa enviada -->
-									<td class="no-padding-bottom align-right">{{ sum_remesa_env }}</td>
+									<td class="td-egresos no-padding-bottom align-right">{{ sum_remesa_env }}</td>
 									<!-- Diferencia remesa -->
-									<td class="no-padding-bottom align-right">{{ sum_dif_remesa }}</td>
+									<td class="td-egresos no-padding-bottom align-right">{{ sum_dif_remesa }}</td>
 									
 
-									<td class="no-padding">
+									<td class="td-egresos no-padding">
 
 										
 									</td>
@@ -744,6 +759,97 @@
 								<td class="warning align-right">{{ total_dif }}</td>
 							</tr>
 						</table>
+
+					</div>
+					
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	<!-- 
+	********************************************************************
+	********************     LIBRO FONDOS LOCALES    ********************
+	********************************************************************
+	-->
+	<div class="box col-md-12" ng-class="{'widget-maximized': widget_maximized_totales}">
+		<div class="box-inner">
+			<div class="box-header well">
+				<h2>
+					<i class="glyphicon glyphicon-info-sign"></i> 
+					LIBRO FONDOS LOCALES
+				</h2>
+
+				<div class="box-icon maximizar">
+					
+					<a href="" ng-click="widget_maximized_totales=!widget_maximized_totales" uib-tooltip="Maximizar" class="btn btn-close btn-round btn-default">
+						<i class="glyphicon " ng-class="{ 'glyphicon-resize-full': !widget_maximized_totales, 'glyphicon-resize-small': widget_maximized_totales }"></i>
+					</a>
+					
+				</div>
+			</div>
+			<div class="box-content " style="overflow: auto;">
+				
+				<div class="row">
+				
+					<div class="col-sm-12">
+						
+						<table class="table tabla-mes table-striped table-hover table-condensed" ng-class="{'ocultando-primeras': ocultando_primeras, 'ocultando-egresos': ocultando_egresos }" style="margin-top: 10px">
+							<thead>
+								<tr>
+									<th scope="col" class="center">ID </th>
+									<th scope="col" class="center">Mes</th>
+									<th scope="col" class="center">Saldo</th>
+									<th scope="col" class="center">60%</th>
+									<th scope="col" class="center">E.Especial</th>
+									<th scope="col" class="center" style="background-color: #fcf8e3;">Totales</th>
+									<th scope="col" class="center">Gastos</th>
+									<th scope="col" class="center" style="background-color: #dff0d8;">Saldo Final</th>
+									
+								</tr>
+							</thead>
+							<tbody>
+
+								<tr ng-repeat="lib_mes in lib_meses | orderBy:'periodo'">
+
+									<td class="no-padding-bottom">{{$index + 1}}</td>
+									<td class="no-padding-bottom">
+										{{ lib_mes.year }}-{{ lib_mes.mes }}
+									</td>
+									<!-- Saldo -->
+									<td class="td-primeras no-padding align-right">
+										{{ lib_mes.saldo_mes | currency:'$':0 }}
+									</td>
+									<!-- 60% -->
+									<td class="td-primeras no-padding align-right">
+										{{ lib_mes.ofrendas * 0.6 | currency:'$':0 }}
+									</td>
+									<!-- E.Especial -->
+									<td class="td-primeras no-padding align-right">
+										{{ lib_mes.especiales | currency:'$':0 }}
+									</td>
+									<!-- Totales -->
+									<td class="td-primeras no-padding align-right" style="background-color: #fcf8e3;">
+										{{ lib_mes.saldo_mes + lib_mes.especiales + (lib_mes.ofrendas * 0.6) | currency:'$':0 }}
+									</td>
+									<!-- Gastos -->
+									<td class="td-primeras no-padding align-right">
+										{{ lib_mes.gastos | currency:'$':0 }}
+									</td>
+									<!-- Saldo Final -->
+									<td class="td-primeras no-padding align-right" style="background-color: #dff0d8;">
+										{{ lib_mes.saldo_mes_final | currency:'$':0 }}
+									</td>
+								
+							</tbody>
+							
+						</table>
+								
 
 					</div>
 					
