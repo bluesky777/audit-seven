@@ -149,6 +149,7 @@ angular.module('auditoriaApp', [
 		{tipo: 'Libro tesorería mensual'},
 		{tipo: 'Libro de envío de remesas'},
 		{tipo: 'Libro de fondos locales'},
+		{tipo: 'Saldo cuadre de caja'},
 		{tipo: 'Libro de iglesia'},
 		{tipo: 'Asuntos generales'},
 		{tipo: 'Diezmo'},
