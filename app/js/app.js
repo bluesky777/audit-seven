@@ -136,8 +136,8 @@ angular.module('auditoriaApp', [
 			// https://edilson.micolevirtual.com
 			// http://192.168.100.31
 			return {
-				ruta: 'http://192.168.100.31/feryz_server/public/auditorias',
-				root: 'http://192.168.100.31/feryz_server/public'
+				ruta: 'https://edilson.micolevirtual.com/feryz_server/public/auditorias',
+				root: 'https://edilson.micolevirtual.com/feryz_server/public'
 			}
 		}
 	}
