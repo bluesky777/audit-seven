@@ -100,10 +100,10 @@ angular.module('auditoriaApp', [
 		templateUrl: 'templates/sincronizacion.html'
 	})
 
-	.state('panel.recomendaciones', {
-		url: '/recomendaciones',
-		controller: 'recomendacionesCtrl',
-		templateUrl: 'templates/recomendaciones.html'
+	.state('panel.observaciones', {
+		url: '/observaciones',
+		controller: 'ObservacionesCtrl',
+		templateUrl: 'templates/observaciones.html'
 	})
 
 
@@ -123,7 +123,7 @@ angular.module('auditoriaApp', [
 	if (location.hostname == 'www.micolevirtual.com') {
 		return {
 			ruta: 'https://edilson.micolevirtual.com/feryz_server/public/auditorias',
-    		root: 'https://edilson.micolevirtual.com/feryz_server/public'
+    	root: 'https://edilson.micolevirtual.com/feryz_server/public'
 		}
 	}else{
 		if (localStorage.ruta) {

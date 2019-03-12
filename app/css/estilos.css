@@ -211,3 +211,7 @@ th .badge{
 .tr-audit-seleccionada td{
 	background-color: #5afff1;
 }
+.fila-danger .td-danger{
+	font-weight: bold;
+	color: red;
+}

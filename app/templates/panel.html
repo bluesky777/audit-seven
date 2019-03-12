@@ -161,13 +161,13 @@
                             </a>
                         </li>
 
-                        <!--
-                        <li>
-                            <a class="ajax-link" href="" ui-sref="panel.recomendaciones">
-                                <i class="glyphicon glyphicon-list-alt"></i><span> Recomendaciones</span>
+                        
+                        <li ng-if="::USER.tipo=='Pastor' || USER.tipo=='Tesorero'">
+                            <a class="ajax-link" href="" ui-sref="panel.observaciones">
+                                <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'OBSERVACIONES_MENU' | translate }}</span>
                             </a>
                         </li>
-                        -->
+                        
 
                         <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.sincronizacion">
