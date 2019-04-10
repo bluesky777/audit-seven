@@ -106,6 +106,12 @@ angular.module('auditoriaApp', [
 		templateUrl: 'templates/observaciones.html'
 	})
 
+	.state('panel.propiedad', {
+		url: '/propiedad',
+		controller: 'PropiedadCtrl',
+		templateUrl: 'templates/propiedad.html'
+	})
+
 
 	.state('panel.libromes', {
 		url: '/libromes',

@@ -65,7 +65,9 @@ angular.module("auditoriaApp")
 	};
 
 	$scope.insertarUsuario = function(usu) {
-		$scope.creando = true;
+		$scope.creando 			= true;
+		usu.asociacion_id 	= $scope.USER.asociacion_id;
+		usu.union_id 				= $scope.USER.union_id;
 		
 		UsuariosFacto.insertar(usu).then(function(result) {
 

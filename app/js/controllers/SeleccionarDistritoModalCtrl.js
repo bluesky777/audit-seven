@@ -1,41 +1,80 @@
 angular.module("auditoriaApp")
 
-.controller('SeleccionarDistritoModalCtrl', function ($uibModalInstance, ConexionServ, $scope, USER, AuthServ, $timeout, $filter, $http, rutaServidor) {
+.controller('SeleccionarDistritoModalCtrl', function ($uibModalInstance, ConexionServ, $scope, USER, AuthServ, $timeout, $filter, $http, rutaServidor, toastr) {
 	
 	$scope.USER 			= USER;
 	$scope.distritos 		= [];
 	$scope.distrito_id 		= USER.distrito_id;
 	$scope.distritos_ori 	= [];
 	
-
-	ConexionServ.query('SELECT *, rowid FROM distritos', []).then(function(result) {
-		
-		$scope.distritos = result;
-		
-		let mapeando = $scope.distritos.map((distrito, i)=>{
-			return new Promise((resolve, reject)=>{
-				
-				if (USER.distrito_id == distrito.rowid) {
-					distrito.seleccionado = true;
-				}
-				
-				ConexionServ.query('SELECT *, rowid FROM iglesias WHERE distrito_id=?', [distrito.rowid]).then(function(result) {
-					distrito.iglesias = result;
-					resolve(distrito.iglesias);
-				}, function(tx) {
-					console.log("Error no es posbile traer iglesias", distrito, tx);
-				});
-			})
-		})
-		
-		Promise.all(mapeando).then(()=>{
-			$scope.distritos_ori = angular.copy($scope.distritos);
-		})
-		
-	}, function(tx) {
-		console.log("Error no es posbile traer Distritos", tx);
-	});
 	
+	if ( ($scope.USER.tipo == 'Auditor' && $scope.modo_offline == true) || 
+		($scope.USER.tipo == 'Admin' && $scope.modo_offline == true) ) {
+		
+		
+		ConexionServ.query('SELECT *, rowid FROM distritos', []).then(function(result) {
+			
+			$scope.distritos = result;
+			
+			let mapeando = $scope.distritos.map((distrito, i)=>{
+				return new Promise((resolve, reject)=>{
+					
+					if (USER.distrito_id == distrito.rowid) {
+						distrito.seleccionado = true;
+					}
+					
+					ConexionServ.query('SELECT *, rowid FROM iglesias WHERE distrito_id=?', [distrito.rowid]).then(function(result) {
+						distrito.iglesias = result;
+						resolve(distrito.iglesias);
+					}, function(tx) {
+						console.log("Error no es posbile traer iglesias", distrito, tx);
+					});
+				})
+			})
+			
+			Promise.all(mapeando).then(()=>{
+				$scope.distritos_ori = angular.copy($scope.distritos);
+			})
+			
+		}, function(tx) {
+			console.log("Error no es posbile traer Distritos", tx);
+		});
+		
+		
+	}else{
+		
+		datos = {
+			tipo_usu: 		$scope.USER.tipo,
+			usu_id: 		$scope.USER.id,
+			asociacion_id: 	$scope.USER.asociacion_id
+		}
+		
+		$http.put(rutaServidor.root + '/au_iglesias', datos).then(function(r){
+
+			$scope.distritos = r.data;
+			
+			if ($scope.distritos.length == 1) {
+				$scope.distritos[0].seleccionado = true;
+			}else if($scope.distritos.length > 1){
+				
+				$scope.distritos.map((distrito, i)=>{
+					
+					if (USER.distrito_id == distrito.id) {
+						distrito.seleccionado = true;
+					}
+					
+				})
+			}
+			
+			$scope.distritos_ori = angular.copy($scope.distritos);
+			
+        }, function(r2){
+            toastr.error('No se pudo descargar iglesias');
+        })
+		
+	}
+	
+
 	
 	$timeout(()=>{
 		$scope.focusSearchIglesia = true;

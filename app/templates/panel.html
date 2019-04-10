@@ -29,7 +29,7 @@
             <!-- user dropdown ends -->
             
             <!-- Botón Offline -->
-            <div class="btn-group pull-right theme-container animated tada">
+            <div ng-if="::USER.tipo=='Auditor'" class="btn-group pull-right theme-container animated tada">
                 <button class="btn" ng-class="{'btn-danger': modo_offline, 'btn-default': !modo_offline}"
                     ng-click="cambiarOffline()">
                     
@@ -44,33 +44,34 @@
                 </button>
             </div>
 
+            
             <!-- theme selector starts -->
-            <div class="btn-group pull-right theme-container animated tada">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <div class="btn-group pull-right theme-container animated tada" uib-dropdown is-open="status.isopen">
+                <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled">
                     <i class="glyphicon glyphicon-tint"></i>
                     <span class="hidden-sm hidden-xs"> {{ 'IDIOMA_MENU' | translate }}</span>
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" id="themes">
-                    <li class="dropdown-header"><i class="whitespace"></i>Idioma</li>
-                    <li><a href="" ng-click="cambiarIdioma('Español')"><i ng-class="{'glyphicon glyphicon-ok': 'Español' == idioma, 'whitespace': 'Español' != idioma}"></i> Español</a></li>
-                    <li><a href="" ng-click="cambiarIdioma('English')"><i ng-class="{'glyphicon glyphicon-ok': 'English' == idioma, 'whitespace': 'English' != idioma}"></i> English</a></li>
-                    <li><a href="" ng-click="cambiarIdioma('Francais')"><i ng-class="{'glyphicon glyphicon-ok': 'Francais' == idioma, 'whitespace': 'Francais' != idioma}"></i> Francais</a></li>
-                    <li class="divider"></li>
-                    <li class="dropdown-header"><i class="whitespace"></i>Tema</li>
-                    <li><a href="" ng-click="cambiarTema('classic')"><i ng-class="{'glyphicon glyphicon-ok': 'classic' == tema, 'whitespace': 'classic' != tema}"></i> Classic</a></li>
-                    <li><a href="" ng-click="cambiarTema('cerulean')"><i ng-class="{'glyphicon glyphicon-ok': 'cerulean' == tema, 'whitespace': 'cerulean' != tema}"></i> Cerulean</a></li>
-                    <li><a href="" ng-click="cambiarTema('cyborg')"><i ng-class="{'glyphicon glyphicon-ok': 'cyborg' == tema, 'whitespace': 'cyborg' != tema}"></i> Cyborg</a></li>
-                    <li><a href="" ng-click="cambiarTema('simplex')"><i ng-class="{'glyphicon glyphicon-ok': 'simplex' == tema, 'whitespace': 'simplex' != tema}"></i> Simplex</a></li>
-                    <li><a href="" ng-click="cambiarTema('darkly')"><i ng-class="{'glyphicon glyphicon-ok': 'darkly' == tema, 'whitespace': 'darkly' != tema}"></i> Darkly</a></li>
-                    <li><a href="" ng-click="cambiarTema('lumen')"><i ng-class="{'glyphicon glyphicon-ok': 'lumen' == tema, 'whitespace': 'lumen' != tema}"></i> Lumen</a></li>
-                    <li><a href="" ng-click="cambiarTema('slate')"><i ng-class="{'glyphicon glyphicon-ok': 'slate' == tema, 'whitespace': 'slate' != tema}"></i> Slate</a></li>
-                    <li><a href="" ng-click="cambiarTema('spacelab')"><i ng-class="{'glyphicon glyphicon-ok': 'spacelab' == tema, 'whitespace': 'spacelab' != tema}"></i> Spacelab</a></li>
-                    <li><a href="" ng-click="cambiarTema('united')"><i ng-class="{'glyphicon glyphicon-ok': 'united' == tema, 'whitespace': 'united' != tema}"></i> United</a></li>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                        <li class="dropdown-header"><i class="whitespace"></i>Idioma</li>
+                        <li><a href="" ng-click="cambiarIdioma('Español')"><i ng-class="{'glyphicon glyphicon-ok': 'Español' == idioma, 'whitespace': 'Español' != idioma}"></i> Español</a></li>
+                        <li><a href="" ng-click="cambiarIdioma('English')"><i ng-class="{'glyphicon glyphicon-ok': 'English' == idioma, 'whitespace': 'English' != idioma}"></i> English</a></li>
+                        <li><a href="" ng-click="cambiarIdioma('Francais')"><i ng-class="{'glyphicon glyphicon-ok': 'Francais' == idioma, 'whitespace': 'Francais' != idioma}"></i> Francais</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header"><i class="whitespace"></i>Tema</li>
+                        <li><a href="" ng-click="cambiarTema('classic')"><i ng-class="{'glyphicon glyphicon-ok': 'classic' == tema, 'whitespace': 'classic' != tema}"></i> Classic</a></li>
+                        <li><a href="" ng-click="cambiarTema('cerulean')"><i ng-class="{'glyphicon glyphicon-ok': 'cerulean' == tema, 'whitespace': 'cerulean' != tema}"></i> Cerulean</a></li>
+                        <li><a href="" ng-click="cambiarTema('cyborg')"><i ng-class="{'glyphicon glyphicon-ok': 'cyborg' == tema, 'whitespace': 'cyborg' != tema}"></i> Cyborg</a></li>
+                        <li><a href="" ng-click="cambiarTema('simplex')"><i ng-class="{'glyphicon glyphicon-ok': 'simplex' == tema, 'whitespace': 'simplex' != tema}"></i> Simplex</a></li>
+                        <li><a href="" ng-click="cambiarTema('darkly')"><i ng-class="{'glyphicon glyphicon-ok': 'darkly' == tema, 'whitespace': 'darkly' != tema}"></i> Darkly</a></li>
+                        <li><a href="" ng-click="cambiarTema('lumen')"><i ng-class="{'glyphicon glyphicon-ok': 'lumen' == tema, 'whitespace': 'lumen' != tema}"></i> Lumen</a></li>
+                        <li><a href="" ng-click="cambiarTema('slate')"><i ng-class="{'glyphicon glyphicon-ok': 'slate' == tema, 'whitespace': 'slate' != tema}"></i> Slate</a></li>
+                        <li><a href="" ng-click="cambiarTema('spacelab')"><i ng-class="{'glyphicon glyphicon-ok': 'spacelab' == tema, 'whitespace': 'spacelab' != tema}"></i> Spacelab</a></li>
+                        <li><a href="" ng-click="cambiarTema('united')"><i ng-class="{'glyphicon glyphicon-ok': 'united' == tema, 'whitespace': 'united' != tema}"></i> United</a></li>
                 </ul>
             </div>
             
-            <!-- theme selector ends -->
+            
 
             <ul class="navbar-collapse nav navbar-nav" style="width: 380px; padding-right: 0;">
                 
@@ -165,6 +166,13 @@
                         <li ng-if="::USER.tipo=='Pastor' || USER.tipo=='Tesorero'">
                             <a class="ajax-link" href="" ui-sref="panel.observaciones">
                                 <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'OBSERVACIONES_MENU' | translate }}</span>
+                            </a>
+                        </li>
+                        
+
+                        <li ng-if="::USER.tipo=='Pastor'">
+                            <a class="ajax-link" href="" ui-sref="panel.propiedad">
+                                <i class="glyphicon glyphicon-home"></i><span> {{ 'PROPIEDAD_MENU' | translate }}</span>
                             </a>
                         </li>
                         
@@ -318,17 +326,29 @@
 
 
     <footer class="row hidden-print">
-        <p class="col-md-9 col-sm-9 col-xs-12 copyright">&copy; 
-            <a href=# target="_blank">Auditoría de iglesias</a> 2018.
+        <p class="col-md-6 col-sm-6 col-xs-12 copyright">&copy; 
+            <a href=# target="_blank">Auditoría de iglesias</a> 2019.
             <span>
                 Versión: <span id="version">{{version}}</span>
                 <div id="messages"></div>
             </span>
         </p>
-
         
-        <p class="col-md-3 col-sm-3 col-xs-12 powered-by">Creado por: <a
-                href="https://www.micolevirtual.com">Grandes desarrolladores</a></p>
+        
+        <p class="col-md-6 col-sm-6 col-xs-12 powered-by">Creado por: <a
+                href="https://www.micolevirtual.com">davidguerrero777@gmail.com</a>
+        </p>
     </footer>
+    <div style="font-size: 9pt;">
+        Ruta: 
+        <span ng-click="verCambiarRuta()" ng-show="!cambiando_ruta" style="cursor:pointer">
+            {{rutaServidor}}
+        </span>
+        <span ng-show="cambiando_ruta">
+            <input type="text" ng-model="rutaServidor" class="form-control" style="display: inline-block; width: 200px;" ng-click="rutaServidor">
+            <input type="button" class="btn btn-default btn-xs" value="Cancelar" ng-click="cancelarVerCambiarRuta()">
+            <input type="button" class="btn btn-primary btn-xs" value="Guardar" ng-click="guardarRuta(rutaServidor)">
+        </span>
+    </div>
 
 </div><!--/.fluid-container-->

@@ -296,7 +296,7 @@
 					
 													<ui-select ng-model="creatar_new_asocaciones.union" style="width: 100%;" theme="bootstrap">
 														<ui-select-match placeholder="Union">
-															<span ng-bind="$select.selected.			nombre"></span>
+															<span ng-bind="$select.selected.nombre"></span>
 														</ui-select-match>
 														<ui-select-choices repeat="item in (uniones |  filter: $select.search) track by $index">
 															<span ng-bind-html="item.nombre | highlight: $select.search"></span>
@@ -374,7 +374,7 @@
 					
 													<ui-select ng-model="actuali_new_asociation.union" style="width: 100%;" theme="bootstrap">
 														<ui-select-match placeholder="Union">
-															<span ng-bind="$select.selected.			nombre"></span>
+															<span ng-bind="$select.selected.nombre"></span>
 														</ui-select-match>
 														<ui-select-choices repeat="item in (uniones |  filter: $select.search) track by $index">
 															<span ng-bind-html="item.nombre | highlight: $select.search"></span>
@@ -608,6 +608,24 @@
 
 
 					<button class="btn btn-primary" ng-show="!verCrearDistrito" ng-click="crear_distrito()">Crear distrito</button>
+					
+					
+					
+					
+					<div class="form-group">
+						<label>Filtrar por asociación</label>
+
+						<ui-select ng-model="datos.asociacion_filtro" style="width: 100%;" theme="bootstrap">
+							<ui-select-match placeholder="Asociación">
+								<span ng-bind="$select.selected.nombre"></span>
+							</ui-select-match>
+							<ui-select-choices repeat="item in (asociaciones |  filter: $select.search) track by $index">
+								<span ng-bind-html="item.nombre | highlight: $select.search"></span>
+							</ui-select-choices>
+						</ui-select>
+
+					</div>
+
 
 
 					<div style="height: 500px; overflow: auto;">
@@ -626,7 +644,7 @@
 							</thead>
 							<tbody>
 
-								<tr ng-repeat="distrito in distritos">
+								<tr ng-repeat="distrito in distritos | filter:{'asociacion_id': datos.asociacion_filtro.id}">
 
 									<td>{{$index + 1}}</td>
 									<td>{{distrito.nombre}}</td>

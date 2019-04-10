@@ -4,11 +4,12 @@ angular.module('auditoriaApp')
 	
 	$scope.USER                     = USER;
 	$scope.sidebar_active           = false;
-	$scope.version                  = '0.0.7';
+	$scope.version                  = '0.0.12';
 	$scope.sidebar_active 	        = false;
 	$scope.modo_offline 	        = false;
 	$scope.tema 					= USER.tema;
 	$scope.idioma 					= USER.idioma;
+	
 	
 	if (localStorage.modo_offline) {
 		if (localStorage.modo_offline == 'true') {
@@ -47,16 +48,34 @@ angular.module('auditoriaApp')
 	}
 	
 	
+	$scope.rutaServidor = rutaServidor.ruta;
 	
-    consulta = "SELECT a.rowid, a.* FROM asociaciones a " +
-        "INNER JOIN distritos d ON a.rowid = d.asociacion_id and d.eliminado is null " + 
-        "WHERE d.rowid=?";       
+	if (localStorage.ruta){
+		$scope.rutaServidor = localStorage.ruta;
+	}
+	
+	$scope.verCambiarRuta = function(){
+		$scope.cambiando_ruta = true;
+	}
+	$scope.cancelarVerCambiarRuta = function(){
+		$scope.cambiando_ruta = false;
+	}
+	
+	$scope.guardarRuta = function(rutaServidor){
+		localStorage.ruta = rutaServidor;
+		$scope.cambiando_ruta = false;
+	}
+	
+	
+	consulta = "SELECT a.rowid, a.* FROM asociaciones a " +
+			"INNER JOIN distritos d ON a.rowid = d.asociacion_id and d.eliminado is null " + 
+			"WHERE d.rowid=?";       
 
-    ConexionServ.query(consulta, [$scope.USER.distrito_id]).then(function(result) {
-        $scope.asociacion = result[0];
-    }, function(tx) {
-        toastr.warning("Parece que no tienes iglesia seleccionada", tx);
-    });
+	ConexionServ.query(consulta, [$scope.USER.distrito_id]).then(function(result) {
+			$scope.asociacion = result[0];
+	}, function(tx) {
+			toastr.warning("Parece que no tienes iglesia seleccionada", tx);
+	});
     
 
 		
@@ -68,15 +87,15 @@ angular.module('auditoriaApp')
 	}	
 	
 	$scope.cambiarTema = function (themeName) {
-		if ($scope.tema == 'classic') {
+
+		if (themeName == 'classic') {
 			$('#bs-css').attr('href', 'bower_components/bootstrap/dist/css/bootstrap.min.css');
 		} else {
-			if ($scope.tema) {
-				$('#bs-css').attr('href', 'css/bootstrap-' + $scope.tema + '.min.css');
+			if (themeName) {
+				$('#bs-css').attr('href', 'css/bootstrap-' + themeName + '.min.css');
 			}else{
 				$('#bs-css').attr('href', 'css/bootstrap-cerulean.min.css');
 			}
-			
 		}
 		
 		$http.put(rutaServidor.root + '/au_usuario/cambiar-tema', { tema: themeName, user_id: $scope.USER.rowid }).then(function(){
@@ -240,7 +259,7 @@ angular.module('auditoriaApp')
 	
 	$scope.seleccionarDistrito = function () {
 		var modal = $uibModal.open({
-			templateUrl: 'templates/Entidades/seleccionarDistritoModal.html',
+			templateUrl: 'templates/entidades/seleccionarDistritoModal.html',
 			size: 'lg',
 			resolve: {
 				USER: function () {

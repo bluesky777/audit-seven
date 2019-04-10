@@ -20,8 +20,8 @@ angular.module('auditoriaApp')
                 if (!id) {
                     id = null;
                 }
-                consulta = "INSERT INTO usuarios(nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?) ";
-                ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha_new, usu.tipo, usu.celular]).then(function(result) {
+                consulta = "INSERT INTO usuarios(nombres, apellidos, sexo, username, password, email, fecha, tipo, celular, union_id, asociacion_id) VALUES(?,?,?,?,?,?,?,?,?,?,?) ";
+                ConexionServ.query(consulta, [usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha_new, usu.tipo, usu.celular, usu.union_id, usu.asociacion_id]).then(function(result) {
                     defer.resolve(result);
                 }, function(tx) {
                     defer.reject('Error: ', consulta);

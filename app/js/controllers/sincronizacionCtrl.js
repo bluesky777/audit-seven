@@ -142,46 +142,46 @@ angular.module("auditoriaApp")
     	datos = {};
 
     	if (elemento) {
-			datos = elemento;
+				datos = elemento;
     	}else{
     		datos = {
-    			iglesias: 			$scope.iglesias,
-    			distritos: 			$scope.distritos,
+    			iglesias: 				$scope.iglesias,
+    			distritos: 				$scope.distritos,
     			asociaciones: 		$scope.asociaciones,
-    			auditorias: 		$scope.auditorias,
-    			uniones: 			$scope.uniones,
-    			usuarios: 			$scope.usuarios,
+    			auditorias: 			$scope.auditorias,
+    			uniones: 					$scope.uniones,
+    			usuarios: 				$scope.usuarios,
     			lib_mensuales: 		$scope.lib_mensuales,
     			lib_semanales: 		$scope.lib_semanales,
-    			gastos_mes: 		$scope.gastos_mes,
-    			preguntas: 			$scope.preguntas,
-    			respuestas: 		$scope.respuestas,
+    			gastos_mes: 			$scope.gastos_mes,
+    			preguntas: 				$scope.preguntas,
+    			respuestas: 			$scope.respuestas,
     			recomendaciones: 	$scope.recomendaciones
     		};
     	}
 
-		$http.put(rutaServidor.ruta + '/subir-datos', datos).then (function(r){
+			$http.put(rutaServidor.ruta + '/subir-datos', datos).then (function(r){
 
-			r = r.data;
-			SincronizarServ.uniones(r.uniones);
-			SincronizarServ.asociaciones(r.asociaciones);
-			SincronizarServ.distritos(r.distritos);
-            SincronizarServ.iglesias(r.iglesias);
-            SincronizarServ.usuarios(r.usuarios);
-            SincronizarServ.auditorias(r.auditorias);
-            SincronizarServ.lib_mensuales(r.lib_mensuales);
-            SincronizarServ.lib_semanales(r.lib_semanales);
-            SincronizarServ.gastos_meses(r.gastos_mes);
-            SincronizarServ.preguntas(r.preguntas);
-            SincronizarServ.respuestas(r.respuestas);
-            SincronizarServ.recomendaciones(r.recomendaciones);
+				r = r.data;
+				SincronizarServ.uniones(r.uniones);
+				SincronizarServ.asociaciones(r.asociaciones);
+				SincronizarServ.distritos(r.distritos);
+							SincronizarServ.iglesias(r.iglesias);
+							SincronizarServ.usuarios(r.usuarios);
+							SincronizarServ.auditorias(r.auditorias);
+							SincronizarServ.lib_mensuales(r.lib_mensuales);
+							SincronizarServ.lib_semanales(r.lib_semanales);
+							SincronizarServ.gastos_meses(r.gastos_mes);
+							SincronizarServ.preguntas(r.preguntas);
+							SincronizarServ.respuestas(r.respuestas);
+							SincronizarServ.recomendaciones(r.recomendaciones);
 
 
-			 toastr.success('Datos subidos');
-		}, function(){
-			toastr.error('No se pudo subir datos');
-		})
-	}
+				toastr.success('Datos subidos');
+			}, function(){
+				toastr.error('No se pudo subir datos');
+			})
+		}
 
 	
 
@@ -348,10 +348,13 @@ angular.module("auditoriaApp")
 			});
 
 			// Traemos DISTRITOS
-			consulta = "SELECT d.rowid, d.* from distritos d WHERE d.modificado is not null or eliminado is not null or id is null " ;
+			consulta = "SELECT d.rowid, d.*, u.nombres as pastor_nombres from distritos d " + 
+									"LEFT JOIN usuarios u ON u.id=d.pastor_id " +
+									"WHERE d.modificado is not null or d.eliminado is not null or d.id is null " ;
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.distritos = result;
+				console.log($scope.distritos);
 			}, function(tx) {
 				console.log("Error no es posbile traer distritos", tx);
 			});

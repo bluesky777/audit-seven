@@ -1,0 +1,357 @@
+<div ngf-drop="uploadFiles($files)" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-pattern="'image/*'" class="drop-box drop-box">
+    <div>
+        <ul class="breadcrumb">
+            <li class="li-breadcrumb">
+                <a ui-sref="panel">{{ 'INICIO_MENU' | translate }}</a>
+            </li>
+            <li class="li-breadcrumb">
+                <a ui-sref="panel.propiedad" >Propiedad</a>
+            </li>
+            <li style="float: right;" class="refresh-breadcrumb">
+            <a href="" ng-click="refresh()">
+                <i class="glyphicon glyphicon-refresh"></i>
+                {{ 'REFRESH' | translate }}</a>
+            </li>
+        </ul>
+    </div>
+
+    <div ngf-select="uploadFiles($files)" ngf-multiple="true" ngf-pattern="'image/*'" ngf-accept="'image/*'" class="btn btn-success">
+        <i class="glyphicon glyphicon-cloud-upload"></i>
+        Subir imágenes documentos
+    </div>
+    
+    
+    <div ng-repeat="file in imgFiles">
+        <div class="row">
+            <div class="ticket-user col-lg-5 col-sm-12">
+                <img ng-src="{{file.dataUrl}}" class="user-avatar">
+                <span class="user-name">{{file.name}}</span>
+                <span class="user-company">- {{(file.size / 1000000) | number:2 }}MB</span>
+            
+                <uib-progressbar value="file.porcentaje" class="progress-xlg progress-striped active">
+                    <b>{{file.porcentaje}}% Completado</b>
+                </uib-progressbar>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    
+
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well">
+                    <h2><i class="glyphicon glyphicon-picture"></i> Imágenes de documentos</h2>
+
+                    <div class="box-icon">
+                        <!--
+                        <a href="#" class="btn btn-close btn-round btn-default"><i
+                                class="glyphicon glyphicon-remove"></i></a>
+                        -->
+                    </div>
+                </div>
+                
+                
+                <div class="box-content row">
+                    <div class="col-sm-12">
+
+                        <table class="table" ng-show="documentos.length > 0">
+                            <thead>
+                        
+                                <tr>
+                                    <th scope="col">ID </th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Creada</th>
+                                    <th scope="col"></th>
+                        
+                                </tr>
+                        
+                            </thead>
+                            
+                            <tbody>
+                                
+                                <tr ng-repeat="imagen in documentos "  >
+                                    
+                                    <td>{{imagen.id}}</td>
+                                    <td style="padding-left: 0;" ng-click="openModalImage(imagen)">
+                                        <img ng-src="{{perfil + imagen.nombre}}" style="width: 50px">
+                                        <span style="font-size: 9pt;">
+                                            {{imagen.nombre }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <textarea ng-model="imagen.descripcion" placeholder="Descripción" 
+                                            style="height: 50px; width: 100%;" class="form-control"
+                                            ng-change="cambiaDescripcion(imagen)"
+                                            ng-model-options="{ updateOn: 'default blur', debounce: {'default': 1000, 'blur': 0} }">
+                                        </textarea>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 9pt;">{{imagen.created_at}}</span>
+                                    </td>
+                                    
+                                    <td scope="col" class="glyphicon glyphicon-remove btn btn-danger btn-sm" href="" ng-click="eliminarImagen(imagen)" ></td>
+                                </tr>
+                            
+                            </tbody>
+                            
+                        </table>
+                        
+                        <div ng-show="documentos.length == 0" style="font-style: italic; margin-bottom: 20px;">
+                            No hay ningún documentos agregado a esta iglesia.
+                        </div>
+                        
+                    </div> 
+                    
+                    
+                            
+                                
+                    <div class="form-group col-sm-6">
+                        <label>Imágenes</label>
+
+                        <ui-select ng-model="datos.imagen_seleccionada" style="width: 100%;" theme="bootstrap">
+                            <ui-select-match placeholder="Imagen">
+                                <img ng-src="{{perfil + $select.selected.nombre}}" style="width: 40px; margin-top: -10px;">
+                                <span ng-bind="$select.selected.nombre + ' - ' + $select.selected.descripcion"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item in imagenes">
+                                <img ng-src="{{perfil + item.nombre}}" style="width: 40px; margin-top: -10px;">
+                                <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                    <div class="col-sm-6">
+                        <a style="margin-top: 25px;" class="btn btn-primary" type="button" ng-click="addImagen(datos.imagen_seleccionada)">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </div>
+                        
+                
+                </div>
+                <!-- box-content -->
+                
+            </div>
+        </div>
+    </div>
+                    
+    
+    
+    
+
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well">
+                    <h2><i class="glyphicon glyphicon-picture"></i> Datos de iglesia</h2>
+
+                    <div class="box-icon">
+                        <!--
+                        <a href="#" class="btn btn-close btn-round btn-default"><i
+                                class="glyphicon glyphicon-remove"></i></a>
+                        -->
+                    </div>
+                </div>
+                
+                
+                <div class="box-content row">
+                    
+                    <div class="col-sm-12">
+                        <form ng-submit="ActualizarIglesia(propiedad)">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label for="nombre_propiedad">Nombre</label>
+                                    <input required="required" class="form-control" id="nombre_propiedad"
+                                        ng-if="(USER.tipo=='Auditor' || USER.tipo == 'Admin' || USER.tipo == 'Tesorero asociación') "
+                                        type="text" placeholder="Nombre" ng-model="propiedad.nombre">
+                                    
+                                    <div ng-if="!(USER.tipo=='Auditor' || USER.tipo == 'Admin' || USER.tipo == 'Tesorero asociación') " style="font-size: 16pt; font-weight: bold; background-color: #edeaff; padding: 8px;">
+                                        {{::propiedad.nombre}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label for="alias_propiedad">Alias</label>
+                                    <input required="required" class="form-control" id="alias_propiedad" type="text" placeholder="Alias" ng-model="propiedad.alias">
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="codigo_propiedad">Código</label>
+                                    <input class="form-control" id="codigo_propiedad" type="text" placeholder="Código" ng-model="propiedad.codigo">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                
+                                <div class="form-group col-sm-6">
+                                    <label>Distrito</label>
+
+                                    <ui-select ng-model="propiedad.distrito" style="width: 100%;" theme="bootstrap">
+                                        <ui-select-match placeholder="Distrito">
+                                            <span ng-bind="$select.selected.nombre"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in (distritos |  filter: $select.search) track by $index">
+                                            <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label>Tesorero</label>
+
+                                    <ui-select ng-model="propiedad.tesorero" style="width: 100%;" theme="bootstrap">
+                                        <ui-select-match placeholder="Tesorero">
+                                            <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero'}  |  filter: $select.search) track by $index">
+                                            <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                </div>
+
+                            </div>
+
+
+                            
+
+                            <div class="row">
+                                                    
+                                    <div class="col-sm-6">
+                                        <label for="zona_propiedad">Zona</label>
+                                        <input class="form-control" id="zona_propiedad" type="text" placeholder="Zona" ng-model="propiedad.zona">
+                                    </div>
+                                    
+                                    <div class="col-sm-6">
+                                        <label style="display: block;" for="tipo_propiedad">Tipo</label>
+                                        <div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-sm-6 col-xs-12">
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" name="tipo" value="IGLESIA" ng-model="propiedad.tipo"><span class="text">Iglesia</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6 col-xs-12">
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" name="tipo" value="GRUPO" ng-model="propiedad.tipo"><span class="text">Grupo</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                </div>
+
+                                
+                            <hr>
+                            
+                            
+                            <div class="row">
+                                <div class="col-sm-3 form-group" style="padding-right: 0px">
+                                    <label>Estado propiedad</label>
+
+                                    <ui-select ng-model="propiedad.estado_propiedad" style="width: 100%;" theme="bootstrap">
+                                        <ui-select-match placeholder="Estado propiedad">
+                                            <span ng-bind="$select.selected.estado + ' ' + $select.selected.apellidos"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in estados_propiedad | filter: $select.search track by $index">
+                                            <span ng-bind-html="item.estado | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                </div>
+                                
+                                <div class="col-sm-3 form-group" style="padding-right: 0px">
+                                    <label uib-tooltip="Estado según el pastor">Estado propiedad (pastor)</label>
+
+                                    <ui-select ng-model="propiedad.estado_propiedad_pastor" style="width: 100%;" theme="bootstrap">
+                                        <ui-select-match placeholder="Estado propiedad">
+                                            <span ng-bind="$select.selected.estado + ' ' + $select.selected.apellidos"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in estados_propiedad | filter: $select.search track by $index">
+                                            <span ng-bind-html="item.estado | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                </div>
+                                
+                                <div class="col-sm-3 form-group" style="padding-right: 0px">
+                                    <label>Tipo documento</label>
+
+                                    <ui-select ng-model="propiedad.tipo_doc_propiedad" style="width: 100%;" theme="bootstrap">
+                                        <ui-select-match placeholder="Tipo documento">
+                                            <span ng-bind="$select.selected.tipo + ' ' + $select.selected.apellidos"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in tipos_documentos_prop | filter: $select.search track by $index">
+                                            <span ng-bind-html="item.tipo | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                </div>
+                                
+                                
+                                <div class="col-sm-3 form-group">
+                                    <label uib-tooltip="Tipo documento según el pastor">Tipo documento (pastor)</label>
+
+                                    <ui-select ng-model="propiedad.tipo_doc_propiedad_pastor" style="width: 100%;" theme="bootstrap">
+                                        <ui-select-match placeholder="Tipo documento">
+                                            <span ng-bind="$select.selected.tipo + ' ' + $select.selected.apellidos"></span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item in tipos_documentos_prop | filter: $select.search track by $index">
+                                            <span ng-bind-html="item.tipo | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+
+                                </div>
+
+                                <div class="col-sm-6" style="padding-right: 0px;">
+                                    <label for="a_nombre_new1">A nombre de</label>
+                                    <input class="form-control" style="padding: 4px 6px;" id="a_nombre_new1" type="text" placeholder="A nombre de" ng-model="propiedad.anombre_propiedad">
+                                </div>
+                                
+
+                                <div class="col-sm-6" style="padding-right: 0px;">
+                                    <label uib-tooltip="A nombre de quién según el pastor" for="a_nombre_new_pastor">A nombre de (pastor)</label>
+                                    <input class="form-control" style="padding: 4px 6px;" id="a_nombre_new_pastor" type="text" placeholder="A nombre de" ng-model="propiedad.anombre_propiedad_pastor">
+                                </div>
+                                
+                            </div>
+
+                            
+                            <hr>
+                            
+                            <div class="row" style="margin-top: 20px" ng-if="(USER.tipo=='Auditor' || USER.tipo == 'Admin' || USER.tipo == 'Tesorero asociación')">
+
+                                <div class="center">
+                                    <input class="btn btn-warning " type="button" ng-click="Cancelar_Actualizar_Iglesia()" value="Cancelar">
+                                    <input class="btn btn-primary " type="submit" value="Guardar Iglesia" ng-disabled="guardando_iglesia">
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                    <!-- formulario datos -->
+                    
+                
+                </div>
+                <!-- box-content -->
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

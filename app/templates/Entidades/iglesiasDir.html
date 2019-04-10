@@ -473,5 +473,21 @@
 <button class="btn btn-primary" ng-show="!Vercreando_iglesia" ng-click="VerCreandoIglesia()">Crear iglesia</button>
 
 
+					
+					
+<div class="form-group">
+    <label>Filtrar por asociación</label>
+
+    <ui-select ng-model="datos.asociacion_filtro_iglesia" on-select="filtrarIglesiasPorAsociacion($item, $model)" style="width: 100%;" theme="bootstrap">
+        <ui-select-match placeholder="Asociación">
+            <span ng-bind="$select.selected.nombre"></span>
+        </ui-select-match>
+        <ui-select-choices repeat="item in (asociaciones |  filter: $select.search) track by $index">
+            <span ng-bind-html="item.nombre | highlight: $select.search"></span>
+        </ui-select-choices>
+    </ui-select>
+
+</div>
+
 <div ui-grid="gridOptions" style="height: 500px" ui-grid-exporter ui-grid-edit ui-grid-cellnav ui-grid-move-columns ui-grid-resize-columns
     ui-grid-auto-resize ui-grid-pinning></div>
