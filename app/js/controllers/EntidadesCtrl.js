@@ -4,7 +4,7 @@ angular.module("auditoriaApp")
 .directive('iglesiasDir', function(){
 	return {
 		restrict: 'E',
-		templateUrl: "templates/entidades/iglesiasDir.html"
+		templateUrl: "templates/Entidades/iglesiasDir.html"
 	}
 })
 
@@ -96,7 +96,7 @@ angular.module("auditoriaApp")
 	}
 
 	
-	btTipoDoc = "templates/entidades/botonSelectTesorero.html";
+	btTipoDoc = "templates/Entidades/botonSelectTesorero.html";
     btGrid1 ='<a uib-tooltip="Editar" tooltip-placement="left" tooltip-append-to-body="true" class="btn btn-default btn-xs icon-only" ng-click="grid.appScope.Ver_actualizar_iglesia(row.entity)"><i class="glyphicon glyphicon-pencil "></i></a>';
     btGrid2 ='<a uib-tooltip=" Eliminar" tooltip-placement="right" tooltip-append-to-body="true" class="btn btn-danger btn-xs icon-only" ng-click="grid.appScope.EliminarIglesia(row.entity)"><i class="glyphicon glyphicon-remove  "></i></a>';
     bt2 ='<span style="padding-left: 2px; padding-top: 4px;" class="btn-group">' + btGrid1 +btGrid2 +"</span>";

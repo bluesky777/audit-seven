@@ -259,7 +259,7 @@ angular.module('auditoriaApp')
 	
 	$scope.seleccionarDistrito = function () {
 		var modal = $uibModal.open({
-			templateUrl: 'templates/entidades/seleccionarDistritoModal.html',
+			templateUrl: 'templates/Entidades/seleccionarDistritoModal.html',
 			size: 'lg',
 			resolve: {
 				USER: function () {

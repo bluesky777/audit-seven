@@ -58,7 +58,7 @@ angular.module('auditoriaApp', [
 	.state('panel.entidades', {
 		url: '/entidades',
 		controller: 'EntidadesCtrl',
-		templateUrl: 'templates/entidades/entidades.html'
+		templateUrl: 'templates/Entidades/entidades.html'
 	})
 
 	.state('panel.imagenes', {
