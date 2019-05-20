@@ -6,6 +6,7 @@
             <th scope="col">ID </th>
             <th scope="col">Fecha</th>
             <th scope="col">Observación</th>
+            <th scope="col">Iglesia</th>
             <th scope="col">Tipo</th>
             <th scope="col">Recomendación</th>
             <th scope="col">Superada</th>
@@ -26,6 +27,7 @@
             
             <td style="font-size: 8pt">{{recomendacion.fecha | date:'short' }}</td>
             <td>{{recomendacion.hallazgo}}</td>
+            <td>{{recomendacion.iglesia_nombre}}</td>
             <td>{{recomendacion.tipo}}</td>
             <td class="td-danger">{{recomendacion.recomendacion}}</td>
             <td class="td-danger" style="text-align: center;">
