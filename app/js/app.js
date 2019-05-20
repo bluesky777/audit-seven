@@ -103,7 +103,7 @@ angular.module('auditoriaApp', [
 	.state('panel.observaciones', {
 		url: '/observaciones',
 		controller: 'ObservacionesCtrl',
-		templateUrl: 'templates/observaciones.html'
+		templateUrl: 'templates/Observaciones/observaciones.html'
 	})
 
 	.state('panel.propiedad', {
@@ -133,14 +133,14 @@ angular.module('auditoriaApp', [
 		}
 	}else{
 		if (localStorage.ruta) {
-			// http://192.168.100.31
+			// http://192.168.0.100
 			return {
 				ruta: localStorage.ruta + '/feryz_server/public/auditorias',
 				root: localStorage.ruta + '/feryz_server/public'
 			}
 		}else{
 			// https://edilson.micolevirtual.com
-			// http://192.168.100.31
+			// http://192.168.0.100
 			return {
 				ruta: 'https://edilson.micolevirtual.com/feryz_server/public/auditorias',
 				root: 'https://edilson.micolevirtual.com/feryz_server/public'

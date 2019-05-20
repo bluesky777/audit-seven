@@ -6,8 +6,85 @@ angular.module("auditoriaApp")
 	$scope.distritos 		= [];
 	$scope.distrito_id 		= USER.distrito_id;
 	$scope.distritos_ori 	= [];
+	$scope.hasDivisionRole 	= AuthServ.hasDivisionRole;
+	$scope.hasUnionRole 	= AuthServ.hasUnionRole;
+	$scope.datos 			= {};
 	
 	
+	
+	$scope.traerIglesias = function(asociacion_id, cargando){
+
+		datos = {
+			tipo_usu: 		$scope.USER.tipo,
+			usu_id: 		$scope.USER.id,
+			asociacion_id: 	asociacion_id,
+			cambiando_asociacion: true
+		}
+		
+		$http.put(rutaServidor.root + '/au_iglesias/de-asociacion', datos).then(function(r){
+
+			$scope.distritos 			= r.data;
+			$scope.USER.asociacion_id 	= asociacion_id;
+			
+			AuthServ.update_user_storage($scope.USER).then(function(usuario){
+				if (!cargando) {
+					toastr.success('Asociación cambiada');
+				}
+			})
+			
+			if ($scope.distritos.length == 1) {
+				$scope.distritos[0].seleccionado = true;
+			}else if($scope.distritos.length > 1){
+				
+				$scope.distritos.map((distrito, i)=>{
+					
+					if (USER.distrito_id == distrito.id) {
+						distrito.seleccionado = true;
+					}
+					
+				})
+			}
+			
+			$scope.distritos_ori = angular.copy($scope.distritos);
+			
+        }, function(r2){
+            toastr.error('No se pudo descargar iglesias');
+        })
+	}
+	
+	
+	// Cuando seleccione una UNIÓN
+	$scope.traerAsociaciones = function(union_id, cargando){
+
+		datos = {
+			tipo_usu: 		$scope.USER.tipo,
+			usu_id: 		$scope.USER.id,
+			union_id: 		union_id,
+			cambiando_union: true
+		}
+		
+		$http.put(rutaServidor.root + '/au_asociaciones/de-union', datos).then(function(r){
+
+			$scope.USER.asociaciones 	= r.data;
+			$scope.USER.union_id 		= union_id;
+			
+			console.log($scope.USER, union_id);
+			
+			AuthServ.update_user_storage($scope.USER).then(function(usuario){
+				if (!cargando) {
+					toastr.success('Unión cambiada');
+				}
+				
+			})
+			
+        }, function(r2){
+            toastr.error('No se pudo descargar iglesias');
+        })
+	}
+	
+
+	
+	// Configuramos los datos si es OFFLINE
 	if ( ($scope.USER.tipo == 'Auditor' && $scope.modo_offline == true) || 
 		($scope.USER.tipo == 'Admin' && $scope.modo_offline == true) ) {
 		
@@ -41,46 +118,65 @@ angular.module("auditoriaApp")
 		});
 		
 		
+	// Configuramos los datos si es ONLINE
 	}else{
-		
-		datos = {
-			tipo_usu: 		$scope.USER.tipo,
-			usu_id: 		$scope.USER.id,
-			asociacion_id: 	$scope.USER.asociacion_id
-		}
-		
-		$http.put(rutaServidor.root + '/au_iglesias', datos).then(function(r){
 
-			$scope.distritos = r.data;
+		if ($scope.USER.union_id > 0 && AuthServ.hasDivisionRole($scope.USER.tipo, true)) {
 			
-			if ($scope.distritos.length == 1) {
-				$scope.distritos[0].seleccionado = true;
-			}else if($scope.distritos.length > 1){
-				
-				$scope.distritos.map((distrito, i)=>{
-					
-					if (USER.distrito_id == distrito.id) {
-						distrito.seleccionado = true;
+			// Para cuando ya tengamos las uniones
+			function continuarConAsociaciones() {
+				// Selecciono la unión del usuario
+				for (let i = 0; i < $scope.USER.uniones.length; i++) {
+					if ($scope.USER.union_id == $scope.USER.uniones[i].id) {
+						$scope.datos.union = $scope.USER.uniones[i];
 					}
+				}
+				
+				// Si tiene asociacion_id, la buscamos y la seleccionamos
+				if ($scope.USER.asociacion_id > 0) {
 					
+					for (let i = 0; i < $scope.USER.asociaciones.length; i++) {
+						if ($scope.USER.asociacion_id == $scope.USER.asociaciones[i].id) {
+							$scope.datos.asociacion = $scope.USER.asociaciones[i];
+						}
+					}
+					$scope.traerIglesias($scope.USER.asociacion_id, true)
+				}else{
+					$scope.traerAsociaciones($scope.USER.union_id, true)
+				}
+			}
+
+			if ($scope.USER.uniones) {
+				if ($scope.USER.uniones.length>1) {
+					continuarConAsociaciones()
+				}
+			}else{
+				$http.put(rutaServidor.root + '/au_uniones').then(function(r){
+
+					$scope.USER.uniones 		= r.data;
+					AuthServ.update_user_storage($scope.USER).then(function(usuario){})
+					continuarConAsociaciones()
+					
+				}, function(r2){
+					toastr.error('No se pudo descargar iglesias');
 				})
 			}
 			
-			$scope.distritos_ori = angular.copy($scope.distritos);
+		}else if (AuthServ.hasAsociacionRole($scope.USER.tipo) || AuthServ.hasUnionRole($scope.USER.tipo)) {
 			
-        }, function(r2){
-            toastr.error('No se pudo descargar iglesias');
-        })
+			$scope.traerIglesias($scope.USER.asociacion_id, true)
+	
+		}
 		
 	}
 	
-
-	
+	// Focus cuando todo 
 	$timeout(()=>{
 		$scope.focusSearchIglesia = true;
 	})
 
 	
+	// Cuando el usuario seleccione una iglesia del Modal:
 	$scope.seleccionarIglesia = function(iglesia) {
 		
 		auditoria_id = null;
@@ -100,6 +196,11 @@ angular.module("auditoriaApp")
 				$scope.USER.iglesia_id 		= iglesia.rowid;
 				$scope.USER.distrito_id 	= iglesia.distrito_id;
 				$scope.USER.auditoria_id 	= auditoria_id;
+				
+				// Para que aparezca en la barra superior del panel
+				localStorage.iglesia_nombre_selected 	= iglesia.nombre;
+				localStorage.iglesia_alias_selected 	= iglesia.alias;
+				localStorage.iglesia_codigo_selected 	= iglesia.codigo;
 				
 				AuthServ.update_user_storage($scope.USER).then(function(usuario){
 					

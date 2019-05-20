@@ -689,10 +689,10 @@ angular.module("auditoriaApp")
     $scope.VerCrearAsociaciones = function() {
 		$scope.MostrandoAsociaciones = true;
 
-		$timeout(function() {
-			$location.hash("nueva_asociacion");
-			$anchorScroll();
-		}, 100);
+			$timeout(function() {
+				$location.hash("nueva_asociacion");
+				$anchorScroll();
+			}, 100);
     };
 
     $scope.CancelarVerCreandoAsoaciones = function() {

@@ -1,6 +1,6 @@
 {
   "name": "audit-seven",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Aplicación para auditar las iglesias Adventistas",
   "main": "main.js",
   "scripts": {

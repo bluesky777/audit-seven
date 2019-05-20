@@ -1,5 +1,5 @@
 angular.module('auditoriaApp')
-.controller('informectrl', function($scope, ConexionServ, $state, toastr, $location, $anchorScroll, $timeout){
+.controller('InformesCtrl', function($scope, ConexionServ, $state, toastr, $location, $anchorScroll, $timeout){
 	
 	$scope.$parent.sidebar_active 	= false;
 	$scope.config 	= {}

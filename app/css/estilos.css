@@ -215,3 +215,16 @@ th .badge{
 	font-weight: bold;
 	color: red;
 }
+.borde-tabla{
+	border-bottom: 3px solid; 
+}
+
+#loading-bar-spinner .spinner-icon {
+	width: 20px;
+	height: 20px;
+	z-index: 999999 !important;
+}
+#loading-bar .bar, #loading-bar .peg {
+	height: 5px !important;
+	z-index: 999999 !important;
+}

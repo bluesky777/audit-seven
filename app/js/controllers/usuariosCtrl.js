@@ -1,6 +1,6 @@
 angular.module("auditoriaApp")
 
-.controller("usuariosCtrl", function($scope, ConexionServ, $state, toastr, UsuariosFacto, $uibModal, Acentos) {
+.controller("usuariosCtrl", function($scope, AuthServ, ConexionServ, $state, toastr, UsuariosFacto, $uibModal, Acentos) {
 
 	if ($scope.USER.tipo=='Pastor' || $scope.USER.tipo=='Tesorero') {
 		toastr.warning('No tienes permiso para editar usuarios.');
@@ -12,6 +12,8 @@ angular.module("auditoriaApp")
 	$scope.gridOptions 				= {};
 	$scope.$parent.sidebar_active 	= false;
 	$scope.ver_crear_usu 			= false;
+	$scope.hasUnionRole 			= AuthServ.hasUnionRole;
+	$scope.hasDivisionRole 		= AuthServ.hasDivisionRole;
 	
 	
 	

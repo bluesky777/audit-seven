@@ -6,15 +6,21 @@ angular.module('auditoriaApp')
 	$stateProvider
 
 	.state('panel.informe_pastor', {
-		url: '/informe',
+		url: '/informe_pastor',
 		controller: 'InformesPastorCtrl',
 		templateUrl: 'templates/informes_pastor.html'
 	})
 	
-	.state('panel.informe', {
-		url: '/informe',
-		controller: 'informectrl',
+	.state('panel.informes', {
+		url: '/informes',
+		controller: 'InformesCtrl',
 		templateUrl: 'templates/informes.html'
+	})
+
+	.state('panel.informes_offline', {
+		url: '/informes_offline',
+		controller: 'InformesOfflineCtrl',
+		templateUrl: 'templates/informesOffline.html'
 	})
 
 	.state('panel.informe.uniones', {

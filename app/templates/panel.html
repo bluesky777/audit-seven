@@ -11,8 +11,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href=""> <img alt="Charisma Logo" src="img/audit fast 2.0.png" class="hidden-xs"/>
-                <span>Auditoría</span></a>
+            <a class="navbar-brand" href="" style="padding: 5px 15px 0px 15px;"> 
+                <img alt="Audit Logo" src="img/audit fast 2.6.png" class="hidden-xs" style="width: auto; height: 40px"/>
+                <span></span>
+            </a>
 
             <!-- user dropdown starts -->
             <div class="btn-group pull-right" uib-dropdown>
@@ -78,7 +80,7 @@
                 <li class="dropdown">
                     <a href="" data-toggle="dropdown" ng-click="seleccionarDistrito()"><i class="glyphicon glyphicon-star"></i> 
                         <span ng-show="!USER.iglesia_id">{{ 'IGLESIA' | translate }}</span>
-                        {{USER.iglesia_alias}} 
+                        {{iglesia_alias_selected}} 
                     </a>
                 </li>
                 
@@ -163,7 +165,7 @@
                         </li>
 
                         
-                        <li ng-if="::USER.tipo=='Pastor' || USER.tipo=='Tesorero'">
+                        <li>
                             <a class="ajax-link" href="" ui-sref="panel.observaciones">
                                 <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'OBSERVACIONES_MENU' | translate }}</span>
                             </a>
@@ -220,13 +222,13 @@
                         </li>
                         
                         <li ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero'">
-                            <a class="ajax-link" href="" ui-sref="panel.informe">
+                            <a class="ajax-link" href="" ui-sref="panel.informes">
                                 <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'INFORMES_MENU' | translate }}</span>
                             </a>
                         </li>
                         
                         <li ng-if="::USER.tipo=='Pastor' || USER.tipo=='Tesorero'">
-                            <a class="ajax-link" href="" ui-sref="panel.informe_pastor">
+                            <a class="ajax-link" href="" ui-sref="panel.informes_pastor">
                                 <i class="glyphicon glyphicon-list-alt"></i><span> {{ 'INFORMES_MENU' | translate }}</span>
                             </a>
                         </li>

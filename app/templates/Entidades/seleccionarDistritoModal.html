@@ -1,12 +1,49 @@
-<div class="modal-body" id="modal-body" style="max-height: 650px; overflow: auto;">
+<div class="modal-body" id="modal-body" style="min-height: 300px; max-height: 650px; overflow: auto;">
 	
-	<form class="form-inline">
-		<div class="form-group">
-			<label for="text-search-iglesia">Filtrar: </label>
-			<input class="form-control" focus-me="focusSearchIglesia" id="text-search-iglesia" 
-				type="text" placeholder="Buscar iglesia..." ng-model="textSearchIglesia" ng-change="changeSearch(textSearchIglesia)" />
+
+	<div class="row">
+		<div ng-if="hasDivisionRole(USER.tipo, true) "  class="form-group col-sm-6">
+			<label>Unión</label>
+
+			<ui-select ng-model="datos.union" on-select="traerAsociaciones(datos.union.id)" style="width: 100%;" theme="bootstrap">
+				<ui-select-match placeholder="Unión">
+					<span ng-bind="$select.selected.nombre"></span>
+				</ui-select-match>
+				<ui-select-choices repeat="item in (USER.uniones |  filter: $select.search) track by $index">
+					<span ng-bind-html="item.nombre | highlight: $select.search"></span>
+				</ui-select-choices>
+			</ui-select>
+
 		</div>
-	</form>
+
+		
+		<div ng-if="USER.tipo=='Admin' || hasDivisionRole(USER.tipo) || hasUnionRole(USER.tipo) " class="form-group col-sm-6">
+			<label>Asociación</label>
+
+			<ui-select ng-model="datos.asociacion" on-select="traerIglesias(datos.asociacion.id)" style="width: 100%;" theme="bootstrap">
+				<ui-select-match placeholder="Asociación">
+					<span ng-bind="$select.selected.nombre"></span>
+				</ui-select-match>
+				<ui-select-choices repeat="item in (USER.asociaciones |  filter: $select.search) track by $index">
+					<span ng-bind-html="item.nombre | highlight: $select.search"></span>
+				</ui-select-choices>
+			</ui-select>
+
+		</div>
+	</div>
+	
+	
+	<br>
+	<div class="row">
+		<form class="form-inline col-sm-12">
+			<div class="form-group">
+				<label for="text-search-iglesia">Filtrar: </label>
+				<input class="form-control" focus-me="focusSearchIglesia" id="text-search-iglesia" 
+					type="text" placeholder="Buscar iglesia..." ng-model="textSearchIglesia" ng-change="changeSearch(textSearchIglesia)" />
+			</div>
+		</form>
+	</div>
+	
 	
 	<br>
 	<br>

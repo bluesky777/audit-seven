@@ -114,15 +114,39 @@
 																
 																<div class="btn-group">
 																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Pastor'">
-																		Pastor</label>
+																		Pastor
+																	</label>
 																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero'">
-																		Tesorero</label>
+																		Tesorero
+																	</label>
 																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Auditor'"
-																		ng-if="USER.tipo=='Admin' || USER.tipo=='Tesorero asociación'">
-																		Auditor</label>
+																		ng-if="USER.tipo=='Tesorero asociación' || hasDivisionRole(USER.tipo, true) || hasUnionRole(USER.tipo)">
+																		Auditor
+																	</label>
 																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero asociación'"
-																		ng-if="USER.tipo=='Admin'">
-																		Tesorero asoc</label>
+																		ng-if="hasDivisionRole(USER.tipo, true) || hasUnionRole(USER.tipo)">
+																		Tesorero asoc
+																	</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Cajero de asociación'"
+																		ng-if="hasDivisionRole(USER.tipo, true) || hasUnionRole(USER.tipo)">
+																		Cajero asoc
+																	</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero de unión'"
+																		ng-if="hasDivisionRole(USER.tipo, true)">
+																		Tesorero unión
+																	</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Coordinador de unión'"
+																		ng-if="hasDivisionRole(USER.tipo, true)">
+																		Coordinador unión
+																	</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero de división'"
+																		ng-if="hasDivisionRole(USER.tipo, true)">
+																		Tesorero división
+																	</label>
+																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Coordinador de división'"
+																		ng-if="hasDivisionRole(USER.tipo, true)">
+																		Coordinador división
+																	</label>
 																</div>
 															</div>
 														</div>

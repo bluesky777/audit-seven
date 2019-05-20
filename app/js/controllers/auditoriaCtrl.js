@@ -217,7 +217,6 @@ angular.module('auditoriaApp')
 			$scope.USER.iglesia_id 			= audit.iglesia.rowid;
 			$scope.USER.distrito_id 		= audit.iglesia.distrito_id;
 			$scope.USER.iglesia_nombre 		= audit.iglesia.iglesia_nombre;
-			$scope.USER.iglesia_tipo 		= audit.iglesia.iglesia_tipo;
 			$scope.USER.distrito_nombre 	= audit.iglesia.distrito_nombre;
 			$scope.USER.iglesia_alias 		= audit.iglesia.iglesia_alias;
 			$scope.USER.auditoria_id 		= resInsert.insertId;

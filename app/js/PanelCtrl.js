@@ -4,19 +4,44 @@ angular.module('auditoriaApp')
 	
 	$scope.USER                     = USER;
 	$scope.sidebar_active           = false;
-	$scope.version                  = '0.0.12';
+	$scope.version                  = '0.0.13';
 	$scope.sidebar_active 	        = false;
 	$scope.modo_offline 	        = false;
 	$scope.tema 					= USER.tema;
 	$scope.idioma 					= USER.idioma;
+	$scope.iglesia_alias_selected 	= localStorage.iglesia_alias_selected;
+	
+	
+	function traerUniones() {
+
+		if (!USER.uniones ) {
+			datos = {};
+			datos.con_asociaciones = false;
+			
+			if (!USER.asociaciones) {
+				datos.con_asociaciones = true;
+			}
+			
+			$http.put(rutaServidor.root + '/au_uniones', datos).then(function(result){
+				USER.uniones = result.data.uniones;
+				if (result.data.asociaciones) {
+					USER.asociaciones = result.data.asociaciones;
+				}
+			})
+			
+		}
+	}
 	
 	
 	if (localStorage.modo_offline) {
 		if (localStorage.modo_offline == 'true') {
 			$scope.modo_offline = true;
+		}else{
+			traerUniones();
 		}
 	}else{
 		localStorage.modo_offline == $scope.modo_offline;
+		traerUniones();
 	}
 	
 	if (USER.idioma) {
@@ -24,6 +49,8 @@ angular.module('auditoriaApp')
 	}else{
 		$translate.use('Español');
 	}
+	
+	
 	
 
 	

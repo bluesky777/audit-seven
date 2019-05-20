@@ -143,7 +143,7 @@ angular.module('auditoriaApp')
       	$scope.VerCreandoReco = true;
 
 		$scope.act_reco = reco;
-		console.log(reco);
+
 
 		$timeout(function() {
 			$location.hash("editar-recomendaciones");
@@ -171,12 +171,21 @@ angular.module('auditoriaApp')
 
 
 
-	$scope.actureco = function(reco){
+	$scope.actualizarRecomendacion = function(reco){
+
+		superada 		= reco.superada=='si' ? 1 : 0;
 		
-		superada = reco.superada=='si' ? 1 : 0;
+		tipo_reco 	= reco.tipo;
+		
+		if (reco.tipo) {
+			if (reco.tipo.tipo) {
+				tipo_reco 	= reco.tipo.tipo;
+			}
+		}
+		
 		
 	 	consulta ="UPDATE recomendaciones SET fecha=?, hallazgo=?, tipo=?, justificacion=?, superada=?, recomendacion=?, modificado=? WHERE rowid=? "
-		ConexionServ.query(consulta,[reco.fecha, reco.hallazgo, reco.tipo.tipo, reco.justificacion, superada, reco.recomendacion, '1', reco.rowid]).then(function(result){
+		ConexionServ.query(consulta,[reco.fecha, reco.hallazgo, tipo_reco, reco.justificacion, superada, reco.recomendacion, '1', reco.rowid]).then(function(result){
 
 		   toastr.success('Recomendación actualizada.');
 		   $scope.verDtosrecomendacion();
