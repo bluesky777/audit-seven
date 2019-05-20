@@ -40,16 +40,42 @@ angular.module('auditoriaApp')
 			
 			switch ($scope.datos.observs_por) {
 				case 'Iglesias':
-					$scope.recomendaciones_pastor 	= r.data;
-					for (let i = 0; i < $scope.recomendaciones_pastor.length; i++) {
 					
-						const recom = $scope.recomendaciones_pastor[i];
-						recom.fecha = new Date(recom.fecha);
+					if ($scope.USER.tipo == 'Pastor' || $scope.USER.tipo == 'Tesorero') {
+						
+						$scope.recomendaciones_pastor 	= res;
+						for (let i = 0; i < $scope.recomendaciones_pastor.length; i++) {
+						
+							const recom = $scope.recomendaciones_pastor[i];
+							recom.fecha = new Date(recom.fecha);
+						}
+					}else{
+						
+						$scope.recomendaciones_distritos 	= res.distritos;
+						for (let i = 0; i < $scope.recomendaciones_distritos.length; i++) {
+						
+							for (let j = 0; j < $scope.recomendaciones_distritos[i].iglesias.length; j++) {
+								const iglesia = $scope.recomendaciones_distritos[i].iglesias[j];
+								
+								for (let k = 0; k < iglesia.recom_auditorias.length; k++) {
+									const recom_auditoria = iglesia.recom_auditorias[k];
+									recom_auditoria.fecha = new Date(recom_auditoria.fecha);
+								}
+								
+								for (let k = 0; k < iglesia.recomendaciones.length; k++) {
+									const recom = iglesia.recomendaciones[k];
+									recom.fecha = new Date(recom.fecha);
+								}
+							}
+						}
 					}
+					
+					
+					
 					break;
 			
 				case 'Distritos':
-					$scope.recomendaciones_distritos 	= r.data.distritos;
+					$scope.recomendaciones_distritos 	= res.distritos;
 					for (let i = 0; i < $scope.recomendaciones_distritos.length; i++) {
 						const distrito = $scope.recomendaciones_distritos[i];
 
@@ -61,7 +87,7 @@ angular.module('auditoriaApp')
 					break;
 			
 				case 'Asociaciones':
-					$scope.recomendaciones_asociaciones 	= r.data.asociaciones;
+					$scope.recomendaciones_asociaciones 	= res.asociaciones;
 					for (let i = 0; i < $scope.recomendaciones_asociaciones.length; i++) {
 						const asociacion = $scope.recomendaciones_asociaciones[i];
 
