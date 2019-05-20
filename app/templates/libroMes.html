@@ -57,17 +57,17 @@
 								<td class="success">{{ USER.distrito_nombre }}</td>
 								
 								<td class="info"> <label>Iglesia: </label></td>
-								<td class="info">{{ iglesia_nombre }}</td>
+								<td class="info">{{ USER.iglesia_nombre }}</td>
 								
 								<td class="success"> <label>Fecha</label></td>
 								<td class="success">{{ USER.fecha_audit }}</td>
 							</tr>
 							<tr>
 								<td class="success"> <label>Pastor: </label></td>
-								<td class="success" colspan="2">{{ distrito.pastor_nombres }} {{ distrito.pastor_apellidos }}</td>
+								<td class="success" colspan="2">{{ USER.distrito_pastor }} </td>
 								
 								<td class="info" colspan="3"> <label>Tesorero(a) distrital: </label>
-									{{ distrito.tesorero_nombres }} {{ distrito.tesorero_apellidos }}
+									{{ USER.distrito_tesorero }} 
 								</td>
 							</tr>
 						</table>

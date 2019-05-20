@@ -11,7 +11,6 @@ angular.module('auditoriaApp')
 	$scope.idioma 					= USER.idioma;
 	$scope.iglesia_alias_selected 	= localStorage.iglesia_alias_selected;
 	
-	
 	function traerUniones() {
 
 		if (!USER.uniones ) {

@@ -1,0 +1,66 @@
+
+
+<table class="table table-bordered table-condensed table-striped">
+    <thead>
+        <tr >
+            <th scope="col">ID </th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Observación</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Recomendación</th>
+            <th scope="col">Superada</th>
+            <th scope="col">Respuesta</th>
+            <th scope="col" style="width: 80px;">Responder</th>
+        
+        </tr>
+    </thead>
+        
+
+    <tbody>
+        
+        
+        <tr ng-repeat="recomendacion in recomendaciones_pastor"  ng-class="{'fila-danger': recomendacion.superada==0 }">
+        
+            <td ng-show="recomendacion.para=='Auditoria'" style="background-color:rgb(223, 255, 254)">{{ $index + 1 }}</td>
+            <td ng-show="recomendacion.para!='Auditoria'" >{{ $index + 1 }}</td>
+            
+            <td style="font-size: 8pt">{{recomendacion.fecha | date:'short' }}</td>
+            <td>{{recomendacion.hallazgo}}</td>
+            <td>{{recomendacion.tipo}}</td>
+            <td class="td-danger">{{recomendacion.recomendacion}}</td>
+            <td class="td-danger" style="text-align: center;">
+                <span ng-show="recomendacion.superada==0" style="font-weight: 800">NO</span>
+                <span ng-show="recomendacion.superada==1">SI</span>
+            </td>
+            <td>
+                <div class="btn-group" ng-show="!recomendacion.editando_justificacion">                        
+                    <button class="btn btn-link btn-sm" uib-tooltip="Editar respuesta" ng-click="VerActualizarRespuesta(recomendacion)">
+                        <i class="glyphicon glyphicon-pencil "></i>
+                    </button>
+                </div>
+                <div ng-show="!recomendacion.editando_justificacion">{{recomendacion.justificacion}}</div>
+                <span ng-show="recomendacion.editando_justificacion">
+                    <div class="form-group">
+                        <textarea class="form-control" ng-model="recomendacion.justificacion"></textarea>
+                    </div>
+                    <button type="button" ng-click="cancelarEditarJustificacion(recomendacion)" class="btn btn-warning btn-xs">Cancelar</button>
+                    <button type="button" ng-click="guardarJustificacion(recomendacion)" class="btn btn-primary btn-xs">Guardar</button>
+                </span>
+            </td>
+            
+            <td>
+                <div class="btn-group">                        
+                    <button class="btn btn-primary btn-sm" uib-tooltip="Editar respuesta" ng-click="VerActualizarRecomendacion(recomendacion)">
+                        <i class="glyphicon glyphicon-pencil "></i>
+                    </button>
+                </div>
+
+            </td>
+        
+        </tr>
+        
+    </tbody>
+</table>
+
+
+

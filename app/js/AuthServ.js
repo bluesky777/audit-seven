@@ -31,6 +31,14 @@ angular.module('auditoriaApp')
                     
                     usu = localStorage.USER;
                     usu = JSON.parse(usu);
+                    
+                    usu.iglesia_alias 		= localStorage.iglesia_alias_selected;
+                    usu.iglesia_nombre 		= localStorage.iglesia_nombre_selected;
+                    usu.distrito_alias 		= localStorage.distrito_alias_selected;
+                    usu.distrito_nombre 	= localStorage.distrito_nombre_selected;
+                    usu.distrito_pastor 	= localStorage.distrito_pastor_selected;
+                    usu.distrito_tesorero 	= localStorage.distrito_tesorero_selected;
+                    
                     defered.resolve(usu);
                     
                 }else{
@@ -113,13 +121,29 @@ angular.module('auditoriaApp')
                         if (result.length > 0) {
                             localStorage.logueado   = true
                             localStorage.USER       = JSON.stringify(result[0]);
-                            defered.resolve(result[0]);
+                            // Para que aparezca en la barra superior del panel
+                            usu = result[0];
+                            usu.iglesia_alias 		= localStorage.iglesia_alias_selected;
+                            usu.iglesia_nombre 		= localStorage.iglesia_nombre_selected;
+                            usu.distrito_alias 		= localStorage.distrito_alias_selected;
+                            usu.distrito_nombre 	= localStorage.distrito_nombre_selected;
+                            
+                            defered.resolve(usu);
                         }else{
                             loguear_online(datos).then(function(usu){
                                 usu                     = usu.data[0];
                                 usu.password            = datos.password;
                                 localStorage.logueado   = true
                                 localStorage.USER       = JSON.stringify(usu);
+                                // Para que aparezca en la barra superior del panel
+                                localStorage.iglesia_nombre_selected 	= usu.iglesia_nombre;
+                                localStorage.iglesia_alias_selected 	= usu.iglesia_alias;
+                                localStorage.iglesia_codigo_selected 	= usu.iglesia_codigo;
+                                localStorage.distrito_nombre_selected 	= usu.distrito_nombre;
+                                localStorage.distrito_alias_selected 	= usu.distrito_alias;
+                                localStorage.distrito_pastor_selected 	= usu.distrito_pastor;
+                                localStorage.distrito_tesorero_selected = usu.distrito_tesorero;
+
                                 
                                 ConexionServ.query('DELETE FROM usuarios').then(function(){
                                     consulta = 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, tema, idioma, username, password, email, fecha, tipo, union_id, asociacion_id, distrito_id, iglesia_id, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
@@ -148,6 +172,15 @@ angular.module('auditoriaApp')
                         usu.rowid               = usu.id;
                         localStorage.logueado   = true
                         localStorage.USER       = JSON.stringify(usu); 
+                        // Para que aparezca en la barra superior del panel
+                        localStorage.iglesia_nombre_selected 	= usu.iglesia_nombre;
+                        localStorage.iglesia_alias_selected 	= usu.iglesia_alias;
+                        localStorage.iglesia_codigo_selected 	= usu.iglesia_codigo;
+                        localStorage.distrito_nombre_selected 	= usu.distrito_nombre;
+                        localStorage.distrito_alias_selected 	= usu.distrito_alias;
+                        localStorage.distrito_pastor_selected 	= usu.distrito_pastor;
+                        localStorage.distrito_tesorero_selected = usu.distrito_tesorero;
+                        
                          
                         consulta = 'INSERT INTO usuarios(rowid, id, nombres, apellidos, sexo, username, password, email, fecha, tipo, celular) VALUES(?,?,?,?,?,?,?,?,?,?,?)';
                         ConexionServ.query(consulta, [usu.id, usu.id, usu.nombres, usu.apellidos, usu.sexo, usu.username, usu.password, usu.email, usu.fecha, usu.tipo, usu.celular]).then(function(result){
@@ -219,7 +252,16 @@ angular.module('auditoriaApp')
                     
                     
                     localStorage.USER       = JSON.stringify(result[0]);
-                    defered.resolve(result[0]);
+                    // Para que aparezca en la barra superior del panel
+                    usu = result[0];
+                    usu.iglesia_alias 		= localStorage.iglesia_alias_selected;
+                    usu.iglesia_nombre 		= localStorage.iglesia_nombre_selected;
+                    usu.distrito_alias 		= localStorage.distrito_alias_selected;
+                    usu.distrito_nombre 	= localStorage.distrito_nombre_selected;
+                    usu.distrito_pastor 	= localStorage.distrito_pastor_selected;
+                    usu.distrito_tesorero 	= localStorage.distrito_tesorero_selected;
+                    
+                    defered.resolve(usu);
                 }else{
                     console.log('Cero usuarios', datos);
                     defered.reject('Cero usuarios')
@@ -241,6 +283,8 @@ angular.module('auditoriaApp')
             delete localStorage.iglesia_alias_selected;
             delete localStorage.iglesia_codigo_selected;
             delete localStorage.iglesia_nombre_selected;
+            delete localStorage.distrito_pastor_selected;
+            delete localStorage.distrito_tesorero_selected;
             $state.go('login');
         },
           

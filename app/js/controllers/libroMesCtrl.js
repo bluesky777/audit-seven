@@ -26,7 +26,8 @@ angular.module("auditoriaApp")
 	$scope.ocultando_primeras 	= false;
 	$scope.ocultando_egresos 	= false;
 	$scope.mostrando_reporte 	= false;
-
+	console.log($scope.USER);
+	
 	$scope.meses = MESES;
 
 	$scope.years = [
@@ -74,6 +75,42 @@ angular.module("auditoriaApp")
 			$scope.ocultando_egresos 	= false;
 		}
 	}
+	
+	/*
+	// Traemos datos de iglesia y distrito
+	if ( ($scope.USER.tipo == 'Auditor' && $scope.modo_offline == true) || 
+		($scope.USER.tipo == 'Admin' && $scope.modo_offline == true) ) {
+		
+		consulta = 'SELECT a.fecha as fecha_audit, a.hora as hora_audit, a.saldo_ant, a.ingre_por_registrar, a.iglesia_id as iglesia_audit_id ' +
+				//'t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, ' +
+				//'p.nombres as pastor_nombres, p.apellidos as pastor_apellidos ' +
+			'FROM auditorias a '+
+			"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=i.tesorero_id " +
+			"LEFT JOIN usuarios p ON p.tipo='Pastor' and p.rowid=d.pastor_id " +
+			'WHERE a.rowid=? ';
+			
+		ConexionServ.query(consulta, [$scope.USER.auditoria_id]).then(function(result) {
+			
+			$scope.distritos = result;
+			
+		}, function(tx) {
+			console.log("Error no es posbile traer Distritos", tx);
+		});
+	}else{
+
+		$http.put(rutaServidor.root + '/au_uniones').then(function(r){
+
+			$scope.USER.uniones 		= r.data;
+			AuthServ.update_user_storage($scope.USER).then(function(usuario){})
+			continuarConAsociaciones()
+			
+		}, function(r2){
+			toastr.error('No se pudo descargar iglesias');
+		})
+		
+	}*/
+			
+			
 	
 	$scope.verficarTextoReporte = function(){
 		$timeout(function(){
@@ -499,6 +536,7 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	// TRAEMOS TODOS LOS DATOS
 	$scope.traerDatos = function(){
 		AuthServ.update_user_storage($scope.USER).then((actualizado)=>{
+			console.log(actualizado);
 			$scope.USER 		= actualizado;
 			$scope.lib_meses 	= [];
 			
@@ -522,6 +560,7 @@ presentados para su revisión y son para consideración de los miembros de la ju
 
 			ConexionServ.query(consulta, [actualizado.asociacion_id]).then(function(rAudi) {
 				$scope.distrito = rAudi[0];
+				console.log($scope.distrito);
 			}, function(tx) {
 				console.log("Error no se pudo traer auditorias", tx);
 			});

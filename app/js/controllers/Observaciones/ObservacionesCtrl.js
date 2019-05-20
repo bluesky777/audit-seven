@@ -37,29 +37,19 @@ angular.module('auditoriaApp')
 		$http.put(rutaServidor.root + '/au_observaciones/correspondientes', data).then(function(r){
 			res 	= r.data;
 		
-			$scope.recomendaciones_distritos 	= r.data.distritos;
 			
 			switch ($scope.datos.observs_por) {
 				case 'Iglesias':
-					for (let i = 0; i < $scope.recomendaciones_distritos.length; i++) {
+					$scope.recomendaciones_pastor 	= r.data;
+					for (let i = 0; i < $scope.recomendaciones_pastor.length; i++) {
 					
-						for (let j = 0; j < $scope.recomendaciones_distritos[i].iglesias.length; j++) {
-							const iglesia = $scope.recomendaciones_distritos[i].iglesias[j];
-							
-							for (let k = 0; k < iglesia.recom_auditorias.length; k++) {
-								const recom_auditoria = iglesia.recom_auditorias[k];
-								recom_auditoria.fecha = new Date(recom_auditoria.fecha);
-							}
-							
-							for (let k = 0; k < iglesia.recomendaciones.length; k++) {
-								const recom = iglesia.recomendaciones[k];
-								recom.fecha = new Date(recom.fecha);
-							}
-						}
+						const recom = $scope.recomendaciones_pastor[i];
+						recom.fecha = new Date(recom.fecha);
 					}
 					break;
 			
 				case 'Distritos':
+					$scope.recomendaciones_distritos 	= r.data.distritos;
 					for (let i = 0; i < $scope.recomendaciones_distritos.length; i++) {
 						const distrito = $scope.recomendaciones_distritos[i];
 
