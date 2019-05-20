@@ -6,9 +6,11 @@
     
     <div ng-repeat="iglesia in distrito.iglesias">
         
-        <h4>{{ iglesia.nombre }} 
-            <a ng-click="mostrarRecomAuditorias(iglesia)" ng-show="iglesia.recom_auditorias.length>0" uib-tooltip="Mostrar recomendaciones hechas en auditorias" href="">
-                - Ver de auditorías</a> 
+        <h4 class="top-block">{{ iglesia.nombre }} 
+            <a ng-click="mostrarRecomAuditorias(iglesia)" ng-show="iglesia.recom_auditorias.length>0" style="position: relative;" uib-tooltip="Mostrar recomendaciones hechas en auditorias" href="">
+                - Ver de auditorías
+                <span class="notification" style="right: -15px;">{{iglesia.recom_auditorias.length}}</span>
+            </a> 
         </h4>
     
         <table ng-show="iglesia.mostrar_recom_auditorias || iglesia.recomendaciones.length>0" class="table table-bordered table-condensed table-striped">

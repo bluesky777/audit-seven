@@ -28,10 +28,10 @@ angular.module('auditoriaApp')
 
 
 	// Traemos todos los datos que necesito para trabajar
-  $scope.traerDatos = function() {
+	$scope.traerDatos = function() {
 
 		// Traemos USUARIOS
-		consulta = "SELECT rowid, nombres, apellidos, sexo, tipo, celular, username from usuarios";
+		consulta = "SELECT rowid, nombres, apellidos, sexo, tipo, celular, username FROM usuarios";
 
 		ConexionServ.query(consulta, []).then(function(result) {
 			$scope.usuarios = result;
@@ -40,42 +40,42 @@ angular.module('auditoriaApp')
 			console.log("Error no es posbile traer usuarios", tx);
 		});
 		
-  };
+	};
 
 	$scope.traerDatos();
 
 
 
 	$scope.VerUniones = function(){
-		$state.go('panel.informe.uniones');
+		$state.go('panel.informes.uniones');
 	}
 
 
 	$scope.VerAsociaciones = function(){
-		$state.go('panel.informe.asociaciones');
+		$state.go('panel.informes.asociaciones');
 	}
 
 	$scope.VerDistritos = function(){
-		$state.go('panel.informe.distritos');
+		$state.go('panel.informes.distritos');
 	}
 
 	$scope.VerIglesias = function(){
-		$state.go('panel.informe.iglesias');
+		$state.go('panel.informes.iglesias');
 	}
 	
 	$scope.compararIglesiasMesesYears = function(){
 		$scope.config.orientacion = 'oficio_horizontal'
-		$state.go('panel.informe.comparar_iglesias_meses_years');
+		$state.go('panel.informes.comparar_iglesias_meses_years');
 	}
 	
 	$scope.compararDistritosYears = function(){
 		$scope.config.orientacion = 'oficio_horizontal'
-		$state.go('panel.informe.comparar_distritos_years');
+		$state.go('panel.informes.comparar_distritos_years');
 	}
 	
 	$scope.compararIglesiasYears = function(){
 		$scope.config.orientacion = 'oficio_horizontal'
-		$state.go('panel.informe.comparar_iglesias_years');
+		$state.go('panel.informes.comparar_iglesias_years');
 	}
 
 

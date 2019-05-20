@@ -204,7 +204,7 @@ angular.module("auditoriaApp")
 				
 				AuthServ.update_user_storage($scope.USER).then(function(usuario){
 					
-					$http.put(rutaServidor.root + '/au_usuario/cambiar-iglesia', { iglesia_id: $scope.USER.iglesia_id, user_id: id }).then(function(){
+					$http.put(rutaServidor.root + '/au_usuario/cambiar-iglesia', { iglesia_id: $scope.USER.iglesia_id, distrito_id: $scope.USER.distrito_id, user_id: id }).then(function(){
 						try {
 							const {ipcRenderer} = require('electron');
 							ipcRenderer.send('refrescar-app');
