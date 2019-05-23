@@ -92,6 +92,11 @@ angular.module('auditoriaApp', [
 		controller: 'respuestasctrl',
 		templateUrl: 'templates/respuestas.html'
 	})
+	.state('panel.remesas', {
+		url: '/remesas',
+		controller: 'RemesasCtrl',
+		templateUrl: 'templates/remesas.html'
+	})
 
 
 	.state('panel.sincronizacion', {

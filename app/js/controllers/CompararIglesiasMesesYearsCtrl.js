@@ -4,7 +4,7 @@ angular.module('auditoriaApp')
 	
 	$scope.dato = {};
 	
-	console.log($scope.USER);
+	
 	
 	// Configuramos los datos si es OFFLINE
 	if ( ($scope.USER.tipo == 'Auditor' && $scope.modo_offline == true) || 
@@ -64,11 +64,13 @@ angular.module('auditoriaApp')
 	$scope.compararDistrito = function(distrito_id){
 		$scope.years    = [$scope.yearAnt, $scope.yearDes];
 		
-		CompararRemesasFactory.traer(distrito_id, '611110', $scope.years).then(function(resp){
+		is_online = !$scope.USER.modo_offline;
+		
+		CompararRemesasFactory.traer(distrito_id, '611110', $scope.years, is_online).then(function(resp){
 			$scope.iglesias     = resp.iglesias;
 		})
 		
-		CompararRemesasFactory.traer(distrito_id, '634110', $scope.years).then(function(resp){
+		CompararRemesasFactory.traer(distrito_id, '634110', $scope.years, is_online).then(function(resp){
 			$scope.iglesias_desarrollo     = resp.iglesias;
 		})
 	}

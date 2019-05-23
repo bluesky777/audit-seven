@@ -5,7 +5,7 @@
 			<a ui-sref="panel">{{ 'INICIO_MENU' | translate }}</a>
 		</li>
 		<li class="li-breadcrumb">
-			<a ui-sref="panel.usuarios">Usuarios</a>
+			<a ui-sref="panel.remesas">Remesas</a>
 		</li>
 		<li style="float: right;" class="refresh-breadcrumb">
 			<a href="" ng-click="refresh()">
@@ -21,131 +21,92 @@
 	<div class="box col-md-12">
 		<div class="box-inner">
 			<div class="box-header well">
-				<h2><i class="glyphicon glyphicon-info-sign"></i> Usuarios</h2>
+				<h2><i class="glyphicon glyphicon-info-sign"></i> Remesas</h2>
 			</div>
 			<div class="box-content row">
 
 				<div class="col-sm-12">
 
-					<button class="btn btn-primary" ng-click="verCreandoUsuario()" ng-show="!ver_crear_usu">
-						Crear usuario
+					<button class="btn btn-primary" ng-click="verCreando()" ng-show="!ver_crear">
+						Crear remesa
 					</button>
 
 
-					<div class="row" ng-show="ver_crear_usu" style="margin-bottom: 20px;">
+					<div class="row" ng-show="ver_crear" style="margin-bottom: 20px;">
 						<div class="box col-md-12">
 							<div class="box-inner">
 								<div class="box-header well">
-									<h2><i class="glyphicon glyphicon-plus"></i> Crear usuario</h2>
+									<h2><i class="glyphicon glyphicon-plus"></i> Crear Remesa</h2>
 								</div>
 								<div class="box-content row">
 
 									<div class="col-sm-12">
 
-										<form ng-submit="insertarUsuario(usuario_crear)">
+										<form ng-submit="insertarRemesa(rem_crear)">
 											<table style="width: 100%;">
 
 												<tr>
-													<td style="width: 150px">Nombre</td>
+													<td style="width: 150px">Num diario</td>
 													<td>
-														<input class="form-control" required="required" type="text" placeholder="Nombre" ng-model="usuario_crear.nombres">
+														<input class="form-control" required="required" type="text" placeholder="Num diario" ng-model="rem_crear.num_diario">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Apellidos</td>
+													<td style="width: 150px">Línea</td>
 													<td>
-														<input class="form-control" required="required" type="text" placeholder="Apellidos" ng-model="usuario_crear.apellidos">
+														<input class="form-control" type="text" placeholder="Línea" ng-model="rem_crear.linea">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Sexo</td>
+													<td style="width: 150px">Tipo diario</td>
 													<td>
-														<div style="margin-bottom: 5px;" class="form-group col-lg-4 col-sm-6 col-xs-12">
-															<div class="row">
-																<div class="col-lg-6 col-sm-4 col-xs-12">
-																	<div class="radio">
-																		<label>
-																			<img ng-src="{{avatar.masculino.img}}" class="img-gender">
-																			<input type="radio" name="sexo" value="M" ng-model="usuario_crear.sexo"><span class="text">Masculino</span>
-																		</label>
-																	</div>
-																</div>
-																<div class="col-lg-6 col-sm-4 col-xs-12">
-																	<div class="radio">
-																		<label>
-																			<img ng-src="{{avatar.femenino.img}}" class="img-gender">
-																			<input type="radio" name="sexo" value="F" ng-model="usuario_crear.sexo"><span class="text">Femenino</span>
-																		</label>
-																	</div>
-																</div>
-															</div>
-														</div>
+														<input class="form-control" type="text" placeholder="Tipo diario" ng-model="rem_crear.tipo_diario">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Email</td>
+													<td style="width: 150px">Num secuencia</td>
 													<td>
-														<input class="form-control" type="email" placeholder="Email" ng-model="usuario_crear.email">
+														<input class="form-control" type="text" placeholder="Num secuencia" ng-model="rem_crear.num_secuencia">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Nombre de usuario</td>
+													<td style="width: 150px">Periodo</td>
 													<td>
-														<input class="form-control" type="text" placeholder="Nombre de usuario" ng-model="usuario_crear.username">
+														<input class="form-control" required="required" type="text" placeholder="Periodo" ng-model="rem_crear.periodo">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Contraseña</td>
+													<td style="width: 150px">Fecha</td>
 													<td>
-														<input class="form-control" type="password" placeholder="Contraseña" ng-model="usuario_crear.password">
+														<input class="form-control" type="text" placeholder="Fecha" ng-model="rem_crear.fecha">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Tipo de usuario</td>
+													<td style="width: 150px">Referencia</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Referencia" ng-model="rem_crear.referencia">
+													</td>
+												</tr>
+
+
+												<tr>
+													<td style="width: 150px">Código cuenta</td>
 													<td>
 														<div style="margin-bottom: 5px;" class="form-group col-xs-12">
 															<div class="row">
 																
 																<div class="btn-group">
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Pastor'">
-																		Pastor
+																	<label class="btn btn-success" ng-model="rem_crear.cod_cuenta" uib-btn-radio="'611110'">
+																		611110
 																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero'">
-																		Tesorero
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Auditor'"
-																		ng-if="USER.tipo=='Tesorero asociación' || hasDivisionRole(USER.tipo, true) || hasUnionRole(USER.tipo)">
-																		Auditor
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero asociación'"
-																		ng-if="hasDivisionRole(USER.tipo, true) || hasUnionRole(USER.tipo)">
-																		Tesorero asoc
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Cajero de asociación'"
-																		ng-if="hasDivisionRole(USER.tipo, true) || hasUnionRole(USER.tipo)">
-																		Cajero asoc
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero de unión'"
-																		ng-if="hasDivisionRole(USER.tipo, true)">
-																		Tesorero unión
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Coordinador de unión'"
-																		ng-if="hasDivisionRole(USER.tipo, true)">
-																		Coordinador unión
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Tesorero de división'"
-																		ng-if="hasDivisionRole(USER.tipo, true)">
-																		Tesorero división
-																	</label>
-																	<label class="btn btn-success" ng-model="usuario_crear.tipo" uib-btn-radio="'Coordinador de división'"
-																		ng-if="hasDivisionRole(USER.tipo, true)">
-																		Coordinador división
+																	<label class="btn btn-success" ng-model="rem_crear.cod_cuenta" uib-btn-radio="'634110'">
+																		634110
 																	</label>
 																</div>
 															</div>
@@ -154,19 +115,81 @@
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Fecha nacimiento</td>
+													<td style="width: 150px">Nombre cuenta</td>
 													<td>
-														<input class="form-control" type="date" placeholder="Fecha nacimiento" ng-model="usuario_crear.fecha">
+														<input class="form-control" type="text" placeholder="Nombre cuenta" ng-model="rem_crear.nombre_cuenta">
 													</td>
 												</tr>
 
 												<tr>
-													<td style="width: 150px">Celular</td>
+													<td style="width: 150px">Descripción transacción</td>
 													<td>
-														<input class="form-control" type="text" placeholder="Celular" ng-model="usuario_crear.celular">
+														<input class="form-control" type="text" placeholder="Descripción transacción" ng-model="rem_crear.descripcion_transaccion">
 													</td>
 												</tr>
 
+												<tr>
+													<td style="width: 150px">Cantidad</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Cantidad" ng-model="rem_crear.cantidad">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">IVA</td>
+													<td>
+														<input class="form-control" type="text" placeholder="IVA" ng-model="rem_crear.iva">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Moneda</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Moneda" ng-model="rem_crear.moneda">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Recurso</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Recurso" ng-model="rem_crear.recurso">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Función</td>
+													<td>
+														<input class="form-control" required="required" type="text" placeholder="Función" ng-model="rem_crear.funcion">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Restr</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Restr" ng-model="rem_crear.restr">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Org id</td>
+													<td>
+														<input class="form-control" required="required" type="text" placeholder="Org id" ng-model="rem_crear.org_id">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Empleados</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Empleados" ng-model="rem_crear.empleados">
+													</td>
+												</tr>
+
+												<tr>
+													<td style="width: 150px">Concepto</td>
+													<td>
+														<input class="form-control" type="text" placeholder="Concepto" ng-model="rem_crear.concepto">
+													</td>
+												</tr>
 
 
 

@@ -13,22 +13,11 @@ angular.module("auditoriaApp")
 	$scope.$parent.sidebar_active 	= false;
 	$scope.ver_crear_usu 			= false;
 	$scope.hasUnionRole 			= AuthServ.hasUnionRole;
-	$scope.hasDivisionRole 		= AuthServ.hasDivisionRole;
+	$scope.hasDivisionRole 			= AuthServ.hasDivisionRole;
 	
 	
 	
-	$scope.avatar = {
-	  masculino: {
-		abrev: "M",
-		def: "Masculino",
-		img: "img/male1.png"
-	  },
-	  femenino: {
-		abrev: "F",
-		def: "Femenino",
-		img: "img/female1.png"
-	  }
-	};
+	$scope.avatar = $scope.avatar = AuthServ.avatars();
 
 	$scope.usuario_crear = {
 	  sexo: "M",
@@ -94,8 +83,8 @@ angular.module("auditoriaApp")
 
 	$scope.traerUsuarios = function() {
 		UsuariosFacto.traer($scope.USER.tipo).then(function(result){
-			$scope.usuarios 			= result;
-            $scope.gridOptions.data 	= $scope.usuarios;
+		$scope.usuarios 		= result;
+      $scope.gridOptions.data 	= $scope.usuarios;
 		}, function(){
 			toastr.error('No se pudo descargar usuarios');
 		});

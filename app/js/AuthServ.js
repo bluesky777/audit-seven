@@ -285,8 +285,25 @@ angular.module('auditoriaApp')
             delete localStorage.iglesia_nombre_selected;
             delete localStorage.distrito_pastor_selected;
             delete localStorage.distrito_tesorero_selected;
+            delete localStorage.distrito_alias_selected;
+            delete localStorage.distrito_nombre_selected;
             $state.go('login');
         },
+        
+        avatars: function () {
+            return {
+                masculino: {
+                  abrev: "M",
+                  def: "Masculino",
+                  img: "img/male1.png"
+                },
+                femenino: {
+                  abrev: "F",
+                  def: "Femenino",
+                  img: "img/female1.png"
+                }
+              };
+        }
           
     }
     
