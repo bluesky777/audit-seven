@@ -73,6 +73,59 @@ angular.module('auditoriaApp')
             return defer.promise;
         },
         
+
+        // *********************** TRAER LOS DATOS DE LAS ENTIDADES
+        traerDatosEntidades: function(asociacion_id, tipo){
+            var defer = $q.defer();
+            
+            $user   = AuthServ.get_user();
+            data    = { auth: $user.auth };
+            
+            data.asociacion_id  = asociacion_id;
+            data.tipo_usu       = tipo;
+            
+            $http.put(rutaServidor.root+'/au_entidades/datos', data).then(function(result){
+                defer.resolve(result.data);
+            }, function(er) {
+                defer.reject('Error: ', er);
+            })
+            
+            return defer.promise;
+        },
+        
+        
+        insertarIglesia: function(datos, is_modo_offline){
+            var defer = $q.defer();
+            
+            
+            if ( is_modo_offline == true){
+            
+                consulta = "INSERT INTO iglesias(nombre, alias, codigo, distrito_id, zona, tesorero_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, anombre_propiedad, anombre_propiedad_pastor, num_matricula, predial, municipio, direccion, observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                
+                ConexionServ.query(consulta, datos).then(function(result) {
+                    defer.resolve(result.data);
+                }, function(tx) {
+                    defer.reject('Error: ', er);
+                });
+
+            }else{
+            
+                $user           = AuthServ.get_user();
+                data            = {auth: $user.auth};
+                data
+
+                $http.put(rutaServidor.root+'/au_entidades/store', data).then(function(result){
+                    defer.resolve(result.data);
+                }, function(er) {
+                    defer.reject('Error: ', er);
+                })
+
+            }
+            
+            
+            return defer.promise;
+        },
+        
         
         
     }

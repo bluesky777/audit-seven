@@ -68,8 +68,8 @@
                           <ui-select-match placeholder="Iglesia">
                             <span ng-bind="$select.selected.nombres + ' ' + $select.selected.alias"></span>
                           </ui-select-match>
-                          <ui-select-choices group-by="agruparPorDistrito" repeat="item in iglesias | filter: $select.search track by $index">
-                            <span ng-bind-html="item.alias + ' - ' + item.nombre | highlight: $select.search"></span>
+                          <ui-select-choices group-by="'nombre_distrito'" repeat="item in iglesias | filter: $select.search track by $index">
+                            <span ng-bind-html="($index+1) + '. ' + item.alias + ' - ' + item.nombre | highlight: $select.search"></span>
                           </ui-select-choices>
                         </ui-select>
                       </div>

@@ -1,7 +1,17 @@
 angular.module("auditoriaApp")
 
 .controller("RemesasCtrl", function($scope, AuthServ, ConexionServ, $filter, toastr, RemesasCrudFacto, $uibModal, Acentos) {
-
+	/* Para grado once
+	ConexionServ.query('SELECT * FROM USUARIOS').then(function(usuarios){
+		for (let i = 0; i < usuarios.length; i++) {
+			const usu = usuarios[i];
+			consulta = 'SELECT * FROM asistencias WHERE usuario_id=?';
+			ConexionServ.query(consulta, [usu.rowid]).then(function(asistencias){
+				usu.asistencias = asistencias;
+			})
+		}
+	})
+	*/
 	
 	$scope.gridScope 								= $scope
 	$scope.gridOptions 							= {};

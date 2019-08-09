@@ -10,8 +10,8 @@ angular.module('auditoriaApp')
 			const {ipcRenderer} = require('electron');
 			window.print();
 		} catch(e) {
-				console.error("electron no encontrado");
-				window.print();
+			console.error("electron no encontrado");
+			window.print();
 		}
 		
 	};

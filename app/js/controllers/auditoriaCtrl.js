@@ -16,7 +16,7 @@ angular.module('auditoriaApp')
 		
 	ConexionServ.query(consulta, []).then(function(result){
 		$scope.iglesias = result;
-		
+		console.log($scope.iglesias);
 		for (let i = 0; i < $scope.iglesias.length; i++) {
 			if ($scope.iglesias[i].rowid == $scope.USER.iglesia_id) {
 				$scope.auditoria_crear.iglesia = $scope.iglesias[i];
@@ -36,8 +36,8 @@ angular.module('auditoriaApp')
 		}else{
 			
 			consulta 	= 'SELECT m.*, m.rowid FROM lib_mensuales m ' + 
-				'WHERE m.auditoria_id =? '
-				'ORDER BY m.periodo DESC LIMIT 1';
+				'WHERE m.auditoria_id =? and m.eliminado is null ' +
+				'ORDER BY m.periodo DESC LIMIT 1'; // SELECT m.*, m.rowid FROM lib_mensuales m WHERE m.auditoria_id=1 ORDER BY m.periodo DESC LIMIT 1
 				
 			id = 0;
 			if ($scope.auditorias[$scope.auditorias.length-1]) {
@@ -48,15 +48,16 @@ angular.module('auditoriaApp')
 				}
 			}
 
+
 			ConexionServ.query(consulta, [id]).then(function(result) {
 				
 				$scope.vermostrandocrarauditorias 	= true;
 				
-				if ($scope.auditorias.length>0) {
+				if ($scope.auditorias.length>0 && result.length>0) {
 					
 					libro = result[result.length-1];
 					$scope.auditoria_crear.saldo_ant 	= $scope.auditorias[$scope.auditorias.length-1].saldo_final;
-				
+					
 					anio 		= libro.periodo.slice(0,4);
 					mes_temp 	= libro.periodo.slice(6, 8);
 					

@@ -8,7 +8,7 @@ angular.module("auditoriaApp")
 	}
 })
 
-.controller("EntidadesCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal, rutaServidor, $http) {
+.controller("EntidadesCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal, rutaServidor, $http, EntidadesFacto) {
 	$scope.entidades 				= true;
 	$scope.distrito_new 			= {};
 	$scope.datos 					= {};
@@ -206,6 +206,9 @@ angular.module("auditoriaApp")
 
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
+
+		if ( $scope.modo_offline == true){
+
 			// Traemos USUARIOS
 			consulta = "SELECT rowid, nombres, apellidos, sexo, tipo, celular, username FROM usuarios WHERE eliminado is null";
 
@@ -269,6 +272,21 @@ angular.module("auditoriaApp")
 			}, function(tx) {
 				toastr.error("Error no es posbile traer asociaciones", tx);
 			});
+			
+		}else{
+
+			EntidadesFacto.traerDatosEntidades().then(function(datos){
+				$scope.uniones 				= datos.uniones;
+				$scope.iglesias 			= datos.iglesias;
+				$scope.gridOptions.data 	= datos.iglesias;
+				$scope.distritos 			= datos.distritos;
+				$scope.asociaciones 		= datos.asociaciones;
+				$scope.usuarios 			= datos.usuarios;
+			});
+
+		}
+
+
     };
 
 	$scope.traerDatos();
@@ -284,8 +302,8 @@ angular.module("auditoriaApp")
 	$scope.traerImagenes();
 	
 
-	
-    $scope.Insertentidad = function(entidad_crear) {
+	/*
+    $scope.InsertarEntidad = function(entidad_crear) {
 			consulta = "INSERT INTO entidades(nombres, alias, pastor, celular) VALUES(?, ?, ?, ?) ";
 			ConexionServ.query(consulta, [entidad_crear.nombres,entidad_crear.alias,entidad_crear.pastor,entidad_crear.celular]).then(function(result) {
 				console.log("entidad creada", result);
@@ -293,7 +311,8 @@ angular.module("auditoriaApp")
 			}, function(tx) {
 				toastr.error("Entidad no se pudo crear", tx);
 			});
-    };
+	};
+	*/
 
     $scope.actuentidad = function(entidad_cambiar) {
 		fecha_update = window.fixDate(new Date(), true);
@@ -368,7 +387,7 @@ angular.module("auditoriaApp")
 	};
 	
 	$scope.addImagen = function(imagen){
-		console.log(imagen);
+
 		$http.put(rutaServidor.root + '/au_imagenes/add-to-iglesia', {imagen_id: imagen.id, iglesia_id: $scope.iglesia_edit.rowid}).then(function(){
 			toastr.success('Documento asignado');
 			imagen.iglesia_id = imagen.id;
@@ -414,7 +433,6 @@ angular.module("auditoriaApp")
 	
     $scope.cambiaDescripcion = function(imagen){
         $http.put(rutaServidor.root + '/au_imagenes/update', imagen).then(function(r){
-            console.log(r);
             toastr.success('Descripción guardada');
         }, function(r2){
             toastr.error('No se pudo guardar');
@@ -568,21 +586,19 @@ angular.module("auditoriaApp")
 			teso_id 		= iglesia.tesorero.rowid;
 		}
 		
-		
-		
-		consulta = "INSERT INTO iglesias(nombre, alias, codigo, distrito_id, zona, tesorero_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, anombre_propiedad, anombre_propiedad_pastor, num_matricula, predial, municipio, direccion, observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		
-		
-		ConexionServ.query(consulta, [ iglesia.nombre, iglesia.alias, iglesia.codigo, distrito_id, iglesia.zona, teso_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, iglesia.anombre_propiedad, iglesia.anombre_propiedad_pastor, iglesia.num_matricula, iglesia.predial, iglesia.municipio, iglesia.direccion, iglesia.observaciones]).then(function(result) {
+		datos = [ iglesia.nombre, iglesia.alias, iglesia.codigo, distrito_id, iglesia.zona, teso_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, iglesia.anombre_propiedad, iglesia.anombre_propiedad_pastor, iglesia.num_matricula, iglesia.predial, iglesia.municipio, iglesia.direccion, iglesia.observaciones];
+
+		EntidadesFacto.insertarIglesia(datos, $scope.modo_offline).then(function(){
 			$scope.traerDatos();
 			toastr.success("Iglesia creada exitosamente.");
 			$scope.guardando_iglesia 	= false;
 			$scope.ver_creando_iglesia 	= false;
 		}, function(tx) {
-			toastr.success("Error al guardar iglesia.");
+			toastr.error("Error al guardar iglesia.");
 			$scope.guardando_iglesia 	= false;
-			$scope.ver_creando_iglesia 	= false;
-		});
+		})
+
+
     };
 
     $scope.VerCreandoIglesia = function() {
