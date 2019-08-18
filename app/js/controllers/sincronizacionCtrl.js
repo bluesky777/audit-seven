@@ -9,7 +9,7 @@ angular.module("auditoriaApp")
 	}
 }])
 
-.controller("sincronizacionCtrl", function($scope, ConexionServ, DescargarTodoServ, toastr, AuthServ, $anchorScroll, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
+.controller("sincronizacionCtrl", function($scope, ConexionServ, DescargarTodoServ, toastr, AuthServ, $q, $timeout, $uibModal,  $http, rutaServidor, SincronizarServ) {
 	$scope.entidades 				= true;
     $scope.distrito_new 			= {};
     $scope.modentidades 			= false;
@@ -147,16 +147,16 @@ angular.module("auditoriaApp")
     		datos = {
     			iglesias: 				$scope.iglesias,
     			distritos: 				$scope.distritos,
-    			asociaciones: 		$scope.asociaciones,
+    			asociaciones: 			$scope.asociaciones,
     			auditorias: 			$scope.auditorias,
-    			uniones: 					$scope.uniones,
+    			uniones: 				$scope.uniones,
     			usuarios: 				$scope.usuarios,
-    			lib_mensuales: 		$scope.lib_mensuales,
-    			lib_semanales: 		$scope.lib_semanales,
+    			lib_mensuales: 			$scope.lib_mensuales,
+    			lib_semanales: 			$scope.lib_semanales,
     			gastos_mes: 			$scope.gastos_mes,
     			preguntas: 				$scope.preguntas,
     			respuestas: 			$scope.respuestas,
-    			recomendaciones: 	$scope.recomendaciones
+    			recomendaciones: 		$scope.recomendaciones
     		};
     	}
 
@@ -166,15 +166,15 @@ angular.module("auditoriaApp")
 				SincronizarServ.uniones(r.uniones);
 				SincronizarServ.asociaciones(r.asociaciones);
 				SincronizarServ.distritos(r.distritos);
-							SincronizarServ.iglesias(r.iglesias);
-							SincronizarServ.usuarios(r.usuarios);
-							SincronizarServ.auditorias(r.auditorias);
-							SincronizarServ.lib_mensuales(r.lib_mensuales);
-							SincronizarServ.lib_semanales(r.lib_semanales);
-							SincronizarServ.gastos_meses(r.gastos_mes);
-							SincronizarServ.preguntas(r.preguntas);
-							SincronizarServ.respuestas(r.respuestas);
-							SincronizarServ.recomendaciones(r.recomendaciones);
+				SincronizarServ.iglesias(r.iglesias);
+				SincronizarServ.usuarios(r.usuarios);
+				SincronizarServ.auditorias(r.auditorias);
+				SincronizarServ.lib_mensuales(r.lib_mensuales);
+				SincronizarServ.lib_semanales(r.lib_semanales);
+				SincronizarServ.gastos_meses(r.gastos_mes);
+				SincronizarServ.preguntas(r.preguntas);
+				SincronizarServ.respuestas(r.respuestas);
+				SincronizarServ.recomendaciones(r.recomendaciones);
 
 
 				toastr.success('Datos subidos');
@@ -191,279 +191,319 @@ angular.module("auditoriaApp")
 		
 		if(res){
 			$scope.datos_eliminados = false;
-		
-			promesas = [];
-			
-			prom = ConexionServ.query('DROP TABLE auditorias')
-			prom.then(function(result){
-				console.log('Eliminado auditorias');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE iglesias').then(function(result){
-				console.log('Eliminado iglesias');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE uniones').then(function(result){
-				console.log('Eliminado uniones');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE distritos').then(function(result){
-				console.log('Eliminado distritos');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE asociaciones').then(function(result){
-				console.log('Eliminado asociaciones');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE usuarios').then(function(result){
-				console.log('Eliminado usuarios');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE lib_mensuales').then(function(result){
-				console.log('Eliminado lib_mensuales');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE lib_semanales').then(function(result){
-				console.log('Eliminado lib_semanales');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE recomendaciones').then(function(result){
-				console.log('Eliminado recomendaciones');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE preguntas').then(function(result){
-				console.log('Eliminado preguntas');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE respuestas').then(function(result){
-				console.log('Eliminado respuestas');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE dinero_efectivo').then(function(result){
-				console.log('Eliminado dinero_efectivo');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE destinos').then(function(result){
-				console.log('Eliminado destinos');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE destinos_pagos').then(function(result){
-				console.log('Eliminado destinos_pagos');
-			});
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE gastos_mes').then(function(result){
-				console.log('Eliminado gastos_mes');
-			})
-			promesas.push(prom);
-			prom = ConexionServ.query('DROP TABLE remesas').then(function(result){
-				console.log('Eliminado remesas');
-			})
-			promesas.push(prom);
-			
-			Promise.all(promesas).then(function(result){
-				$scope.datos_eliminados = true;
-				toastr.success('Tablas borradas.');
-			})
+			$scope.eliminar_tablas_promise();
 		}
 		
+	}
+
+	$scope.eliminar_tablas_promise = function () {
+		var defered = $q.defer();
+
+		promesas = [];
+			
+		prom = ConexionServ.query('DROP TABLE auditorias')
+		prom.then(function(result){
+			console.log('Eliminado auditorias');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE iglesias').then(function(result){
+			console.log('Eliminado iglesias');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE uniones').then(function(result){
+			console.log('Eliminado uniones');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE distritos').then(function(result){
+			console.log('Eliminado distritos');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE asociaciones').then(function(result){
+			console.log('Eliminado asociaciones');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE usuarios').then(function(result){
+			console.log('Eliminado usuarios');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE lib_mensuales').then(function(result){
+			console.log('Eliminado lib_mensuales');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE lib_semanales').then(function(result){
+			console.log('Eliminado lib_semanales');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE recomendaciones').then(function(result){
+			console.log('Eliminado recomendaciones');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE preguntas').then(function(result){
+			console.log('Eliminado preguntas');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE respuestas').then(function(result){
+			console.log('Eliminado respuestas');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE dinero_efectivo').then(function(result){
+			console.log('Eliminado dinero_efectivo');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE destinos').then(function(result){
+			console.log('Eliminado destinos');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE destinos_pagos').then(function(result){
+			console.log('Eliminado destinos_pagos');
+		});
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE gastos_mes').then(function(result){
+			console.log('Eliminado gastos_mes');
+		})
+		promesas.push(prom);
+		prom = ConexionServ.query('DROP TABLE remesas').then(function(result){
+			console.log('Eliminado remesas');
+		})
+		promesas.push(prom);
+		
+		Promise.all(promesas).then(function(result){
+			$scope.datos_eliminados = true;
+			toastr.success('Tablas borradas.');
+			defered.resolve(usu);
+		})
+
+		return defered.promise;
 	}
 	
 	
 
     $scope.descargar_datos = function (elemento){
 		
-		if (!$scope.datos_eliminados) {
+		if (!$scope.datos_eliminados && $scope.cambios_sin_subir > 0) {
 			toastr.info('Primero debes eliminar los datos locales');
 			return;
 		}
-		
-		$scope.estado_descarga = 'Descargando';
-    	
-		$http.get(rutaServidor.ruta + '/all', {params: {username: $scope.USER.username, password: $scope.USER.password}}).then (function(result){
-			$scope.estado_descarga = 'insertando';
-			
-			$scope.valor_insertado 	= function(){
-				return DescargarTodoServ._valor_insertado;
-			};
-			$scope.valor_maximo 	= function(){
-				return DescargarTodoServ._valor_maximo;
-			};
-			
-			ConexionServ.createTables().then(function(){
-				toastr.info('Datos descargados.', 'Tablas creadas.');
-				
-				DescargarTodoServ.insertar_datos_descargados(result.data).then(function(result){
-					AuthServ.update_user_storage($scope.USER);
-					$scope.estado_descarga = 'Insertados. Actualice la página.';
-					console.log('Todas los datos Insertados', result);
-				})
-			})
-			
-			
 
-		}), function(){
-			console.log('error db')
+		function descargar() {
+			
+			$scope.estado_descarga = 'Descargando';
+			
+			$http.get(rutaServidor.ruta + '/all', {params: {username: $scope.USER.username, password: $scope.USER.password}}).then (function(result){
+				$scope.estado_descarga = 'insertando';
+				
+				$scope.valor_insertado 	= function(){
+					return DescargarTodoServ._valor_insertado;
+				};
+				$scope.valor_maximo 	= function(){
+					return DescargarTodoServ._valor_maximo;
+				};
+				
+				ConexionServ.createTables().then(function(){
+					toastr.info('Datos descargados.', 'Tablas creadas.');
+					
+					DescargarTodoServ.insertar_datos_descargados(result.data).then(function(result){
+						AuthServ.update_user_storage($scope.USER);
+						$scope.estado_descarga = 'Insertados. Actualice la página.';
+						console.log('Todas los datos Insertados', result);
+					})
+				})
+				
+				
+
+			}), function(){
+				console.log('error db')
+			}
 		}
+
+		if ($scope.cambios_sin_subir == 0) {
+
+			$scope.eliminar_tablas_promise().then(function(){
+				descargar();
+			})
+
+		}else{
+			descargar();
+		}
+
+
+		
+		
 
 	}
 
 
     // Traemos todos los datos que necesito para trabajar
     $scope.traerDatos = function() {
-			// Traemos USUARIOS
-			consulta = "SELECT count(*) as cant FROM sqlite_master WHERE type='table' AND name='usuarios'";
+
+		$scope.cambios_sin_subir = 0;
+	
+		// Traemos USUARIOS
+		consulta = "SELECT count(*) as cant FROM sqlite_master WHERE type='table' AND name='usuarios'";
+		
+		ConexionServ.query(consulta, []).then(function(result) {
+			cant = result[0].cant;
+			if (cant==0) {
+				AuthServ.cerrar_sesion();
+			}
+		},function(tx) {
+			console.log("Error no es posbile verificar si existe la tabla usuarios", tx);
+		});
+
+		
+		
+		consulta = "SELECT rowid, * from usuarios where modificado=1 or eliminado=1 or id is null";
+
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.usuarios = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer usuarios", tx);
+		});
+
+		// Traemos IGLESIAS
+		$scope.consulta_igle =
+			"SELECT i.rowid, i.* FROM iglesias i " +
+			"where i.modificado= '1'  or eliminado=1  or i.id is null ";
 			
-			ConexionServ.query(consulta, []).then(function(result) {
-				cant = result[0].cant;
-				if (cant==0) {
-					AuthServ.cerrar_sesion();
-				}
-			},function(tx) {
-				console.log("Error no es posbile verificar si existe la tabla usuarios", tx);
-			});
 
-			
-			
-			consulta = "SELECT rowid, * from usuarios where modificado=1 or eliminado=1 or id is null";
+		ConexionServ.query($scope.consulta_igle, []).then(function(result) {
+			$scope.iglesias = result;
+			$scope.gridOptions.data = result;
+			$scope.cambios_sin_subir += result.length;
+		}, function(tx) {
+			console.log("Error no es posbile traer iglesias", tx);
+		});
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.usuarios = result;
-			},function(tx) {
-				console.log("Error no es posbile traer usuarios", tx);
-			});
+		// Traemos DISTRITOS
+		consulta = "SELECT d.rowid, d.*, u.nombres as pastor_nombres from distritos d " + 
+								"LEFT JOIN usuarios u ON u.id=d.pastor_id " +
+								"WHERE d.modificado is not null or d.eliminado is not null or d.id is null " ;
 
-			// Traemos IGLESIAS
-			$scope.consulta_igle =
-				"SELECT i.rowid, i.* FROM iglesias i " +
-				"where i.modificado= '1'  or eliminado=1  or i.id is null ";
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.distritos = result;
+			$scope.cambios_sin_subir += result.length;
+		}, function(tx) {
+			console.log("Error no es posbile traer distritos", tx);
+		});
 
+		// Traemos Uniones
+		consulta = "SELECT rowid, * from uniones un WHERE un.modificado is not null or eliminado is not null or id is null";
 
-				
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.uniones = result;
+			$scope.cambios_sin_subir += result.length;
+		}, function(tx) {
+			console.log("Error no es posbile traer Uniones", tx);
+		});
 
-			ConexionServ.query($scope.consulta_igle, []).then(function(result) {
-				$scope.iglesias = result;
-				$scope.gridOptions.data = result;
-			}, function(tx) {
-				console.log("Error no es posbile traer iglesias", tx);
-			});
+		// Traemos Asociaciones
+		consulta = "SELECT aso.rowid, aso.*  from asociaciones aso WHERE aso.modificado is not null or eliminado is not null or id is null ";
 
-			// Traemos DISTRITOS
-			consulta = "SELECT d.rowid, d.*, u.nombres as pastor_nombres from distritos d " + 
-									"LEFT JOIN usuarios u ON u.id=d.pastor_id " +
-									"WHERE d.modificado is not null or d.eliminado is not null or d.id is null " ;
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.asociaciones = result;
+			$scope.cambios_sin_subir += result.length;
+		}, function(tx) {
+			console.log("Error no es posbile traer asociaciones", tx);
+		});
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.distritos = result;
-				console.log($scope.distritos);
-			}, function(tx) {
-				console.log("Error no es posbile traer distritos", tx);
-			});
+		// Traemos Auditoria
+		consulta = "SELECT rowid, * from auditorias WHERE auditorias.modificado is not null or auditorias.eliminado is not null or auditorias.id is null";
 
-			// Traemos Uniones
-			consulta = "SELECT rowid, * from uniones un WHERE un.modificado is not null or eliminado is not null or id is null";
-
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.uniones = result;
-			}, function(tx) {
-				console.log("Error no es posbile traer Uniones", tx);
-			});
-
-			// Traemos Asociaciones
-			consulta = "SELECT aso.rowid, aso.*  from asociaciones aso WHERE aso.modificado is not null or eliminado is not null or id is null ";
-
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.asociaciones = result;
-			}, function(tx) {
-				console.log("Error no es posbile traer asociaciones", tx);
-			});
-
-			// Traemos Auditoria
-			consulta = "SELECT rowid, * from auditorias WHERE auditorias.modificado is not null or auditorias.eliminado is not null or auditorias.id is null";
-
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.auditorias = result;
-			},function(tx) {
-				console.log("Error no es posbile traer auditorias", tx);
-			});
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.auditorias = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer auditorias", tx);
+		});
 
 
-			consulta = "SELECT rowid, * from lib_mensuales libm WHERE libm.modificado is not null or libm.eliminado is not null or libm.id is null";
+		consulta = "SELECT rowid, * from lib_mensuales libm WHERE libm.modificado is not null or libm.eliminado is not null or libm.id is null";
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.lib_mensuales = result;
-			},function(tx) {
-				console.log("Error no es posbile traer libromes", tx);
-			});
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.lib_mensuales = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer libromes", tx);
+		});
 
-			
-			consulta = "SELECT rowid, * from lib_semanales WHERE modificado is not null OR eliminado is not null OR id is null";
+		
+		consulta = "SELECT rowid, * from lib_semanales WHERE modificado is not null OR eliminado is not null OR id is null";
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.lib_semanales = result;
-			},function(tx) {
-				console.log("Error no es posbile traer libro semanales", tx);
-			});
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.lib_semanales = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer libro semanales", tx);
+		});
 
-			consulta = "SELECT rowid, * from preguntas preg WHERE preg.modificado is not null OR preg.eliminado is not null OR preg.id is null";
+		consulta = "SELECT rowid, * from preguntas preg WHERE preg.modificado is not null OR preg.eliminado is not null OR preg.id is null";
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.preguntas = result;
-			},function(tx) {
-				console.log("Error no es posbile traer preguntas", tx);
-			});
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.preguntas = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer preguntas", tx);
+		});
 
-			consulta = "SELECT rowid, * from respuestas res WHERE res.modificado is not null or res.eliminado is not null or res.id is null ";
+		consulta = "SELECT rowid, * from respuestas res WHERE res.modificado is not null or res.eliminado is not null or res.id is null ";
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.respuestas = result;
-			},function(tx) {
-				console.log("Error no es posbile traer respuestas", tx);
-			});
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.respuestas = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer respuestas", tx);
+		});
 
-			consulta = "SELECT rowid, * from recomendaciones rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.recomendaciones = result;
-			},function(tx) {
-				console.log("Error no es posbile traer recomendaciones", tx);
-			});
+		consulta = "SELECT rowid, * from recomendaciones rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.recomendaciones = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer recomendaciones", tx);
+		});
 
-			consulta = "SELECT rowid, * from destinos rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.destinos = result;
-			},function(tx) {
-				console.log("Error no es posbile traer recomendaciones", tx);
-			});
-			
-			consulta = "SELECT rowid, * from dinero_efectivo rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.dinero_efectivo = result;
-			},function(tx) {
-				console.log("Error no es posbile traer recomendaciones", tx);
-			});
+		consulta = "SELECT rowid, * from destinos rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.destinos = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer recomendaciones", tx);
+		});
+		
+		consulta = "SELECT rowid, * from dinero_efectivo rec WHERE id is null or rec.modificado is not null or rec.eliminado is not null or rec.id is null ";
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.dinero_efectivo = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer recomendaciones", tx);
+		});
 
 
-			consulta = "SELECT rowid, * from destinos_pagos rec WHERE id is null OR rec.modificado is not null OR rec.eliminado is not null OR rec.id is null ";
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.destinos_pagos = result;
-			},function(tx) {
-				console.log("Error no es posbile traer recomendaciones", tx);
-			});
-			
-			
-			consulta = "SELECT rowid, * from gastos_mes WHERE id is null OR modificado is not null OR eliminado is not null OR id is null ";
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.gastos_mes = result;
-			},function(tx) {
-				console.log("Error no es posbile traer recomendaciones", tx);
-			});
-			/*
-			consulta = "SELECT rowid, * from respuestas where res.modificado is not null or res.elimiado is not null";
+		consulta = "SELECT rowid, * from destinos_pagos rec WHERE id is null OR rec.modificado is not null OR rec.eliminado is not null OR rec.id is null ";
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.destinos_pagos = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer recomendaciones", tx);
+		});
+		
+		
+		consulta = "SELECT rowid, * from gastos_mes WHERE id is null OR modificado is not null OR eliminado is not null OR id is null ";
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.gastos_mes = result;
+			$scope.cambios_sin_subir += result.length;
+		},function(tx) {
+			console.log("Error no es posbile traer recomendaciones", tx);
+		});
+		/*
+		consulta = "SELECT rowid, * from respuestas where res.modificado is not null or res.elimiado is not null";
 
-			ConexionServ.query(consulta, []).then(function(result) {
-				$scope.respuestas = result;
-			},function(tx) {
-				console.log("Error no es posbile traer respuestas", tx);
-			});*/
+		ConexionServ.query(consulta, []).then(function(result) {
+			$scope.respuestas = result;
+		},function(tx) {
+			console.log("Error no es posbile traer respuestas", tx);
+		});*/
     };
 
 	$scope.traerDatos();    

@@ -26,7 +26,6 @@ angular.module("auditoriaApp")
 	$scope.ocultando_primeras 	= false;
 	$scope.ocultando_egresos 	= false;
 	$scope.mostrando_reporte 	= false;
-	console.log($scope.USER);
 	
 	$scope.meses = MESES;
 
@@ -113,7 +112,7 @@ angular.module("auditoriaApp")
 			
 	
 	$scope.verficarTextoReporte = function(){
-		$timeout(function(){
+		$scope.timeout_texto = $timeout(function(){
 			if ($scope.distrito) {
 				var mensaje_periodo_original = `En cumplimiento de las funciones del departamento de auditoría de la Iglesia Adventista del Séptimo Día - ${$scope.distrito.asociacion_nombre}
 hemos practicado el procedimiento de auditoría a los movimientos de la tesoreria de la iglesia (grupo).
@@ -535,8 +534,8 @@ presentados para su revisión y son para consideración de los miembros de la ju
 	// ************************************************
 	// TRAEMOS TODOS LOS DATOS
 	$scope.traerDatos = function(){
+
 		AuthServ.update_user_storage($scope.USER).then((actualizado)=>{
-			console.log(actualizado);
 			$scope.USER 		= actualizado;
 			$scope.lib_meses 	= [];
 			
@@ -560,7 +559,6 @@ presentados para su revisión y son para consideración de los miembros de la ju
 
 			ConexionServ.query(consulta, [actualizado.asociacion_id]).then(function(rAudi) {
 				$scope.distrito = rAudi[0];
-				console.log($scope.distrito);
 			}, function(tx) {
 				console.log("Error no se pudo traer auditorias", tx);
 			});
@@ -867,7 +865,9 @@ presentados para su revisión y son para consideración de los miembros de la ju
 
 	})
 
-	
+	$scope.$on('$destroy', function(){
+		$timeout.cancel($scope.timeout_texto);
+	});
 	
 	
 });

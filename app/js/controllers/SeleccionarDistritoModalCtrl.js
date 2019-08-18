@@ -12,7 +12,7 @@ angular.module("auditoriaApp")
 	
 	
 	
-	$scope.traerIglesias = function(asociacion_id, cargando){
+	$scope.traerIglesias = function(asociacion_id, cargando, sin_cambiar){
 
 		datos = {
 			tipo_usu: 		$scope.USER.tipo,
@@ -28,7 +28,11 @@ angular.module("auditoriaApp")
 			
 			AuthServ.update_user_storage($scope.USER).then(function(usuario){
 				if (!cargando) {
-					toastr.success('Asociación cambiada');
+
+					if (!sin_cambiar) {
+						toastr.success('Asociación cambiada');
+					}
+					
 				}
 			})
 			
@@ -197,7 +201,13 @@ angular.module("auditoriaApp")
 				$scope.USER.distrito_id 	= iglesia.distrito_id;
 				$scope.USER.auditoria_id 	= auditoria_id;
 				
+				console.log(iglesia);
 				// Para que aparezca en la barra superior del panel
+				localStorage.distrito_tesorero_selected = iglesia.nombre_tesorero ? iglesia.nombre_tesorero : '';
+				localStorage.distrito_pastor_selected 	= iglesia.nombre_pastor;
+				localStorage.distrito_nombre_selected 	= iglesia.nombre_distrito;
+				localStorage.distrito_alias_selected 	= iglesia.alias_distrito;
+				localStorage.distrito_codigo_selected 	= iglesia.codigo_distrito;
 				localStorage.iglesia_nombre_selected 	= iglesia.nombre;
 				localStorage.iglesia_alias_selected 	= iglesia.alias;
 				localStorage.iglesia_codigo_selected 	= iglesia.codigo;
@@ -232,6 +242,28 @@ angular.module("auditoriaApp")
 		});
 		
 	}
+
+
+	// Ponemos unión seleccionada si ya estaba
+	if ($scope.USER.union_id) {
+		for (let i = 0; i < $scope.USER.uniones.length; i++) {
+			const element = $scope.USER.uniones[i];
+			if (element.id == $scope.USER.union_id) {
+				$scope.datos.union = element;
+			}
+		}
+	}
+
+	if ($scope.USER.asociacion_id) {
+		for (let i = 0; i < $scope.USER.asociaciones.length; i++) {
+			const element = $scope.USER.asociaciones[i];
+			if (element.id == $scope.USER.asociacion_id) {
+				$scope.datos.asociacion = element;
+				$scope.traerIglesias($scope.datos.asociacion.id, undefined, true);
+			}
+		}
+	}
+
 
 	
 	$scope.changeSearch = function (textSearchIglesia) {

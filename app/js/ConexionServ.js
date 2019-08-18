@@ -78,7 +78,7 @@ angular.module('auditoriaApp')
                 "secretario_id integer DEFAULT NULL)";
 
                 
-    sqlusuarios = "CREATE TABLE IF NOT EXISTS usuarios (id integer," +
+    sqlUsuarios = "CREATE TABLE IF NOT EXISTS usuarios (id integer," +
                 "nombres varchar(100)  NOT NULL collate nocase," +
                 "apellidos varchar(100)  DEFAULT NULL collate nocase," +
                 "email varchar(200)  DEFAULT NULL collate nocase," +
@@ -99,7 +99,7 @@ angular.module('auditoriaApp')
                 "username varchar(100)  NOT NULL , " +  
                 "password varchar(100)  NOT NULL)" ;
 
-    sqlauditorias = "CREATE TABLE IF NOT EXISTS auditorias (id integer," +
+    sqlAuditorias = "CREATE TABLE IF NOT EXISTS auditorias (id integer," +
                 "fecha varchar(100)  DEFAULT NULL collate nocase," +
                 "hora varchar(100)  DEFAULT NULL collate nocase," +
                 "auditor_id integer  NOT NULL," +
@@ -214,7 +214,7 @@ angular.module('auditoriaApp')
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
                 "eliminado  varchar(100)  DEFAULT NULL collate nocase)";
 
-    sqlpreguntas = "CREATE TABLE IF NOT EXISTS preguntas (id integer," +
+    sqlPreguntas = "CREATE TABLE IF NOT EXISTS preguntas (id integer," +
                 "definition varchar(100)  NOT NULL collate nocase," +
                 "tipo varchar(100)  DEFAULT NULL collate nocase," +
                 "option1 varchar(100)  NOT NULL, " +
@@ -227,7 +227,7 @@ angular.module('auditoriaApp')
 
 
 
-    sqlrespuestas = "CREATE TABLE IF NOT EXISTS respuestas (id integer," +
+    sqlRespuestas = "CREATE TABLE IF NOT EXISTS respuestas (id integer," +
                 "pregunta_id varchar(100)  NOT NULL collate nocase," +
                 "respuestas varchar(100)  NOT NULL, " +
                 "modificado varchar(100)  DEFAULT NULL collate nocase," +
@@ -235,7 +235,7 @@ angular.module('auditoriaApp')
 
            
 
-    sqlremesas = "CREATE TABLE IF NOT EXISTS remesas (id integer," +
+    sqlRemesas = "CREATE TABLE IF NOT EXISTS remesas (id integer," +
                 "asociacion_id integer NOT NULL," +
                 "num_diario integer DEFAULT NULL," +
                 "linea integer DEFAULT NULL," +
@@ -290,13 +290,13 @@ angular.module('auditoriaApp')
             promesas.push(prom);
             
             
-            prom = this.query(sqlusuarios).then(function(){
+            prom = this.query(sqlUsuarios).then(function(){
                 console.log('Usuarios Tabla creada');
             })
             promesas.push(prom);
             
                 
-            prom = this.query(sqlauditorias).then(function(){
+            prom = this.query(sqlAuditorias).then(function(){
                 console.log('auditorias Tabla creada');
             })
             promesas.push(prom);
@@ -350,19 +350,19 @@ angular.module('auditoriaApp')
             promesas.push(prom);
             
                 
-            prom = this.query(sqlpreguntas).then(function(){
+            prom = this.query(sqlPreguntas).then(function(){
                 console.log('preguntas Tabla creada');
             })
             promesas.push(prom);
             
             
-            prom = this.query(sqlrespuestas).then(function(){
+            prom = this.query(sqlRespuestas).then(function(){
                 console.log('respuestas Tabla creada');
             })
             promesas.push(prom);
             
             
-            prom = this.query(sqlremesas).then(function(){
+            prom = this.query(sqlRemesas).then(function(){
                 console.log('Remesas Tabla creada');
             })
             promesas.push(prom);

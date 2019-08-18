@@ -179,8 +179,9 @@ result = {
                 
                 for (var i = 0; i < auditorias.length; i++) {
 
-                    consulta = 'INSERT INTO auditorias (rowid, id, fecha, hora, saldo_ant, iglesia_id) VALUES(?, ?, ?, ?, ?, ?)'
-                    ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].hora, auditorias[i].saldo_ant, auditorias[i].iglesia_id]).then(function(result){
+                    consulta 	= 'INSERT INTO auditorias (rowid, id, fecha, auditor_id, saldo_ant, saldo_final, iglesia_id, cerrada, cerrada_fecha, saldo_ant_descripcion) VALUES(?,?,?,?,?,?,?,?,?,?)';
+                    ConexionServ.query();
+                    ConexionServ.query(consulta, [auditorias[i].id, auditorias[i].id, auditorias[i].fecha, auditorias[i].auditor_id, auditorias[i].saldo_ant, auditorias[i].saldo_final, auditorias[i].iglesia_id, auditorias[i].cerrada, auditorias[i].cerrada_fecha, auditorias[i].saldo_ant_descripcion]).then(function(result){
                         console.log('se cargo auditorias', result);
                     
                     }, function(tx){

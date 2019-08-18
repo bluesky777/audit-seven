@@ -14,7 +14,10 @@
     </ul>
 </div>
 <DIV>
-    <BUTTON class="btn btn-danger" ng-click="eliminar_datos_locales()">Eliminar datos locales</BUTTON>
+    <h3>
+        {{cambios_sin_subir}} cambios que aún no has subido.
+    </h3>
+    <BUTTON class="btn btn-danger" ng-click="eliminar_datos_locales()" ng-disabled="cambios_sin_subir==0">Eliminar datos locales</BUTTON>
     <BUTTON class="btn btn-default" type="button" ng-click="descargar_datos()">DESCARGAR DATOS</BUTTON>
     
 
@@ -41,7 +44,10 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleUniones()">Uniones</a> 
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                    <a href="" ng-click="toggleUniones()"> Uniones
+                        <span ng-show="uniones.length>0" uib-tooltip="{{uniones.length}} cambios sin subir">({{uniones.length}})</span>
+                    </a> 
                 </h2>
 
                 <div class="box-icon"></div>
@@ -50,7 +56,6 @@
 
             <div ng-if="ver_uniones" class="box-content row">
                 <div class="col-sm-12">
-                   
 
 
                     <table class="table table-bordered table-condensed">
@@ -62,8 +67,6 @@
                                 <th scope="col">Código</th>
                                 <th scope="col">CAMBIO</th>
                                 <th scope="col">Editar</th>
-
-
                             </tr>
                         </thead>
                         <tbody>
@@ -86,9 +89,6 @@
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
                             </tr>
-
-
-
 
                         </tbody>
                     </table>
@@ -227,7 +227,10 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleAsociaciones()"> Asociaciones</a>
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                    <a href="" ng-click="toggleAsociaciones()"> Asociaciones
+                        <span ng-show="asociaciones.length>0" uib-tooltip="{{asociaciones.length}} cambios sin subir">({{asociaciones.length}})</span>
+                    </a>
                 </h2>
                 <div class="box-icon"></div>
             </div>
@@ -449,7 +452,10 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleDistritos()"> Distritos</a>
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                    <a href="" ng-click="toggleDistritos()"> Distritos
+                        <span ng-show="distritos.length>0" uib-tooltip="{{distritos.length}} cambios sin subir">({{distritos.length}})</span>
+                    </a>
                 </h2>
 
                 <div class="box-icon"></div>
@@ -651,13 +657,9 @@
                                     <th scope="col">Zona</th>
                                     <th scope="col">Cambio</th>
                                     <th scope="col">Editar</th>
-
                                 </tr>
                             </thead>
                             <tbody>
-
-                                  
-
                                 <tr ng-repeat="distrito in distritos">
 
                                     <td>{{$index + 1}}</td>
@@ -668,12 +670,10 @@
                                     
                                     <td>{{distrito.zona}}</td>
                                     <td>
-                                        
 
                                         <span ng-show="!distrito.id">Nuevo</span>
                                         <span ng-show="distrito.modificado != '0' ">Modificado</span>
                                         <span ng-show="distrito.eliminado " style="background-color: red">Eliminado</span>
-
 
                                     </td>
 
@@ -716,15 +716,11 @@
 
             <div ng-if="ver_iglesias" class="box-content row">
                 <div class="col-sm-12">
-                    
-                    
 
-                    <div ui-grid="gridOptions" style="height: 500px" ui-grid-exporter ui-grid-edit ui-grid-cellnav ui-grid-move-columns ui-grid-resize-columns
-                     ui-grid-auto-resize ui-grid-pinning></div>
-
-
-
+                    <div ui-grid="gridOptions" style="height: 500px" ui-grid-exporter ui-grid-edit ui-grid-cellnav ui-grid-move-columns ui-grid-resize-columns ui-grid-auto-resize ui-grid-pinning></div>
           
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -763,8 +759,6 @@
                         </thead>
                         <tbody>
 
-
-
                             <tr ng-repeat="usuario in usuarios">
 
                                 <td>{{$index + 1}}</td>
@@ -782,31 +776,14 @@
                                     <span style="background-color: #fdcaa9">{{usuario.eliminado}}</span>
                                 </td>
 
-
-
-
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
                             </tr>
-
-
-
-
                         </tbody>
                     </table>
-
-
-                    
-                    
-                
-                    
-
                 </div>
             </div>
-
         </div>
-
-
     </div>
 </div>
 
@@ -817,7 +794,10 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="toggleauditorias()"> auditorias</a>
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                    <a href="" ng-click="toggleauditorias()"> Auditorias
+                        <span ng-show="auditorias.length>0" uib-tooltip="{{auditorias.length}} cambios sin subir">({{auditorias.length}})</span>
+                    </a>
                 </h2>
                 <div class="box-icon"></div>
             </div>
@@ -829,19 +809,15 @@
                     <table class="table table-bordered table-condensed">
                         <thead>
                             <tr>
-                                <th scope="col">ID </th>
+                                <th scope="col">Id </th>
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Hora</th>
-                                <th scope="col">saldo_ant</th>
-                                <th scope="col">iglesia_id</th>
-                                
-
+                                <th scope="col">Saldo_ant</th>
+                                <th scope="col">Id glesia</th>
 
                             </tr>
                         </thead>
                         <tbody>
-
-
 
                             <tr ng-repeat="auditoria in auditorias">
 
@@ -855,36 +831,16 @@
                                     <span ng-show="auditoria.modificado" style="background-color: #dd5600">Modificado</span>
                                     <span ng-show="auditoria.eliminado" style="background-color: red">Eliminado</span>
                                 </td>
-
-
-
-
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
                             </tr>
-
-
-
-
                         </tbody>
                     </table>
-
-
-                    
-                    
-                    
-                    
-                    
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                
-                    
-
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -894,7 +850,10 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglelibromes()"> Libro mes</a>
+                    <i class="glyphicon glyphicon-info-sign"></i>
+                    <a href="" ng-click="togglelibromes()"> Libro mes
+                        <span ng-show="lib_mensuales.length>0" uib-tooltip="{{lib_mensuales.length}} cambios sin subir">({{lib_mensuales.length}})</span>
+                    </a>
                 </h2>
                 <div class="box-icon"></div>
             </div>
@@ -914,14 +873,9 @@
                                 <th scope="col">Diaconos</th>
                                 <th scope="col">Diferencia</th>
                                 <th scope="col">Auditoria</th>
-
-
                             </tr>
                         </thead>
                         <tbody>
-
-
-
                             <tr ng-repeat="LibMes in lib_mensuales">
 
                                 <td>{{$index + 1}}</td>
@@ -939,22 +893,14 @@
                                 </td>
 
 
-
-
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
-                    
             </div>
-
-
         </div>
-
-
     </div>
 </div>
 
@@ -965,7 +911,7 @@
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglepreguntas()">Preguntas</a>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglepreguntas()"> Preguntas</a>
                 </h2>
                 <div class="box-icon"></div>
             </div>
@@ -985,13 +931,9 @@
                                 <th scope="col">Opcion 3</th>
                                 <th scope="col">Opcion 4</th>
                                 
-
-
                             </tr>
                         </thead>
                         <tbody>
-
-
 
                             <tr ng-repeat="pregunta in preguntas">
 
@@ -1009,40 +951,31 @@
                                     <span ng-show="pregunta.eliminado" style="background-color: red">Eliminado</span>
                                 </td>
 
-
-
-
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
-                    
             </div>
-
-
         </div>
-
-
     </div>
 </div>
+
 
 <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-header well">
                 <h2>
-                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerespuestas()">Respuestas</a>
+                    <i class="glyphicon glyphicon-info-sign"></i><a href="" ng-click="togglerespuestas()"> Respuestas</a>
                 </h2>
                 <div class="box-icon"></div>
             </div>
              
             <div ng-if="ver_respuestas" class="box-content row">
                 <div class="col-sm-12">
-
-                   
+                    
                     <table class="table table-bordered table-condensed">
                         <thead>
                             <tr>
@@ -1051,14 +984,10 @@
                                 <th scope="col">Auditoria_ID</th>
                                 <th scope="col">Respuesta</th>
                                 
-                                
-
 
                             </tr>
                         </thead>
                         <tbody>
-
-
 
                             <tr ng-repeat="respuesta in respuestas">
 
@@ -1067,15 +996,11 @@
                                 <td>{{respuesta.auditoria_id}}</td>
                                 <td>{{respuesta.respuestas}}</td>
                                 
-                                
                                 <td>
                                     <span ng-show="!pregunta.id" style="background-color: #2fa4e7">Nuevo</span>
                                     <span ng-show="pregunta.modificado" style="background-color: #dd5600">Modificado</span>
                                     <span ng-show="pregunta.eliminado" style="background-color: red">Eliminado</span>
                                 </td>
-
-
-
 
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
@@ -1084,15 +1009,11 @@
                     </table>
 
                 </div>
-                    
             </div>
-
-
         </div>
-
-
     </div>
 </div>
+
 
 
 <div class="row">
@@ -1108,7 +1029,6 @@
             <div ng-if="ver_recomendaciones" class="box-content row">
                 <div class="col-sm-12">
 
-                   
                     <table class="table table-bordered table-condensed">
                         <thead>
                             <tr>
@@ -1118,14 +1038,9 @@
                                 <th scope="col">superada</th>
                                 <th scope="col">fecha</th>
                                 
-                                
-
-
                             </tr>
                         </thead>
                         <tbody>
-
-
 
                             <tr ng-repeat="recomendacion in recomendaciones">
 
@@ -1142,9 +1057,6 @@
                                     <span ng-show="recomendacion.eliminado" style="background-color: red">Eliminado</span>
                                 </td>
 
-
-
-
                                 <td scope="col" ng-click="" class=" glyphicon glyphicon-pencil btn btn-primary"></td>
                                 <td scope="col" ng-click="" class="glyphicon glyphicon-remove btn btn-danger"></td>
                             </tr>
@@ -1152,13 +1064,8 @@
                     </table>
 
                 </div>
-                    
             </div>
-
-
         </div>
-
-
     </div>
 </div>
 

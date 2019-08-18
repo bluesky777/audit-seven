@@ -89,6 +89,7 @@ angular.module('auditoriaApp')
 		if (reco.fecha) {
 			fecha_fix = window.fixDate(reco.fecha);
 		}
+		console.log(reco.fecha);
 		
 		if (!reco.tipo) {
 			

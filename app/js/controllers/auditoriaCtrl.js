@@ -16,7 +16,6 @@ angular.module('auditoriaApp')
 		
 	ConexionServ.query(consulta, []).then(function(result){
 		$scope.iglesias = result;
-		console.log($scope.iglesias);
 		for (let i = 0; i < $scope.iglesias.length; i++) {
 			if ($scope.iglesias[i].rowid == $scope.USER.iglesia_id) {
 				$scope.auditoria_crear.iglesia = $scope.iglesias[i];

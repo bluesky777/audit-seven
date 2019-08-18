@@ -166,6 +166,7 @@ angular.module('auditoriaApp', [
 		{tipo: 'Diezmo'},
 		{tipo: 'Ofrenda'},
 		{tipo: 'Especial'},
+		{tipo: 'Escrituras'},
 		{tipo: 'Total diezmo-ofren-espe'},
 		{tipo: 'Gastos'},
 		{tipo: 'Gastos soportados'},

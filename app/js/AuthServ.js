@@ -11,7 +11,7 @@ angular.module('auditoriaApp')
             'LEFT JOIN auditorias a ON a.rowid=u.auditoria_id '+
             //"LEFT JOIN usuarios t ON t.tipo='Tesorero' and t.rowid=i.tesorero_id " +
 			//"LEFT JOIN usuarios p ON p.tipo='Pastor' and p.rowid=d.pastor_id " +
-            'WHERE  ';
+            'WHERE ';
 
 
     function loguear_online(datos){
@@ -229,7 +229,7 @@ angular.module('auditoriaApp')
             if (!id) {
                 id = datos.id;
             }
-            
+
             ConexionServ.query(consulta_user+' u.rowid=? ', [id]).then(function(result){
 
                 if (result.length > 0) {
