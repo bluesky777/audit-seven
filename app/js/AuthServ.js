@@ -263,7 +263,8 @@ angular.module('auditoriaApp')
                     
                     defered.resolve(usu);
                 }else{
-                    console.log('Cero usuarios', datos);
+
+                    console.log('Cero usuarios', consulta_user+' u.rowid=?', datos, id);
                     defered.reject('Cero usuarios')
                 }
                 
