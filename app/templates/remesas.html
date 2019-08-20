@@ -15,6 +15,36 @@
 	</ul>
 </div>
 
+<div ngf-drop="uploadFiles($files)" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-pattern="'image/*'" class="drop-box drop-box"
+	ng-if="::USER.tipo!='Pastor' && USER.tipo!='Tesorero asociación'">
+	
+	<div class="row">
+		
+		<div class="col-lg-2 col-xs-12">
+			<div ngf-select="uploadFiles($files, $invalidFiles)" ngf-multiple="true" 
+				ngf-pattern="'.xlsx,.xls'" 
+				ngf-accept="'.xlsx,.xls'" class="btn btn-success">
+				
+				<i class="fa fa-upload"></i>
+				Subir remesas
+				<!--  ngf-max-size="7MB"-->
+			</div>
+			<br>
+		</div>     
+		<div class="col-lg-2 col-xs-12">
+			{{ log }}
+			<div ng-show="estado_descarga=='insertando'">{{ porc }}/{{ total }}</div>
+		</div>      
+		<div class="col-lg-2 col-xs-12">
+			<div class="progress" ng-show="total">
+				<div class="progress-bar progress-bar-striped " ng-class="{active: estado_descarga=='insertando'}" role="progressbar" aria-valuenow="{{ porc }}" aria-valuemin="0" aria-valuemax="{{ total }}" style="width: {{ porcentajeInsertado() }}%">
+					<span class="sr-only">{{ porc }}% Completado</span>
+				</div>
+			</div>
+		</div>     
+	</div>     
+</div>
+
 
 
 <div class="row">
@@ -24,7 +54,8 @@
 				<h2><i class="glyphicon glyphicon-info-sign"></i> Remesas</h2>
 			</div>
 			<div class="box-content row">
-
+ 
+				
 				<div class="col-sm-12">
 
 					<button class="btn btn-primary" ng-click="verCreando()" ng-show="!ver_crear">

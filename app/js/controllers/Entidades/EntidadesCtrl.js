@@ -19,7 +19,7 @@ angular.module("auditoriaApp")
 		nombre: '',
 		distrito_id: null,
 		zona: null,
-		tipo: 'IGLESIA',
+		tipo: 'Iglesia',
 		
 		anombre_propiedad: '',
 		anombre_propiedad_pastor: '',
@@ -200,6 +200,11 @@ angular.module("auditoriaApp")
 								iglesia.tipo = $scope.tipos_iglesia[i];
 							}
 						}
+						for (let i = 0; i < $scope.usuarios.length; i++) {
+							if (iglesia.tesorero_id == $scope.usuarios[i].rowid) {
+								iglesia.tesorero = $scope.usuarios[i];
+							}
+						}
 					}
 					
 					$scope.iglesias = result;
@@ -241,6 +246,7 @@ angular.module("auditoriaApp")
 				$scope.asociaciones 		= datos.asociaciones;
 				$scope.usuarios 			= datos.usuarios;
 
+
 				for (let j = 0; j < $scope.iglesias.length; j++) {
 					const iglesia = $scope.iglesias[j];
 
@@ -252,6 +258,11 @@ angular.module("auditoriaApp")
 					for (let i = 0; i < $scope.tipos_iglesia.length; i++) {
 						if (iglesia.tipo == $scope.tipos_iglesia[i].id) {
 							iglesia.tipo = $scope.tipos_iglesia[i];
+						}
+					}
+					for (let i = 0; i < $scope.usuarios.length; i++) {
+						if (iglesia.tesorero_id == $scope.usuarios[i].id) {
+							iglesia.tesorero = $scope.usuarios[i];
 						}
 					}
 				}

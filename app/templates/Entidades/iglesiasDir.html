@@ -56,7 +56,7 @@
                                     <ui-select-match placeholder="Tesorero">
                                         <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
                                     </ui-select-match>
-                                    <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero'}  |  filter: $select.search) track by $index">
+                                    <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero iglesia'}  |  filter: $select.search) track by $index">
                                         <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
                                     </ui-select-choices>
                                 </ui-select>
@@ -80,14 +80,14 @@
                                         <div class="col-lg-6 col-sm-6 col-xs-12">
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="tipo" value="IGLESIA" ng-model="iglesia_new.tipo"><span class="text">Iglesia</span>
+                                                    <input type="radio" name="tipo" value="Iglesia" ng-model="iglesia_new.tipo"><span class="text">Iglesia</span>
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-sm-6 col-xs-12">
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="tipo" value="GRUPO" ng-model="iglesia_new.tipo"><span class="text">Grupo</span>
+                                                    <input type="radio" name="tipo" value="Grupo" ng-model="iglesia_new.tipo"><span class="text">Grupo</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -251,7 +251,7 @@
                                     <ui-select-match placeholder="Tesorero">
                                         <span ng-bind="$select.selected.nombres + ' ' + $select.selected.apellidos"></span>
                                     </ui-select-match>
-                                    <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero'}  |  filter: $select.search) track by $index">
+                                    <ui-select-choices repeat="item in (usuarios | filter:{tipo:'Tesorero iglesia'}  |  filter: $select.search) track by $index">
                                         <span ng-bind-html="item.nombres + ' ' + item.apellidos | highlight: $select.search"></span>
                                     </ui-select-choices>
                                 </ui-select>
@@ -277,14 +277,14 @@
                                             <div class="col-lg-6 col-sm-6 col-xs-12">
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="tipo" value="IGLESIA" ng-model="iglesia_edit.tipo"><span class="text">Iglesia</span>
+                                                        <input type="radio" name="tipo" value="Iglesia" ng-model="iglesia_edit.tipo"><span class="text">Iglesia</span>
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6 col-sm-6 col-xs-12">
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="tipo" value="GRUPO" ng-model="iglesia_edit.tipo"><span class="text">Grupo</span>
+                                                        <input type="radio" name="tipo" value="Grupo" ng-model="iglesia_edit.tipo"><span class="text">Grupo</span>
                                                     </label>
                                                 </div>
                                             </div>

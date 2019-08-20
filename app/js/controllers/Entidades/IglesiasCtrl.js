@@ -12,7 +12,7 @@ angular.module("auditoriaApp")
 .controller("IglesiasCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal, rutaServidor, $http, EntidadesFacto) {
     
 
-	btTipoDoc = "templates/entidades/botonSelectTesorero.html";
+	btTesorero = "templates/entidades/botonSelectTesoreroIglesia.html";
 	btDistrito = "templates/entidades/botonSelectDistrito.html";
 	btTipoIglesia = "templates/entidades/botonSelectTipoIglesia.html";
     btGrid1 ='<a uib-tooltip="Editar" tooltip-placement="left" tooltip-append-to-body="true" class="btn btn-default btn-xs icon-only" ng-click="grid.appScope.Ver_actualizar_iglesia(row.entity)"><i class="glyphicon glyphicon-pencil "></i></a>';
@@ -40,7 +40,7 @@ angular.module("auditoriaApp")
         { field: "distrito", displayName: 'Distrito', cellTemplate: btDistrito, enableCellEdit: false, minWidth: 200 },
         { field: "estado_propiedad", minWidth: 80, displayName: "Propiedad" },
         { field: "zona", minWidth: 80 },
-        { field: "tesorero_nombres", minWidth: 120, cellTemplate: btTipoDoc, enableCellEdit: false }
+        { field: "tesorero", minWidth: 170, cellTemplate: btTesorero, enableCellEdit: false }
       ],
       onRegisterApi: function(gridApi) {
         $scope.grid1Api = gridApi;
@@ -259,17 +259,36 @@ angular.module("auditoriaApp")
 		tipo_doc_propiedad_pastor = null;
 		if (iglesia.tipo_doc_propiedad_pastor) { tipo_doc_propiedad_pastor = iglesia.tipo_doc_propiedad_pastor.tipo; }
 		
-		distrito_id = null;
-		if (iglesia.distrito) {
-			distrito_id 		= iglesia.distrito.rowid;
-		}
+        datos = [];
+        
+        if ($scope.modo_offline) {
+
+            distrito_id = null;
+            if (iglesia.distrito) {
+                distrito_id 		= iglesia.distrito.rowid;
+            }
+            
+            teso_id = null;
+            if (iglesia.tesorero) {
+                teso_id 		= iglesia.tesorero.rowid;
+            }
+            
+            datos = [ iglesia.nombre, iglesia.alias, iglesia.codigo, distrito_id, iglesia.tipo, iglesia.zona, teso_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, iglesia.anombre_propiedad, iglesia.anombre_propiedad_pastor, iglesia.num_matricula, iglesia.predial, iglesia.municipio, iglesia.direccion, iglesia.observaciones];
+        }else{
+            distrito_id = null;
+            if (iglesia.distrito) {
+                distrito_id 		= iglesia.distrito.id;
+            }
+            
+            teso_id = null;
+            if (iglesia.tesorero) {
+                teso_id 		= iglesia.tesorero.id;
+            }
+        
+            datos = { nombre: iglesia.nombre, alias: iglesia.alias, codigo: iglesia.codigo, distrito_id: distrito_id, tipo: iglesia.tipo, zona: iglesia.zona, teso_id: teso_id, estado_propiedad: estado_propiedad, estado_propiedad_pastor: estado_propiedad_pastor, tipo_doc_propiedad: tipo_doc_propiedad, tipo_doc_propiedad_pastor: tipo_doc_propiedad_pastor, 
+                anombre_propiedad: iglesia.anombre_propiedad, anombre_propiedad_pastor: iglesia.anombre_propiedad_pastor, num_matricula: iglesia.num_matricula, predial: iglesia.predial, municipio: iglesia.municipio, direccion: iglesia.direccion, observaciones: iglesia.observaciones, created_by: $scope.$parent.$parent.USER.id};
+        }
 		
-		teso_id = null;
-		if (iglesia.tesorero) {
-			teso_id 		= iglesia.tesorero.rowid;
-		}
-		
-		datos = [ iglesia.nombre, iglesia.alias, iglesia.codigo, distrito_id, iglesia.zona, teso_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, iglesia.anombre_propiedad, iglesia.anombre_propiedad_pastor, iglesia.num_matricula, iglesia.predial, iglesia.municipio, iglesia.direccion, iglesia.observaciones];
 
 		EntidadesFacto.insertarIglesia(datos, $scope.modo_offline).then(function(){
 			$scope.traerDatos();

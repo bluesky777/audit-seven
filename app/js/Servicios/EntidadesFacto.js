@@ -100,7 +100,7 @@ angular.module('auditoriaApp')
             
             if ( is_modo_offline == true){
             
-                consulta = "INSERT INTO iglesias(nombre, alias, codigo, distrito_id, zona, tesorero_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, anombre_propiedad, anombre_propiedad_pastor, num_matricula, predial, municipio, direccion, observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                consulta = "INSERT INTO iglesias(nombre, alias, codigo, distrito_id, tipo, zona, tesorero_id, estado_propiedad, estado_propiedad_pastor, tipo_doc_propiedad, tipo_doc_propiedad_pastor, anombre_propiedad, anombre_propiedad_pastor, num_matricula, predial, municipio, direccion, observaciones) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 
                 ConexionServ.query(consulta, datos).then(function(result) {
                     defer.resolve(result.data);
@@ -111,10 +111,10 @@ angular.module('auditoriaApp')
             }else{
             
                 $user           = AuthServ.get_user();
-                data            = {auth: $user.auth};
-                data
+                datos.auth      = $user.auth;
+                
 
-                $http.put(rutaServidor.root+'/au_entidades/store', data).then(function(result){
+                $http.put(rutaServidor.root+'/au_iglesias/store', datos).then(function(result){
                     defer.resolve(result.data);
                 }, function(er) {
                     defer.reject('Error: ', er);
