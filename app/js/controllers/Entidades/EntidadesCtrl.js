@@ -1,13 +1,6 @@
 angular.module("auditoriaApp")
 
 
-.directive('iglesiasDir', function(){
-	return {
-		restrict: 'E',
-		templateUrl: "templates/Entidades/iglesiasDir.html"
-	}
-})
-
 .controller("EntidadesCtrl", function($scope, ConexionServ, $filter, toastr, $location, $anchorScroll, $timeout, $uibModal, rutaServidor, $http, EntidadesFacto) {
 	$scope.entidades 				= true;
 	$scope.distrito_new 			= {};
@@ -17,6 +10,10 @@ angular.module("auditoriaApp")
 	$scope.usuarios 				= [];
 	$scope.$parent.sidebar_active 	= false;
 	$scope.perfil 					= rutaServidor.root + '/images/perfil/';
+	$scope.gridOptions 				= {};
+    $scope.tipos_iglesia = [
+        {id: 'Iglesia'}, {id: 'Grupo'}
+    ]
 	
 	$scope.tpl_igle = {
 		nombre: '',
@@ -96,61 +93,6 @@ angular.module("auditoriaApp")
 	}
 
 	
-	btTipoDoc = "templates/Entidades/botonSelectTesorero.html";
-    btGrid1 ='<a uib-tooltip="Editar" tooltip-placement="left" tooltip-append-to-body="true" class="btn btn-default btn-xs icon-only" ng-click="grid.appScope.Ver_actualizar_iglesia(row.entity)"><i class="glyphicon glyphicon-pencil "></i></a>';
-    btGrid2 ='<a uib-tooltip=" Eliminar" tooltip-placement="right" tooltip-append-to-body="true" class="btn btn-danger btn-xs icon-only" ng-click="grid.appScope.EliminarIglesia(row.entity)"><i class="glyphicon glyphicon-remove  "></i></a>';
-    bt2 ='<span style="padding-left: 2px; padding-top: 4px;" class="btn-group">' + btGrid1 +btGrid2 +"</span>";
-
-    $scope.gridOptions = {
-      showGridFooter: true,
-      enableSorting: true,
-      enableFiltering: true,
-      enebleGridColumnMenu: false,
-      enableCellEdit: true,
-      enableCellEditOnFocus: true,
-      columnDefs: [
-        {
-          name: "no", displayName: "No", width: 45, enableCellEdit: false, enableColumnMenu: false,
-          cellTemplate: '<div class="ui-grid-cell-contents">{{grid.renderContainers.body.visibleRowCache.indexOf(row)+1}}</div>'
-				},
-				{ field: "rowid", displayName: "Id", pinnedLeft: true, width: 40, enableCellEdit: false },
-        { name: "edicion", displayName: "Edición", width: 60, enableSorting: false, enableFiltering: false, cellTemplate: bt2, enableCellEdit: false, enableColumnMenu: true },
-        { field: "nombre", minWidth:150 },
-        //{ field: "alias", minWidth: 90 },
-        { field: "codigo", minWidth: 90 },
-        { field: "tipo", minWidth: 90 },
-        { field: "distrito_nombre", displayName: 'Distrito', enableCellEdit: false, minWidth: 90 },
-        { field: "tipo_propiedad", minWidth: 80, displayName: "Propiedad" },
-        { field: "zona", minWidth: 80 },
-        { field: "tesorero_nombres", minWidth: 120, cellTemplate: btTipoDoc, enableCellEdit: false }
-      ],
-      onRegisterApi: function(gridApi) {
-        $scope.grid1Api = gridApi;
-        gridApi.edit.on.afterCellEdit($scope, function(rowEntity,colDef,newValue,oldValue) {
-			if (newValue != oldValue) {
-				if (colDef.field === "tipo") {
-					newValue = newValue.toUpperCase();
-					if (!(newValue === "IGLESIA" || newValue === "GRUPO")) {
-						toastr.warning("Debe usar IGLESIA o GRUPO");
-						rowEntity.tipo = oldValue;
-						return;
-					}
-				}
-				fecha_update = window.fixDate(new Date(), true);
-				ConexionServ.query("UPDATE iglesias SET "+colDef.field+"='"+newValue+"', modificado=? WHERE rowid=?", [ fecha_update, rowEntity.rowid ] ).then(function(r) {
-					return toastr.success("Iglesia actualizada.");
-				}, function(r2) {
-					rowEntity[colDef.field] = oldValue;
-					return toastr.error("Cambio no guardado", "Error");
-				});
-			}
-        });
-        $timeout(function() {
-          $scope.$apply();
-        }, 0);
-      }
-    };
-
     $scope.crear_distrito = function() {
       $scope.verCrearDistrito = true;
 
@@ -218,24 +160,6 @@ angular.module("auditoriaApp")
 				toastr.error("Error, no es posbile traer usuarios");
 			});
 
-			// Traemos IGLESIAS
-			$scope.consulta_igle =
-				"SELECT i.rowid, i.nombre, i.alias, i.codigo, i.distrito_id, i.zona, d.asociacion_id, d.nombre as distrito_nombre, i.tesorero_id, i.secretario_id, " +
-					"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, i.tipo, " + 
-					"i.estado_propiedad, i.estado_propiedad_pastor, i.tipo_doc_propiedad, i.tipo_doc_propiedad_pastor, " + 
-					"i.anombre_propiedad, i.anombre_propiedad_pastor, i.num_matricula, i.predial, " + 
-					"i.municipio, i.direccion, i.observaciones " + 
-				"FROM iglesias i " +
-				"LEFT JOIN distritos d ON d.rowid=i.distrito_id AND d.eliminado is null " +
-				"LEFT JOIN usuarios t ON t.tipo='Tesorero' AND t.rowid=i.tesorero_id AND t.eliminado is null " + 
-				"WHERE i.eliminado is null";
-
-			ConexionServ.query($scope.consulta_igle, []).then(function(result) {
-				$scope.iglesias = result;
-				$scope.gridOptions.data = result;
-			}, function(tx) {
-				toastr.error("Error no es posbile traer iglesias", tx);
-			});
 
 			// Traemos DISTRITOS
 			consulta = "SELECT d.rowid, d.*, p.nombres as pastor_nombres, p.apellidos as pastor_apellidos, " +
@@ -249,6 +173,41 @@ angular.module("auditoriaApp")
 
 			ConexionServ.query(consulta, []).then(function(result) {
 				$scope.distritos = result;
+
+				// Traemos IGLESIAS
+				$scope.consulta_igle =
+					"SELECT i.rowid, i.nombre, i.alias, i.codigo, i.distrito_id, i.zona, d.asociacion_id, d.nombre as distrito_nombre, i.tesorero_id, i.secretario_id, " +
+						"t.nombres as tesorero_nombres, t.apellidos as tesorero_apellidos, i.tipo, " + 
+						"i.estado_propiedad, i.estado_propiedad_pastor, i.tipo_doc_propiedad, i.tipo_doc_propiedad_pastor, " + 
+						"i.anombre_propiedad, i.anombre_propiedad_pastor, i.num_matricula, i.predial, " + 
+						"i.municipio, i.direccion, i.observaciones " + 
+					"FROM iglesias i " +
+					"LEFT JOIN distritos d ON d.rowid=i.distrito_id AND d.eliminado is null " +
+					"LEFT JOIN usuarios t ON t.tipo='Tesorero' AND t.rowid=i.tesorero_id AND t.eliminado is null " + 
+					"WHERE i.eliminado is null";
+
+				ConexionServ.query($scope.consulta_igle, []).then(function(result) {
+					for (let j = 0; j < result.length; j++) {
+						const iglesia = result[j];
+
+						for (let i = 0; i < $scope.distritos.length; i++) {
+							if (iglesia.distrito_id == $scope.distritos[i].rowid) {
+								iglesia.distrito = $scope.distritos[i];
+							}
+						}
+						for (let i = 0; i < $scope.tipos_iglesia.length; i++) {
+							if (iglesia.tipo == $scope.tipos_iglesia[i].tipo) {
+								iglesia.tipo = $scope.tipos_iglesia[i];
+							}
+						}
+					}
+					
+					$scope.iglesias = result;
+					$scope.gridOptions.data = result;
+				}, function(tx) {
+					toastr.error("Error no es posbile traer iglesias", tx);
+				});
+			
 			}, function(tx) {
 				toastr.error("Error no es posbile traer distritos", tx);
 			});
@@ -278,10 +237,33 @@ angular.module("auditoriaApp")
 			EntidadesFacto.traerDatosEntidades().then(function(datos){
 				$scope.uniones 				= datos.uniones;
 				$scope.iglesias 			= datos.iglesias;
-				$scope.gridOptions.data 	= datos.iglesias;
 				$scope.distritos 			= datos.distritos;
 				$scope.asociaciones 		= datos.asociaciones;
 				$scope.usuarios 			= datos.usuarios;
+
+				for (let j = 0; j < $scope.iglesias.length; j++) {
+					const iglesia = $scope.iglesias[j];
+
+					for (let i = 0; i < $scope.distritos.length; i++) {
+						if (iglesia.distrito_id == $scope.distritos[i].id) {
+							iglesia.distrito = $scope.distritos[i];
+						}
+					}
+					for (let i = 0; i < $scope.tipos_iglesia.length; i++) {
+						if (iglesia.tipo == $scope.tipos_iglesia[i].id) {
+							iglesia.tipo = $scope.tipos_iglesia[i];
+						}
+					}
+				}
+
+
+				
+
+				$timeout(function(){
+					$scope.gridOptions.data 	= $scope.iglesias;
+					$scope.$apply();
+				}, 100)
+
 			});
 
 		}
@@ -601,16 +583,6 @@ angular.module("auditoriaApp")
 
     };
 
-    $scope.VerCreandoIglesia = function() {
-			$scope.ver_creando_iglesia = true;
-			$scope.iglesia_new = angular.copy($scope.tpl_igle);
-			
-			$timeout(function() {
-				$location.hash("nueva_new_new_iglesia");
-				$anchorScroll();
-			}, 100);
-    };
-
     $scope.cancelar_crear_iglesia = function() {
 			$scope.ver_creando_iglesia = false;
 			$scope.iglesia_new = angular.copy($scope.tpl_igle);
@@ -767,29 +739,3 @@ angular.module("auditoriaApp")
 
 
 
-
-
-.controller('RemoveIglesiaCtrl', ['$scope', '$uibModalInstance', 'elemento', 'toastr', 'ConexionServ', ($scope, $modalInstance, elemento, toastr, ConexionServ)=>{
-	$scope.elemento = elemento;
-	console.log('elemento', elemento);
-
-	$scope.ok = ()=>{
-
-		fecha_update = window.fixDate(new Date(), true);
-		
-		consulta = "UPDATE iglesias SET eliminado=? WHERE rowid=? ";
-
-		ConexionServ.query(consulta, [ fecha_update, elemento.rowid]).then(function(result) {
-			$modalInstance.close(elemento)
-		}, function(tx) {
-			console.log("iglesia no se pudo Eliminar", tx);
-			$modalInstance.dismiss('Error')
-		})
-		
-	}
-	
-	$scope.cancel = ()=>{
-		$modalInstance.dismiss('cancel')
-	}
-
-}])

@@ -1,0 +1,11 @@
+
+<ui-select ng-model="MODEL_COL_FIELD" on-select="grid.appScope.guardarValor($item.id, row.entity, 'tipo')" append-to-body="true" style="width: 100%;">
+    <ui-select-match placeholder="Elija..."> 
+        <span style="font-size: 9pt"> 
+            <span>{{ COL_FIELD.id }} </span>
+        </span>
+    </ui-select-match>
+    <ui-select-choices repeat="item in grid.appScope.tipos_iglesia | filter: $select.search">
+        <span>{{ item.id }}</span>
+    </ui-select-choices>
+  </ui-select>

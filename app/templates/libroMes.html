@@ -486,8 +486,86 @@
 						</table>
 					
 					</div>
-					
+
+
 					<div class="col-sm-6">
+
+							<table  class="table table-bordered table-condensed table-striped">
+	
+								<tr>
+									<td> <label>Total fondos de iglesia</label></td>
+									<td class="align-right">{{ sum_total_fondos }}</td>
+								</tr>
+	
+								<tr>
+									<td>Ingresos por registrar</td>
+									<td class="align-right">
+										<input type="text" ng-model="auditoria.ingre_por_registrar" class="align-right"
+											ng-change="cambiaAuditoria('ingre_por_registrar')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+									</td>
+								</tr>
+	
+								<tr>
+									<td><label>Fondos Locales iglesia</label></td>
+									<td class="align-right">{{ sum_locales_igl }}</td>
+								</tr>
+	
+								<tr>
+									<td>Ingreso Sábados</td>
+									<td class="align-right">
+											<input type="text" ng-model="auditoria.ingre_sabados" class="align-right"
+											ng-change="cambiaAuditoria('ingre_sabados')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+									</td>
+								</tr>
+	
+								<tr>
+									<td uib-tooltip="Remesa por enviar del mes" tooltip-append-to-body="true">
+										Cuenta por pagar
+									</td>
+									<td class="align-right">
+										<input type="text" ng-model="auditoria.cta_por_pagar" class="align-right"
+											ng-change="cambiaAuditoria('cta_por_pagar')" 
+											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+											ui-number-mask="0" enter-as-tab>
+									</td>
+								</tr>
+	
+								<tr>
+									<td>Ajuste de auditoría por enviar</td>
+									<td class="align-right">
+										<div class="input-group">
+											<input type="text" ng-model="auditoria.ajuste_por_enviar" class="align-right input-totales"
+												ng-change="cambiaAuditoria('ajuste_por_enviar')" 
+												ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
+												ui-number-mask="0" enter-as-tab>
+												
+											<span class="input-group-btn">
+												<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Ajuste de auditoría por enviar')">
+													<i class="glyphicon glyphicon-flag"></i>
+													<span class="badge" ng-show="auditoria['reco_cont_Ajuste de auditoría por enviar'].length>0">
+														{{auditoria['reco_cont_Ajuste de auditoría por enviar'].length}}
+													</span>
+												</button>
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td class="info"><label>Total</label></td>
+									<td class="info align-right">{{ total_fondos }}</td>
+								</tr>
+								
+							</table>							
+						
+						</div>
+					
+						
+					
+					<div ng-if="false" class="col-sm-6">
 						
 						<table class="table table-striped table-bordered table-condensed">
 							<thead>
@@ -533,81 +611,6 @@
 				
 				<div class="row">
 			
-					<div class="col-sm-6">
-
-						<table  class="table table-bordered table-condensed table-striped">
-
-							<tr>
-								<td> <label>Total fondos de iglesia</label></td>
-								<td class="align-right">{{ sum_total_fondos }}</td>
-							</tr>
-
-							<tr>
-								<td>Ingresos por registrar</td>
-								<td class="align-right">
-									<input type="text" ng-model="auditoria.ingre_por_registrar" class="align-right"
-										ng-change="cambiaAuditoria('ingre_por_registrar')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
-								</td>
-							</tr>
-
-							<tr>
-								<td><label>Fondos Locales iglesia</label></td>
-								<td class="align-right">{{ sum_locales_igl }}</td>
-							</tr>
-
-							<tr>
-								<td>Ingreso Sábados</td>
-								<td class="align-right">
-										<input type="text" ng-model="auditoria.ingre_sabados" class="align-right"
-										ng-change="cambiaAuditoria('ingre_sabados')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
-								</td>
-							</tr>
-
-							<tr>
-								<td uib-tooltip="Remesa por enviar del mes" tooltip-append-to-body="true">
-									Cuenta por pagar
-								</td>
-								<td class="align-right">
-									<input type="text" ng-model="auditoria.cta_por_pagar" class="align-right"
-										ng-change="cambiaAuditoria('cta_por_pagar')" 
-										ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-										ui-number-mask="0" enter-as-tab>
-								</td>
-							</tr>
-
-							<tr>
-								<td>Ajuste de auditoría por enviar</td>
-								<td class="align-right">
-									<div class="input-group">
-										<input type="text" ng-model="auditoria.ajuste_por_enviar" class="align-right input-totales"
-											ng-change="cambiaAuditoria('ajuste_por_enviar')" 
-											ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-											ui-number-mask="0" enter-as-tab>
-											
-										<span class="input-group-btn">
-											<button class="btn btn-default btn-sm" type="button" ng-click="abrirRecomendacionesModal('Ajuste de auditoría por enviar')">
-												<i class="glyphicon glyphicon-flag"></i>
-												<span class="badge" ng-show="auditoria['reco_cont_Ajuste de auditoría por enviar'].length>0">
-													{{auditoria['reco_cont_Ajuste de auditoría por enviar'].length}}
-												</span>
-											</button>
-										</span>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td class="info"><label>Total</label></td>
-								<td class="info align-right">{{ total_fondos }}</td>
-							</tr>
-							
-						</table>							
-					
-					</div>
-					
 					
 					<div class="col-sm-6">
 

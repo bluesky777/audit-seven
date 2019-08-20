@@ -209,7 +209,9 @@
                         <div class="row">
                             <div class="form-group col-sm-12">
                                 <label for="nombre_iglesia_edit">Nombre</label>
-                                <input required="required" class="form-control" id="nombre_iglesia_edit" type="text" placeholder="Nombre" ng-model="iglesia_edit.nombre">
+                                <input required="required" class="form-control" id="nombre_iglesia_edit" type="text" placeholder="Nombre" 
+                                    ng-model="iglesia_edit.nombre" ng-change="guardarValor(iglesia_edit.nombre, iglesia_edit, 'nombre')"
+                                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 1000, 'blur': 0} }">
                             </div>
                         </div>
 
@@ -221,7 +223,8 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="codigo_iglesia_edit">Código</label>
-                                <input class="form-control" id="codigo_iglesia_edit" type="text" placeholder="Código" ng-model="iglesia_edit.codigo">
+                                <input class="form-control" id="codigo_iglesia_edit" type="text" placeholder="Código" ng-model="iglesia_edit.codigo" ng-change="guardarValor(iglesia_edit.codigo, iglesia_edit, 'codigo')"
+                                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 1000, 'blur': 0} }">
                             </div>
                         </div>
 
@@ -362,7 +365,8 @@
 
                             <div class="col-sm-6" style="padding-right: 0px;">
                                 <label uib-tooltip="A nombre de quién según el pastor" for="a_nombre_new_pastor">A nombre de (pastor)</label>
-                                <input class="form-control" style="padding: 4px 6px;" id="a_nombre_new_pastor" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad_pastor">
+                                <input class="form-control" style="padding: 4px 6px;" id="a_nombre_new_pastor" type="text" placeholder="A nombre de" ng-model="iglesia_edit.anombre_propiedad_pastor" ng-change="guardarValor(iglesia_edit.anombre_propiedad_pastor, iglesia_edit, 'anombre_propiedad_pastor')"
+                                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 1000, 'blur': 0} }">
                             </div>
                             
                         </div>
@@ -454,8 +458,8 @@
                         <div class="row" style="margin-top: 20px">
 
                             <div class="center">
-                                <input class="btn btn-warning " type="button" ng-click="Cancelar_Actualizar_Iglesia()" value="Cancelar">
-                                <input class="btn btn-primary " type="submit" value="Guardar Iglesia" ng-disabled="guardando_iglesia">
+                                <input class="btn btn-default " type="button" ng-click="Cancelar_Actualizar_Iglesia()" value="Cerrar edición">
+                                <input class="btn btn-primary " ng-show="modo_offline" type="submit" value="Guardar Iglesia" ng-disabled="guardando_iglesia">
                             </div>
                         </div>
 
