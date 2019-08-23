@@ -23,16 +23,16 @@ angular.module("auditoriaApp")
 
         $http.put(rutaServidor.root + '/auditorias/revision', data).then(function(r){
 
-            $scope.asociacion 	= r.data.asociacion;
-            $scope.distritos 	= r.data.distritos;
-            $scope.anio 	    = r.data.anio;
+            $scope.asociacion 	    = r.data.asociacion;
+            $scope.distritos 	    = r.data.distritos;
+            $scope.cant_iglesias 	= r.data.cant_iglesias;
+            $scope.cant_auditadas 	= r.data.cant_auditadas;
+            $scope.anio 	        = r.data.anio;
 
             if (!$scope.anios) {
                 $scope.anios 	= r.data.anios;
                 $scope.datos.anioSeleccionado = $scope.anio;
             }
-
-            console.log($scope.anios);
         
         }, function(r2){
             toastr.error('No se pudo traer recision de auditorías');

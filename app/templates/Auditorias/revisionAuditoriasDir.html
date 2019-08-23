@@ -17,13 +17,20 @@
                 
             <div class="col-sm-12">
 
+                <div style="font-size: 12pt; text-align: center; padding: 4px; margin-bottom: 20px; background-color: #ddd;">
+                    Total iglesias: 
+                    <span style="font-weight: bold">{{cant_iglesias}}</span>   -  Auditadas: 
+                    <span style="font-weight: bold">{{cant_auditadas}}</span>   -  Faltan: 
+                    <span style="font-weight: bold">{{cant_iglesias-cant_auditadas}} </span>
+                </div>
+
                 <label for="searchDistrito">Buscar distrito</label>
                 <input type="text" ng-model="searchDistrito" id="searchDistrito">
 
                 <select ng-model="datos.anioSeleccionado" ng-options="anio.anio as anio.anio for anio in anios "
                     ng-change="traerRevision()">
                 </select>
-                {{anio}}
+                
                 
                 <hr>
 
