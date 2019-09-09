@@ -124,9 +124,9 @@ angular.module("auditoriaApp")
 				}
 			}
 
-			consulta = "INSERT INTO distritos(nombre, alias, codigo, zona, pastor_id, tesorero_id) VALUES(?,?,?,?,?,?)";
+			consulta = "INSERT INTO distritos(nombre, alias, codigo, zona, asociacion_id, pastor_id, tesorero_id) VALUES(?,?,?,?,?,?,?)";
 
-			ConexionServ.query(consulta, [distrito.nombre,distrito.alias,distrito.codigo,distrito.zona,$scope.pastor_new_id,$scope.tesorero_new_id]).then(function(result) {
+			ConexionServ.query(consulta, [distrito.nombre,distrito.alias,distrito.codigo, distrito.zona, $scope.USER.asociacion_id, $scope.pastor_new_id, $scope.tesorero_new_id]).then(function(result) {
 				$scope.traerDatos();
 				toastr.success("Distrito creado.");
 				$scope.guardando_distrito 	= false;
