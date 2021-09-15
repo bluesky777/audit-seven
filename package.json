@@ -61,7 +61,7 @@
     "express": "^4.15.2",
     "ip": "^1.1.5",
     "node-excel-export": "^1.4.4",
-    "socket.io": "^2.1.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {
     "@angular/cli": "^6.0.5",
