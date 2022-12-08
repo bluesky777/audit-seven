@@ -58,7 +58,7 @@
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.16",
     "electron-updater": "^3.0.3",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "ip": "^1.1.5",
     "node-excel-export": "^1.4.4",
     "socket.io": "^2.1.0"
